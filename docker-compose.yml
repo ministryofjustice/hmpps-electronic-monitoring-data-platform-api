@@ -1,10 +1,10 @@
 version: "3"
 services:
-  hmpps-template-kotlin:
+  hmpps-electronic-monitoring-data-platform-api:
     build:
       context: .
     network_mode: "host"
-    container_name: hmpps-template-kotlin
+    container_name: hmpps-electronic-monitoring-data-platform-api
     ports:
       - "8081:8080"
     healthcheck:
