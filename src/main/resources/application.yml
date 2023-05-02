@@ -1,10 +1,10 @@
 info.app:
-  name: HMPPS Template Kotlin
+  name: Hmpps Electronic Monitoring Data Platform Api
   version: 1.0
 
 spring:
   application:
-    name: hmpps-template-kotlin
+    name: hmpps-electronic-monitoring-data-platform-api
   codec:
     max-in-memory-size: 10MB
 
