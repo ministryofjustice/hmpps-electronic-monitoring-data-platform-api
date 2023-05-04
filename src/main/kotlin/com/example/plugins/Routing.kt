@@ -1,16 +1,28 @@
-package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.health
+package com.example.plugins
 
+import io.ktor.server.routing.*
+import io.ktor.server.response.*
+import io.ktor.server.application.*
 import org.springframework.boot.actuate.health.Health
 import org.springframework.boot.actuate.health.HealthIndicator
 import org.springframework.boot.info.BuildProperties
 import org.springframework.stereotype.Component
 
-/**
- * Adds version data to the /health endpoint. This is called by the UI to display API details
- */
+fun Application.configureRouting() {
+  routing {
+    get("/") {
+      call.respondText("Hello World!")
+    }
+
+  }
+}
+
 @Component
 class HealthInfo(buildProperties: BuildProperties) : HealthIndicator {
-  private val version: String = buildProperties.version
+
+  val version: String = buildProperties.version
 
   override fun health(): Health = Health.up().withDetail("version", version).build()
 }
+
+
