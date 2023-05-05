@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.api
+package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helloworld
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
