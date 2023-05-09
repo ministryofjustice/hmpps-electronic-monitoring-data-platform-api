@@ -2,11 +2,11 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi
 
 // import org.springframework.boot.autoconfigure.SpringBootApplication
 // import org.springframework.boot.runApplication
-import io.ktor.server.application.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.plugins.configureRouting
+import io.ktor.server.application.Application
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
 import java.util.*
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.plugins.configureRouting
 
 // @SpringBootApplication()
 // class HmppsElectronicMonitoringDataPlatformApi

@@ -3,9 +3,10 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.he
 import Class.Project.Project
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.ktor.server.application.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.server.application.call
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.get
 import java.io.File
 
 fun Routing.health() {
