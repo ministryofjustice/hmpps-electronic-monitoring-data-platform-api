@@ -1,8 +1,8 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.plugins.configureRouting
 import io.ktor.server.application.Application
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.plugins.configureRouting
 import java.util.*
 
 fun main() {
