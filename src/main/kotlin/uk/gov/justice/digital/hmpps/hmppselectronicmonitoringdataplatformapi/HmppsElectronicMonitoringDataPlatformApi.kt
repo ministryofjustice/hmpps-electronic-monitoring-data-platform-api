@@ -1,11 +1,18 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi
+import io.ktor.server.application.Application
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.plugins.configureRouting
+import java.util.*
 
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+fun main() {
+  embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
+    .start(wait = true)
+  val properties = Properties()
+  properties.load(Application::class.java.getResourceAsStream("/version.properties"))
+  println(properties.getProperty("version"))
+}
 
-@SpringBootApplication()
-class HmppsElectronicMonitoringDataPlatformApi
-
-fun main(args: Array<String>) {
-  runApplication<HmppsElectronicMonitoringDataPlatformApi>(*args)
+fun Application.module() {
+  configureRouting()
 }
