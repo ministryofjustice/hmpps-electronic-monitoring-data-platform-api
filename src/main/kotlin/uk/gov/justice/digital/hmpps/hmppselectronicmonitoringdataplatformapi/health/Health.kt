@@ -8,7 +8,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.io.File
 
-
 fun Routing.health() {
   get("/api/v1/hello/world") {
     val mapper = jacksonObjectMapper()
