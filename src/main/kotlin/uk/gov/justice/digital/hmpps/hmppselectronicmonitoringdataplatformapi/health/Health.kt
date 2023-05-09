@@ -10,10 +10,12 @@ import io.ktor.server.routing.get
 import java.io.File
 
 fun Routing.health() {
-  get("/api/v1/hello/world") {
+  get("/health") {
     val mapper = jacksonObjectMapper()
-    val file = File("src/Properties.json").readText(Charsets.UTF_8)
-    val project = mapper.readValue<Project>(file)
-    call.respondText("I am alive, version is = ${project.version}")
+    val internalPropsFile = File("src/Properties.json").readText(Charsets.UTF_8)
+    val internalProps = mapper.readValue<Project>(internalPropsFile)
+    val appInsightsDevFile = File("applicationinsights.dev.json").readText(Charsets.UTF_8)
+    val appInsightsDev = mapper.readValue<Any>(appInsightsDevFile)
+    call.respondText("I am alive, internal version is ${internalProps.version} and build pipeline data is \n ${appInsightsDev}")
   }
 }

@@ -11,7 +11,6 @@ fun main() {
   val properties = Properties()
   properties.load(Application::class.java.getResourceAsStream("/version.properties"))
   println(properties.getProperty("version"))
-  println("cheese")
 }
 
 fun Application.module() {
