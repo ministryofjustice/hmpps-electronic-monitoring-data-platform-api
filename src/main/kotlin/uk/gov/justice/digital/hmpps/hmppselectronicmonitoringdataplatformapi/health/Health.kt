@@ -16,6 +16,6 @@ fun Routing.health() {
     val internalProps = mapper.readValue<Project>(internalPropsFile)
     val appInsightsDevFile = File("applicationinsights.dev.json").readText(Charsets.UTF_8)
     val appInsightsDev = mapper.readValue<Any>(appInsightsDevFile)
-    call.respondText("I am alive, internal version is ${internalProps.version} and build pipeline data is \n ${appInsightsDev}")
+    call.respondText("I am alive, internal version is ${internalProps.version} and build pipeline data is \n $appInsightsDev")
   }
 }
