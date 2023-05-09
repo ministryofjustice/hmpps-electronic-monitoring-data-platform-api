@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.ValidationException
 
-@RequestMapping("api/v1/hello")
+@RequestMapping("api")
 @RestController
 class HelloWorldController {
-  @GetMapping("/world")
+  @GetMapping("/v1/hello/world")
   fun getHelloWorld(): ResponseEntity<Any> {
     try {
       return ResponseEntity.ok("Hello world!!!")
