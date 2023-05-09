@@ -4,9 +4,7 @@
 [![Docker Repository on Quay](https://quay.io/repository/hmpps/hmpps-electronic-monitoring-data-platform-api/status "Docker Repository on Quay")](https://quay.io/repository/hmpps/hmpps-electronic-monitoring-data-platform-api)
 [![API docs](https://img.shields.io/badge/API_docs_-view-85EA2D.svg?logo=swagger)](https://hmpps-electronic-monitoring-data-platform-api-dev.hmpps.service.justice.gov.uk/webjars/swagger-ui/index.html?configUrl=/v3/api-docs)
 
-This is based on a skeleton project from which to create new kotlin projects from.
-
-This project deploys to a dev environment at: https://hmpps-electronic-monitoring-data-platform-api-dev.hmpps.service.justice.gov.uk/
+This is a skeleton project from which to create new kotlin projects from.
 
 # Instructions
 
