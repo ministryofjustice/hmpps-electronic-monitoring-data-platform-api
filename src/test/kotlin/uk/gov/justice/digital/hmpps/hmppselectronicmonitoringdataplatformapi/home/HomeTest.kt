@@ -8,7 +8,6 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 import kotlin.test.assertEquals
 
 class HomeTest {
-
   @Test
   fun testGet() = testApplication {
     application {

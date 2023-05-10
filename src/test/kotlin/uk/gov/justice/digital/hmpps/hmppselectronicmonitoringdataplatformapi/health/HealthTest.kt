@@ -12,12 +12,10 @@ import java.io.File
 import kotlin.test.assertContains
 
 class HealthTest {
-
   @Test
   fun testGetHealth() = testApplication {
     application {
       module()
-
     }
     val mapper = jacksonObjectMapper()
     val internalPropsFile = File("src/Properties.json").readText(Charsets.UTF_8)
