@@ -3,7 +3,7 @@ services:
   hmpps-electronic-monitoring-data-platform-api:
     build:
       context: .
-    network_mode: "host"
+    network_mode: "bridge"
     container_name: hmpps-electronic-monitoring-data-platform-api
     ports:
       - "8081:8080"
