@@ -2,12 +2,14 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.pl
 
 import io.ktor.server.application.Application
 import io.ktor.server.routing.routing
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.health.health
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.routes.health.health
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.health.home
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.health.users
 
 fun Application.configureRouting() {
   routing {
     health()
     home()
+    users()
   }
 }
