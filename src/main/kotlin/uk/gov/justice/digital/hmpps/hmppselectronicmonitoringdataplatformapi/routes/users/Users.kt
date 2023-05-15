@@ -1,6 +1,6 @@
-package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.health
+package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.routes.users
 
-import com.apurebase.kgraphql.*
+import com.apurebase.kgraphql.KGraphQL
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
@@ -20,15 +20,15 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.tab
 fun Routing.users() {
 
   val schema = KGraphQL.schema {
-    query("heroes"){
-      resolver{->
-        transaction { Users.selectAll().map{Users.toUser(it)} }
+    query("heroes") {
+      resolver { ->
+        transaction { Users.selectAll().map { Users.toUser(it) } }
       }
     }
   }
 
-  route("graphql"){
-    get("/"){
+  route("graphql") {
+    get("/") {
       val graphRequest = call.receive<GraphQLRequest>()
       call.respond(schema.execute(graphRequest.query))
     }
@@ -36,7 +36,6 @@ fun Routing.users() {
 
   route("/user") {
     get("/") {
-//    call.respondText("Hi!")
       val users = transaction {
         Users.selectAll().map { Users.toUser(it) }
       }

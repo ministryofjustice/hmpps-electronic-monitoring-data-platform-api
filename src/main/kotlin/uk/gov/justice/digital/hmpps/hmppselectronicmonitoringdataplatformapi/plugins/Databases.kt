@@ -1,85 +1,59 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.plugins
 
+import com.apurebase.kgraphql.*
 import io.ktor.http.*
+import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
-import kotlinx.coroutines.*
-import java.sql.*
-import io.ktor.server.application.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.tables.Users
-import com.apurebase.kgraphql.*
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import java.sql.*
 
 fun Application.configureDatabases() {
-
+  System.getenv()
   //h2 connection
-//  Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1","org.h2.Driver" )
-  Database.connect("jdbc:postgresql://localhost:5432/",driver = "org.postgresql.Driver",user = "postgres", password = "root")
+  //  Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1","org.h2.Driver" )
+  //  Connect to database on the docker container
+  //  Database.connect("jdbc:postgresql://localhost:5432/",driver = "org.postgresql.Driver",user = "postgres", password = "root")
+  Database.connect(
+    System.getenv("EM_DATABASE_CONNECTION"),
+    driver = "org.postgresql.Driver",
+    user = "postgres",
+    password = "root",
+  )
+//  Database.connect("jdbc:postgresql://database:5432/",driver = "org.postgresql.Driver",user = "postgres", password = "root")
   transaction {
     SchemaUtils.create(Users);
-    Users.insert{
+    Users.insert {
       it[Users.name] = "Jown"
       it[Users.age] = 36
     }
-    Users.insert{
+    Users.insert {
       it[Users.name] = "Jack"
       it[Users.age] = 38
     }
-    Users.insert{
+    Users.insert {
       it[Users.name] = "Jill"
       it[Users.age] = 34
     }
   }
 
   val schema = KGraphQL.schema {
-    query("heroes"){
-      resolver {->
+    query("heroes") {
+      resolver { ->
         transaction {
-          Users.selectAll().map{Users.toUser(it)}
+          Users.selectAll().map { Users.toUser(it) }
         }
       }
     }
   }
-//    val dbConnection: Connection = connectToPostgres(embedded = true)
-//    val cityService = CityService(dbConnection)
-//    routing {
-        // Create city
-//        post("/cities") {
-//            val city = call.receive<City>()
-//            val id = cityService.create(city)
-//            call.respond(HttpStatusCode.Created, id)
-//        }
-        // Read city
-//        get("/cities/{id}") {
-//            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-//            try {
-//                val city = cityService.read(id)
-//                call.respond(HttpStatusCode.OK, city)
-//            } catch (e: Exception) {
-//                call.respond(HttpStatusCode.NotFound)
-//            }
-        }
-        // Update city
-//        put("/cities/{id}") {
-//            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-//            val user = call.receive<City>()
-//            cityService.update(id, user)
-//            call.respond(HttpStatusCode.OK)
-//        }
-//        // Delete city
-//        delete("/cities/{id}") {
-//            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-//            cityService.delete(id)
-//            call.respond(HttpStatusCode.OK)
-//        }
-//    }
-//}
+}
 
 /**
  * Makes a connection to a Postgres database.
@@ -103,14 +77,14 @@ fun Application.configureDatabases() {
  * your application shuts down by calling [Connection.close]
  * */
 fun Application.connectToPostgres(embedded: Boolean): Connection {
-    Class.forName("org.postgresql.Driver")
-    if (embedded) {
-        return DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "root", "")
-    } else {
-        val url = environment.config.property("postgres.url").getString()
-        val user = environment.config.property("postgres.user").getString()
-        val password = environment.config.property("postgres.password").getString()
+  Class.forName("org.postgresql.Driver")
+  if (embedded) {
+    return DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "root", "")
+  } else {
+    val url = environment.config.property("postgres.url").getString()
+    val user = environment.config.property("postgres.user").getString()
+    val password = environment.config.property("postgres.password").getString()
 
-        return DriverManager.getConnection(url, user, password)
-    }
+    return DriverManager.getConnection(url, user, password)
+  }
 }

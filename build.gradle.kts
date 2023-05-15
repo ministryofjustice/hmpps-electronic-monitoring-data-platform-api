@@ -15,7 +15,7 @@ group = "uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi"
 version = project_version
 
 application {
-  mainClass.set("uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.HmppsEletronicMonitoringDataPlatformApi.kt")
+  mainClass.set("uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.HmppsElectronicMonitoringDataPlatformApiKt")
   val isDevelopment: Boolean = project.ext.has("development")
   applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
