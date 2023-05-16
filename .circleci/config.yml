@@ -34,7 +34,7 @@ jobs:
           path: build/reports/tests
 
 workflows:
-  version: 2
+  version: 3
   build-test-and-deploy:
     jobs:
       - validate:
@@ -43,6 +43,34 @@ workflows:
               ignore: /.*/
       - hmpps/helm_lint:
           name: helm_lint
+      - hmpps/gradle_owasp_dependency_check:
+          name: gradle_owasp_dependency_check
+          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          context:
+            - hmpps-common-vars
+          filters:
+            branches:
+              only:
+                - main
+      - hmpps/trivy_latest_scan:
+          name: trivy_latest_scan
+          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          context:
+            - hmpps-common-vars
+          filters:
+            branches:
+              only:
+                - main
+      - hmpps/veracode_pipeline_scan:
+          name: veracode_pipeline_scan
+          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          context:
+            - veracode-credentials
+            - hmpps-common-vars
+          filters:
+            branches:
+              only:
+                - main
       - hmpps/build_multiplatform_docker:
           name: build_docker
           filters:
@@ -62,6 +90,9 @@ workflows:
             - validate
             - build_docker
             - helm_lint
+            - gradle_owasp_dependency_check
+            - trivy_latest_scan
+            - veracode_pipeline_scan
           helm_timeout: 5m
 #      - request-preprod-approval:
 #          type: approval
