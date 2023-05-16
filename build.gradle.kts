@@ -6,8 +6,8 @@ val project_version: String by project
 plugins {
   kotlin("jvm") version "1.8.21"
   id("io.ktor.plugin") version "2.3.0"
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.8.5"
-  kotlin("plugin.spring") version "1.8.10"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "5.1.4"
+  kotlin("plugin.spring") version "1.8.21"
 }
 group = "uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi"
 version = project_version
