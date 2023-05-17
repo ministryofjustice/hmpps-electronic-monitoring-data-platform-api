@@ -19,20 +19,20 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.tab
 
 fun Routing.users() {
 
-  val schema = KGraphQL.schema {
-    query("heroes") {
-      resolver { ->
-        transaction { Users.selectAll().map { Users.toUser(it) } }
-      }
-    }
-  }
+//  val schema = KGraphQL.schema {
+//    query("heroes") {
+//      resolver { ->
+//        transaction { Users.selectAll().map { Users.toUser(it) } }
+//      }
+//    }
+//  }
 
-  route("graphql") {
-    get("/") {
-      val graphRequest = call.receive<GraphQLRequest>()
-      call.respond(schema.execute(graphRequest.query))
-    }
-  }
+//  route("graphql") {
+//    get("/") {
+//      val graphRequest = call.receive<GraphQLRequest>()
+//      call.respond(schema.execute(graphRequest.query))
+//    }
+//  }
 
   route("/user") {
     get("/") {

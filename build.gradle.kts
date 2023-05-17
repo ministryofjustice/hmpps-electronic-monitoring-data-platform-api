@@ -4,6 +4,7 @@ val logback_version: String by project
 val project_version: String by project
 val postgresql_version: String by project
 val kgraphql_version: String by project
+val koin_version: String by project
 
 plugins {
   kotlin("jvm") version "1.8.21"
@@ -44,11 +45,22 @@ dependencies {
 
   implementation ("org.jetbrains.exposed:exposed-core:0.41.1")
   implementation ("org.jetbrains.exposed:exposed-jdbc:0.41.1")
-//  implementation ("com.h2database:h2:1.4.199")
+  implementation ("com.h2database:h2:1.4.199")
   implementation ("com.apurebase:kgraphql:${kgraphql_version}")
   implementation("com.apurebase:kgraphql-ktor:$kgraphql_version")
 
-
-
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
+
+  implementation("io.insert-koin:koin-core:$koin_version")
+  implementation("io.insert-koin:koin-test:$koin_version")
+  implementation("io.insert-koin:koin-test-junit4:$koin_version")
+  implementation("io.insert-koin:koin-test-junit5:$koin_version")
+
+  // Koin for Ktor
+  implementation ("io.insert-koin:koin-ktor:$koin_version")
+  // SLF4J Logger
+  implementation ("io.insert-koin:koin-logger-slf4j:$koin_version")
+
+
+
 }

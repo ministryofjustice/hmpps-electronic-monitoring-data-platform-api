@@ -8,52 +8,40 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.*
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.tables.Users
+import org.koin.ktor.ext.inject
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.services.DatabaseService
 import java.sql.*
 
-fun Application.configureDatabases() {
+fun Application.configureDatabases() : Int {
+  val databaseService: DatabaseService by inject()
   System.getenv()
   //h2 connection
-  //  Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1","org.h2.Driver" )
+  Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1", "org.h2.Driver")
   //  Connect to database on the docker container
   //  Database.connect("jdbc:postgresql://localhost:5432/",driver = "org.postgresql.Driver",user = "postgres", password = "root")
-  Database.connect(
-    System.getenv("EM_DATABASE_CONNECTION"),
-    driver = "org.postgresql.Driver",
-    user = "postgres",
-    password = "root",
-  )
-//  Database.connect("jdbc:postgresql://database:5432/",driver = "org.postgresql.Driver",user = "postgres", password = "root")
-  transaction {
-    SchemaUtils.create(Users);
-    Users.insert {
-      it[Users.name] = "Jown"
-      it[Users.age] = 36
-    }
-    Users.insert {
-      it[Users.name] = "Jack"
-      it[Users.age] = 38
-    }
-    Users.insert {
-      it[Users.name] = "Jill"
-      it[Users.age] = 34
-    }
-  }
 
-  val schema = KGraphQL.schema {
-    query("heroes") {
-      resolver { ->
-        transaction {
-          Users.selectAll().map { Users.toUser(it) }
-        }
-      }
-    }
-  }
+  //docker connection
+//  Database.connect(
+//    System.getenv("EM_DATABASE_CONNECTION"),
+//    driver = "org.postgresql.Driver",
+//    user = "postgres",
+//    password = "root",
+//  )
+//  Database.connect("jdbc:postgresql://database:5432/",driver = "org.postgresql.Driver",user = "postgres", password = "root")
+  databaseService.initializeDatabase();
+  return 1;
 }
+
+//  val schema = KGraphQL.schema {
+//    query("heroes") {
+//      resolver { ->
+//        transaction {
+//          Users.selectAll().map { Users.toUser(it) }
+//        }
+//      }
+//    }
+//  }
+//}
 
 /**
  * Makes a connection to a Postgres database.
