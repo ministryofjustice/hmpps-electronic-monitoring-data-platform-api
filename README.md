@@ -44,3 +44,18 @@ The `rename-project.bash` script takes a single argument - the name of the proje
 * The main package name (project name with hyphens removed)
 
 It then performs a search and replace and directory renames so the project is ready to be used.
+
+
+## To start the container:
+install docker
+run the command:
+docker compose up --build  
+
+## To run locally in an h2 database
+To run locally in an h2 database you need to create the following local variables 
+EM_DATABASE_CONNECTION
+EM_DATABASE_DRIVER
+EM_DATABASE_USER
+EM_DATABASE_PASSWORD
+
+
