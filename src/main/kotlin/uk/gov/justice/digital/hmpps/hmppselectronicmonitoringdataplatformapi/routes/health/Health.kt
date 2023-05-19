@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.health
+package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.routes.health
 
 import Class.Project.Project
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
