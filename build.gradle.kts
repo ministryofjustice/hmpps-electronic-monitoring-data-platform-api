@@ -12,6 +12,7 @@ plugins {
   id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.8.5"
   kotlin("plugin.spring") version "1.8.10"
 }
+
 group = "uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi"
 version = project_version
 
@@ -33,7 +34,7 @@ dependencies {
   implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
   implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
   implementation("ch.qos.logback:logback-classic:$logback_version")
-  implementation("org.testng:testng:7.1.0")
+  implementation("org.testng:testng:7.7.0")
   testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
   testImplementation("io.ktor:ktor-server-test-host-jvm:2.3.0")
