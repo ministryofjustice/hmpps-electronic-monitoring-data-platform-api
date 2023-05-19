@@ -8,6 +8,11 @@ configurations {
   testImplementation { exclude(group = "org.junit.vintage") }
 }
 
+ktlint {
+  enableExperimentalRules.set(true)
+  disabledRules.set(setOf("experimental:package-name", "no-wildcard-imports"))
+}
+
 repositories {
   jcenter()
   mavenCentral()
