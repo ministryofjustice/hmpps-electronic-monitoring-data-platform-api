@@ -1,8 +1,8 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.integration.controller
 
 import org.hibernate.validator.internal.util.Contracts.assertNotNull
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.integration.IntegrationTestBase
 

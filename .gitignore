@@ -8,7 +8,7 @@
 build/
 
 # Environment variables file:
-.env
+*.env
 
 # CMake
 cmake-build-debug/
