@@ -11,9 +11,9 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.plu
 import java.util.*
 
 fun main() {
-   startKoin{
-     modules(appModule)
-   }
+  startKoin {
+    modules(appModule)
+  }
   embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
     .start(wait = true)
   val properties = Properties()
@@ -25,6 +25,7 @@ fun Application.module() {
   try {
     configureDatabases()
   } catch (e: Exception) {
+    //this will need to be changed to logging
     println(e.message)
   }
   configureRouting()

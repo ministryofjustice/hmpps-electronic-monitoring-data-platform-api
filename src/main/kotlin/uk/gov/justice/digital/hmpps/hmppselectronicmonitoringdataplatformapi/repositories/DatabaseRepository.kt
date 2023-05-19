@@ -9,10 +9,10 @@ interface DatabaseRepository {
   fun initializeDatabase()
 }
 
-class DatabaseRepositoryImplementation: DatabaseRepository {
+class DatabaseRepositoryImplementation : DatabaseRepository {
   override fun initializeDatabase() {
     transaction {
-      SchemaUtils.create(Users);
+      SchemaUtils.create(Users)
       Users.insert {
         it[name] = "Jown"
         it[age] = 36

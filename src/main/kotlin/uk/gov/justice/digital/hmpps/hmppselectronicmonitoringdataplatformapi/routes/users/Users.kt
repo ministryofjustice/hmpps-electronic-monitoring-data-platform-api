@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.routes.users
 
-import com.apurebase.kgraphql.KGraphQL
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
@@ -12,28 +11,10 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.classes.GraphQLRequest
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.classes.User
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.tables.Users
 
-
 fun Routing.users() {
-
-//  val schema = KGraphQL.schema {
-//    query("heroes") {
-//      resolver { ->
-//        transaction { Users.selectAll().map { Users.toUser(it) } }
-//      }
-//    }
-//  }
-
-//  route("graphql") {
-//    get("/") {
-//      val graphRequest = call.receive<GraphQLRequest>()
-//      call.respond(schema.execute(graphRequest.query))
-//    }
-//  }
-
   route("/user") {
     get("/") {
       val users = transaction {
@@ -59,6 +40,4 @@ fun Routing.users() {
       call.respond(users)
     }
   }
-
-
 }

@@ -10,9 +10,6 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.ser
 val appModule = module {
 //  single<DatabaseRepository> { DatabaseRepositoryImplementation() }
 //  single{DatabaseService(get())}
-  singleOf(::DatabaseRepositoryImplementation){bind<DatabaseRepository>()}
+  singleOf(::DatabaseRepositoryImplementation) { bind<DatabaseRepository>() }
   singleOf(::DatabaseService)
-
 }
-
-

@@ -13,6 +13,9 @@ services:
       - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=dev
       - EM_DATABASE_CONNECTION=jdbc:postgresql://database:5432/
+      - EM_DATABASE_DRIVER=org.postgresql.Driver
+      - EM_DATABASE_USER=postgres
+      - EM_DATABASE_PASSWORD=root
     networks:
       - ktor-network
     depends_on:
