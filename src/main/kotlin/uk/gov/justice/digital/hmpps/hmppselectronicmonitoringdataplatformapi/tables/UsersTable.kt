@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.classes.User
 
-object Users : Table() {
+object UsersTable : Table() {
   val id: Column<Int> = integer("id").autoIncrement()
   val name: Column<String> = varchar("name", 255)
   val age: Column<Int> = integer("age")

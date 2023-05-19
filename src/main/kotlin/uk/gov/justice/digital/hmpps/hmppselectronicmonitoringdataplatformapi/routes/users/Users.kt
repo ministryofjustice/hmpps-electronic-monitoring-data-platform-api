@@ -12,22 +12,22 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.classes.User
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.tables.Users
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.tables.UsersTable
 
 fun Routing.users() {
   route("/user") {
     get("/") {
       val users = transaction {
-        Users.selectAll().map { Users.toUser(it) }
+        UsersTable.selectAll().map { UsersTable.toUser(it) }
       }
       call.respond(users)
     }
     post("/") {
       val user = call.receive<User>()
       transaction {
-        Users.insert {
-          it[Users.name] = user.name
-          it[Users.age] = user.age
+        UsersTable.insert {
+          it[UsersTable.name] = user.name
+          it[UsersTable.age] = user.age
         }
       }
       call.respond(user)
@@ -35,7 +35,7 @@ fun Routing.users() {
     get("/{id}") {
       val id = call.parameters["id"]!!.toInt()
       val users = transaction {
-        Users.select { Users.id eq id }.map { Users.toUser(it) }
+        UsersTable.select { UsersTable.id eq id }.map { UsersTable.toUser(it) }
       }
       call.respond(users)
     }

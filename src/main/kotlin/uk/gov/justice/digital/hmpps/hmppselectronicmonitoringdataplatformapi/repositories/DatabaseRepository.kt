@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.re
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.tables.Users
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.tables.UsersTable
 
 interface DatabaseRepository {
   fun initializeDatabase()
@@ -12,16 +12,16 @@ interface DatabaseRepository {
 class DatabaseRepositoryImplementation : DatabaseRepository {
   override fun initializeDatabase() {
     transaction {
-      SchemaUtils.create(Users)
-      Users.insert {
+      SchemaUtils.create(UsersTable)
+      UsersTable.insert {
         it[name] = "Jown"
         it[age] = 36
       }
-      Users.insert {
+      UsersTable.insert {
         it[name] = "Jack"
         it[age] = 38
       }
-      Users.insert {
+      UsersTable.insert {
         it[name] = "Jill"
         it[age] = 34
       }
