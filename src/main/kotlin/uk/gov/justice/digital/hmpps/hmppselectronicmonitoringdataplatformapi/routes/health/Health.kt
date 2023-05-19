@@ -19,4 +19,3 @@ fun Routing.health() {
     call.respondText("I am alive, internal version is ${internalProps.version} and build pipeline data is \n $appInsightsDev")
   }
 }
-

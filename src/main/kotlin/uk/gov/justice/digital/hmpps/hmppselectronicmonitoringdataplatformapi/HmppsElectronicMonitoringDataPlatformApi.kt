@@ -25,7 +25,7 @@ fun Application.module() {
   try {
     configureDatabases()
   } catch (e: Exception) {
-    //this will need to be changed to logging
+    // this will need to be changed to logging
     println(e.message)
   }
   configureRouting()

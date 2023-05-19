@@ -13,4 +13,3 @@ fun Application.configureRouting() {
     users()
   }
 }
-
