@@ -51,5 +51,11 @@ install docker
 run the command:
 docker compose up --build  
 
+## To run locally in an h2 database
+To run locally in an h2 database you need to create the following local variables 
+EM_DATABASE_CONNECTION
+EM_DATABASE_DRIVER
+EM_DATABASE_USER
+EM_DATABASE_PASSWORD
 
 

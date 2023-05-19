@@ -15,8 +15,11 @@ fun Application.configureDatabases(): Int {
     System.getenv("EM_DATABASE_CONNECTION"),
     System.getenv("EM_DATABASE_DRIVER"),
     System.getenv("EM_DATABASE_USER"),
-    System.getenv("EM_DATABASE_PASSWORD")
+    System.getenv("EM_DATABASE_PASSWORD"),
   )
-  databaseService.initializeDatabase()
+  if (System.getenv("EM_DATABASE_DRIVER") == "org.h2.Driver") {
+    databaseService.initializeDatabase()
+  }
+
   return 1
 }
