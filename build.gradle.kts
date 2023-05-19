@@ -9,8 +9,6 @@ val koin_version: String by project
 plugins {
   kotlin("jvm") version "1.8.21"
   id("io.ktor.plugin") version "2.3.0"
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.8.5"
-  kotlin("plugin.spring") version "1.8.10"
 }
 
 group = "uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi"
@@ -30,7 +28,6 @@ configurations {
 }
 
 dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
   implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
   implementation("ch.qos.logback:logback-classic:$logback_version")
