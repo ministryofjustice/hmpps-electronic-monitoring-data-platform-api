@@ -9,8 +9,6 @@ val koin_version: String by project
 plugins {
   kotlin("jvm") version "1.8.21"
   id("io.ktor.plugin") version "2.3.0"
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "5.1.4"
-  kotlin("plugin.spring") version "1.8.21"
 }
 
 group = "uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi"
@@ -30,7 +28,6 @@ configurations {
 }
 
 dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
   implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
   implementation("ch.qos.logback:logback-classic:$logback_version")
@@ -46,7 +43,7 @@ dependencies {
 
   implementation("org.jetbrains.exposed:exposed-core:0.41.1")
   implementation("org.jetbrains.exposed:exposed-jdbc:0.41.1")
-  implementation("com.h2database:h2:1.4.199")
+
   implementation("com.apurebase:kgraphql:$kgraphql_version")
   implementation("com.apurebase:kgraphql-ktor:$kgraphql_version")
 
@@ -61,4 +58,6 @@ dependencies {
   implementation("io.insert-koin:koin-ktor:$koin_version")
   // SLF4J Logger
   implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
+  // uncomment to use local database
+  // implementation("com.h2database:h2:2.1.214")
 }
