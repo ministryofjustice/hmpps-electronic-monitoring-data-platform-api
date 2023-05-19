@@ -47,7 +47,7 @@ dependencies {
   implementation("org.jetbrains.exposed:exposed-core:0.41.1")
   implementation("org.jetbrains.exposed:exposed-jdbc:0.41.1")
   implementation("com.h2database:h2:1.4.199")
-  implementation("com.apurebase:kgraphql:${kgraphql_version}")
+  implementation("com.apurebase:kgraphql:$kgraphql_version")
   implementation("com.apurebase:kgraphql-ktor:$kgraphql_version")
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
