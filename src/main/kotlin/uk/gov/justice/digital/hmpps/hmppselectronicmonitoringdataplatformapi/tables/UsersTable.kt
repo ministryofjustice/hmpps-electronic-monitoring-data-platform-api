@@ -1,4 +1,5 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.tables
+
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
