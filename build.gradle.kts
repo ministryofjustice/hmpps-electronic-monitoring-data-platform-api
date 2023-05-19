@@ -9,8 +9,8 @@ val koin_version: String by project
 plugins {
   kotlin("jvm") version "1.8.21"
   id("io.ktor.plugin") version "2.3.0"
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "5.1.4"
-  kotlin("plugin.spring") version "1.8.21"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.8.5"
+  kotlin("plugin.spring") version "1.8.10"
 }
 
 group = "uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi"
@@ -46,7 +46,7 @@ dependencies {
 
   implementation("org.jetbrains.exposed:exposed-core:0.41.1")
   implementation("org.jetbrains.exposed:exposed-jdbc:0.41.1")
-  implementation("com.h2database:h2:1.4.199")
+  implementation("com.h2database:h2:2.1.214")
   implementation("com.apurebase:kgraphql:$kgraphql_version")
   implementation("com.apurebase:kgraphql-ktor:$kgraphql_version")
 
