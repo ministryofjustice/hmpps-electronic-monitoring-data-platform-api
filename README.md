@@ -45,6 +45,10 @@ The `rename-project.bash` script takes a single argument - the name of the proje
 
 It then performs a search and replace and directory renames so the project is ready to be used.
 
+## Linting conventions
+This project uses ktlint linting, checked with the task `./gradlew check
+` when the branch is built by CircleCI.
+You can install a plugin to enforce this linting locally and avoid build errors: https://github.com/nbadal/ktlint-intellij-plugin/
 
 ## To start the container:
 install docker
@@ -52,10 +56,15 @@ run the command:
 docker compose up --build  
 
 ## To run locally in an h2 database
-To run locally in an h2 database you need to create the following local variables 
-EM_DATABASE_CONNECTION
-EM_DATABASE_DRIVER
-EM_DATABASE_USER
-EM_DATABASE_PASSWORD
+To run locally in an h2 database the project uses environment variables set in the .run/Local.run.xml file:
+
+`EM_DATABASE_CONNECTION`
+`EM_DATABASE_DRIVER`
+`EM_DATABASE_USER`
+`EM_DATABASE_PASSWORD`
+
+You also need to uncomment the h2 dependency in build.gradle.kts: `// implementation("com.h2database:h2:2.1.214")`
+
+When deploying this to the server the environment variables will be picked up from the dockerfile instead.
 
 
