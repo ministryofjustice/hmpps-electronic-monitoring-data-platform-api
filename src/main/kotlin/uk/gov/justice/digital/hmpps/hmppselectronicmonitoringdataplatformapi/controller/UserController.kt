@@ -24,8 +24,7 @@ class UserController(@Autowired private val userRepository: UserRepository) {
   @GetMapping("/v1/{id}")
   fun getUserById(@PathVariable("id") userId: Int): ResponseEntity<User> {
     val user = userRepository.findById(userId).orElse(null)
-    return if (user != null) { ResponseEntity(user, HttpStatus.OK) }
-    else { ResponseEntity(HttpStatus.NOT_FOUND) }
+    return if (user != null) { ResponseEntity(user, HttpStatus.OK) } else { ResponseEntity(HttpStatus.NOT_FOUND) }
   }
 
   @PutMapping("/v1/{id}")
