@@ -43,10 +43,10 @@ dependencies {
   implementation("io.ktor:ktor-serialization-gson-jvm:$ktor_version")
   implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
 
-  implementation ("org.jetbrains.exposed:exposed-core:0.41.1")
-  implementation ("org.jetbrains.exposed:exposed-jdbc:0.41.1")
-  implementation ("com.h2database:h2:1.4.199")
-  implementation ("com.apurebase:kgraphql:${kgraphql_version}")
+  implementation("org.jetbrains.exposed:exposed-core:0.41.1")
+  implementation("org.jetbrains.exposed:exposed-jdbc:0.41.1")
+  implementation("com.h2database:h2:1.4.199")
+  implementation("com.apurebase:kgraphql:${kgraphql_version}")
   implementation("com.apurebase:kgraphql-ktor:$kgraphql_version")
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
@@ -57,10 +57,7 @@ dependencies {
   implementation("io.insert-koin:koin-test-junit5:$koin_version")
 
   // Koin for Ktor
-  implementation ("io.insert-koin:koin-ktor:$koin_version")
+  implementation("io.insert-koin:koin-ktor:$koin_version")
   // SLF4J Logger
-  implementation ("io.insert-koin:koin-logger-slf4j:$koin_version")
-
-
-
+  implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
 }
