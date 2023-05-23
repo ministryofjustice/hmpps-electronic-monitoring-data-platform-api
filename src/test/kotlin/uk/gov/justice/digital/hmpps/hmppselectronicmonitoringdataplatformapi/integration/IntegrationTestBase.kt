@@ -10,7 +10,7 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.utility.DockerImageName
 
 @SpringBootTest(
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 )
 @ActiveProfiles("test")
 abstract class IntegrationTestBase {
