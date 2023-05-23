@@ -2,19 +2,31 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.in
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
-import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.testcontainers.containers.JdbcDatabaseContainer
+import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.utility.DockerImageName
 
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest(
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 @ActiveProfiles("test")
 abstract class IntegrationTestBase {
 
-  @Suppress("SpringJavaInjectionPointsAutowiringInspection")
   @Autowired
   lateinit var webTestClient: WebTestClient
 
-  @Autowired
-  lateinit var testRestTemplate: TestRestTemplate
+  @Container
+  val container = postgres("postgres:latest") {
+    withDatabaseName("demo_db")
+    withUsername("postgres")
+    withPassword("password1")
+  }
+//  @Autowired
+//  lateinit var testRestTemplate: TestRestTemplate
 }
+
+fun postgres(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() -> Unit) =
+  PostgreSQLContainer<Nothing>(DockerImageName.parse(imageName)).apply(opts)

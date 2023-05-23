@@ -21,8 +21,6 @@ repositories {
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("jakarta.persistence:jakarta.persistence-api:3.1.0")
-//  implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
-//  annotationProcessor("com.querydsl:querydsl-apt:5.0.0:jakarta")
   implementation("com.google.code.gson:gson:2.8.9")
   implementation("org.springframework.boot:spring-boot-starter-hateoas:3.0.6")
   implementation("org.springframework.boot:spring-boot-starter-web:3.0.6")
@@ -35,10 +33,13 @@ dependencies {
   implementation("org.jetbrains.exposed:exposed-core:0.24.1")
   implementation("org.jetbrains.exposed:exposed-dao:0.24.1")
   implementation("org.jetbrains.exposed:exposed-jdbc:0.24.1")
-  runtimeOnly("org.postgresql:postgresql")
+  implementation("org.postgresql:postgresql")
+  testImplementation("org.springframework.boot:spring-boot-starter-test")
+  testImplementation("org.testcontainers:testcontainers:1.18.1")
+  testImplementation("org.testcontainers:junit-jupiter:1.18.1")
+  testImplementation("org.testcontainers:postgresql:1.18.1")
   api("me.paulschwarz:spring-dotenv:2.5.3")
   developmentOnly("org.springframework.boot:spring-boot-devtools:3.0.6")
-  testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 java {
