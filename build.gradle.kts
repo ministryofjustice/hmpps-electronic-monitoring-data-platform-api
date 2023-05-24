@@ -9,6 +9,8 @@ val koin_version: String by project
 plugins {
   kotlin("jvm") version "1.8.21"
   id("io.ktor.plugin") version "2.3.0"
+  id("org.owasp.dependencycheck") version "8.2.1"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "5.1.4"
 }
 
 group = "uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi"
