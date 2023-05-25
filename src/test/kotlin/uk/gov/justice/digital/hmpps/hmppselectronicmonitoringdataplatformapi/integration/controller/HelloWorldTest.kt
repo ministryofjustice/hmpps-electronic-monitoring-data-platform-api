@@ -9,7 +9,7 @@ class HelloWorldTest : IntegrationTestBase() {
   @Test
   fun `test hello endpoint`() {
     webTestClient.get()
-      .uri("/api/v1/hello/world")
+      .uri("/hello/v1")
       .exchange()
       .expectStatus()
       .isOk
