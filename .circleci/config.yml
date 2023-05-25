@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   hmpps: ministryofjustice/hmpps@7
   gradle: circleci/gradle@3.0.0
-  testcontainers-cloud-orb: atomicjar/testcontainers-cloud-orb@0.1.0
+  tcc: atomicjar/testcontainers-cloud-orb@0.1.0
 
 parameters:
   alerts-slack-channel:
