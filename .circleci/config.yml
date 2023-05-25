@@ -49,10 +49,9 @@ workflows:
     jobs:
       - gradle/test:
           executor: machine_executor_amd64
-          store_artifacts: build/reports/
+          store_artifacts: build/reports/tests
           test_command: myTests
           test_results_path: build/test-results/
-          reports_path: build/reports/tests
           filters:
             tags:
               ignore: /.*/
