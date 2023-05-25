@@ -44,6 +44,5 @@ abstract class IntegrationTestBase {
   }
 }
 
-
 fun postgres(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() -> Unit) =
   PostgreSQLContainer<Nothing>(DockerImageName.parse(imageName)).apply(opts)
