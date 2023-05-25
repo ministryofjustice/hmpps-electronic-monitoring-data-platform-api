@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("api")
+@RequestMapping("hello")
 @RestController
 class HelloWorldController {
-  @GetMapping("/v1/hello/world")
+  @GetMapping("/v1")
   fun getHelloWorld(): ResponseEntity<Any> {
     try {
       return ResponseEntity("Hello World!!!", HttpStatus.OK)
