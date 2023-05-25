@@ -35,9 +35,9 @@ dependencies {
   implementation("org.jetbrains.exposed:exposed-jdbc:0.24.1")
   implementation("org.postgresql:postgresql")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
-  testImplementation("org.testcontainers:testcontainers:1.18.1")
-  testImplementation("org.testcontainers:junit-jupiter:1.18.1")
-  testImplementation("org.testcontainers:postgresql:1.18.1")
+  implementation("org.testcontainers:testcontainers:1.18.1")
+  implementation("org.testcontainers:junit-jupiter:1.18.1")
+  implementation("org.testcontainers:postgresql:1.18.1")
   api("me.paulschwarz:spring-dotenv:2.5.3")
   developmentOnly("org.springframework.boot:spring-boot-devtools:3.0.6")
 }
