@@ -18,10 +18,10 @@ jobs:
     executor:
       name: hmpps/java
       tag: "19.0"
-    pre-steps:
-      - tcc/setup
+    
     steps:
       - checkout
+      - tcc/setup
       - restore_cache:
           keys:
             - gradle-{{ checksum "build.gradle.kts" }}
