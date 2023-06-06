@@ -29,7 +29,7 @@ COPY --from=builder --chown=appuser:appgroup /app/build/libs/hmpps-electronic-mo
 #COPY --from=builder --chown=appuser:appgroup /app/build/libs/applicationinsights-agent*.jar /app/agent.jar
 COPY --from=builder --chown=appuser:appgroup /app/applicationinsights.json /app
 COPY --from=builder --chown=appuser:appgroup /app/applicationinsights.dev.json /app
-COPY --from=builder --chown=appuser:appgroup /app/.env /app
+#COPY --from=builder --chown=appuser:appgroup /app/.env /app
 
 USER 2000
 
