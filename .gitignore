@@ -6,6 +6,7 @@
 .idea/
 .gradle/
 build/
+gradle.properties
 
 # Environment variables file:
 *.env
@@ -73,3 +74,8 @@ sonar-project.properties
 
 #Helm
 **/Chart.lock
+
+#Databse data
+.DS_Store
+db/data/
+src/.DS_Store
