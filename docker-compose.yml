@@ -1,17 +1,43 @@
 version: "3"
 services:
   hmpps-electronic-monitoring-data-platform-api:
+    restart: always
     build:
       context: .
-    network_mode: "host"
     container_name: hmpps-electronic-monitoring-data-platform-api
     ports:
       - "8081:8080"
+    networks:
+      - db-network
+    depends_on:
+      db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
     environment:
       - SERVER_PORT=8080
-      - SPRING_PROFILES_ACTIVE=dev
+      - spring.profiles.active=dev
+
+  db:
+    container_name: db
+    image: postgres:latest
+    restart: always
+#    env_file:
+#      - .env
+    ports:
+      - '5432:5432'
+    networks:
+      - db-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/dev/databases.sql:/docker-entrypoint-initdb.d/1-dev-database.sql
+      - ./db/dev/roles.sql:/docker-entrypoint-initdb.d/2-dev-roles.sql
 
 networks:
   hmpps:
+  db-network:
