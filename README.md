@@ -4,9 +4,7 @@
 [![Docker Repository on Quay](https://quay.io/repository/hmpps/hmpps-electronic-monitoring-data-platform-api/status "Docker Repository on Quay")](https://quay.io/repository/hmpps/hmpps-electronic-monitoring-data-platform-api)
 [![API docs](https://img.shields.io/badge/API_docs_-view-85EA2D.svg?logo=swagger)](https://hmpps-electronic-monitoring-data-platform-api-dev.hmpps.service.justice.gov.uk/webjars/swagger-ui/index.html?configUrl=/v3/api-docs)
 
-This is based on a skeleton project from which to create new kotlin projects from.
-
-This project deploys to a dev environment at: https://hmpps-electronic-monitoring-data-platform-api-dev.hmpps.service.justice.gov.uk/
+This is a skeleton project from which to create new kotlin projects from.
 
 # Instructions
 
@@ -44,27 +42,3 @@ The `rename-project.bash` script takes a single argument - the name of the proje
 * The main package name (project name with hyphens removed)
 
 It then performs a search and replace and directory renames so the project is ready to be used.
-
-## Linting conventions
-This project uses ktlint linting, checked with the task `./gradlew check
-` when the branch is built by CircleCI.
-You can install a plugin to enforce this linting locally and avoid build errors: https://github.com/nbadal/ktlint-intellij-plugin/
-
-## To start the container:
-install docker
-run the command:
-docker compose up --build  
-
-## To run locally in an h2 database
-To run locally in an h2 database the project uses environment variables set in the .run/Local.run.xml file:
-
-`EM_DATABASE_CONNECTION`
-`EM_DATABASE_DRIVER`
-`EM_DATABASE_USER`
-`EM_DATABASE_PASSWORD`
-
-You also need to uncomment the h2 dependency in build.gradle.kts: `// implementation("com.h2database:h2:2.1.214")`
-
-When deploying this to the server the environment variables will be picked up from the dockerfile instead.
-
-
