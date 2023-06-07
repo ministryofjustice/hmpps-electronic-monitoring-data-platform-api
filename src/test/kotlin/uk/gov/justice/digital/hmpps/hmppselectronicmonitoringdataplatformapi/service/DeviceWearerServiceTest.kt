@@ -1,17 +1,10 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service
 
 import org.assertj.core.api.Assertions
-import org.hibernate.mapping.List
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.repository.DeviceWearerRepository
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.DeviceWearerService
 
 
 class DeviceWearerServiceTest{
