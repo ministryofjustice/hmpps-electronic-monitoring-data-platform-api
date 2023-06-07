@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.services.IDeviceWearerService
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.IDeviceWearerService
 
 @RequestMapping("device-wearers")
 @RestController
