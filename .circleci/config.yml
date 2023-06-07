@@ -71,7 +71,9 @@ workflows:
           name: deploy_dev
           env: "dev"
           jira_update: true
-          context: hmpps-common-vars
+          context:
+            - hmpps-common-vars
+            - hmpps-electronic-monitoring-data-platform-api-prod
           filters:
             branches:
               only:
