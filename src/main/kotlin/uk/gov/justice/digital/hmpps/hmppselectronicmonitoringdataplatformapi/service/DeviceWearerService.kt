@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.services
+package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

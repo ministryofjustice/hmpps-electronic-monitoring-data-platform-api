@@ -12,7 +12,7 @@ data class DeviceWearer(
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   val id: Int = 0,
-  val deviceWearerId: Int = 0,
+  val deviceWearerId: String = "0",
   val firstName: String = "",
   val lastName: String = "",
   val type: String = "",
