@@ -3,7 +3,7 @@
 
 generic-service:
   ingress:
-    host: hmpps-electronic-monitoring-data-platform-api-preprod.hmpps.service.justice.gov.uk
+    host: api.electronic-monitoring-dev.hmpps.service.justice.gov.uk
 
   env:
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.dev.json
