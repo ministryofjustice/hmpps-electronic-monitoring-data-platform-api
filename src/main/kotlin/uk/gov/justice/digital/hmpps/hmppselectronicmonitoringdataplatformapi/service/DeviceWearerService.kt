@@ -7,12 +7,23 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.rep
 
 interface IDeviceWearerService {
   fun getAllDeviceWearers(): List<DeviceWearer>
+  fun createDummyDeviceWearers(): List<DeviceWearer>
 }
 
 @Service
 class DeviceWearerService(@Autowired private val deviceWearerRepository: DeviceWearerRepository) :
   IDeviceWearerService {
   override fun getAllDeviceWearers(): List<DeviceWearer> {
+    return deviceWearerRepository!!.findAll().toList()
+  }
+
+  override fun createDummyDeviceWearers(): List<DeviceWearer> {
+    val deviceWearer1 = DeviceWearer(deviceWearerId = "abc123UID", firstName = "Billiam", lastName = "Doors", type = "Dummy")
+    deviceWearerRepository.save(deviceWearer1)
+
+    val deviceWearer2 = DeviceWearer(deviceWearerId = "UID456784", firstName = "John", lastName = "Smith", type = "Dummy")
+    deviceWearerRepository.save(deviceWearer2)
+
     return deviceWearerRepository!!.findAll().toList()
   }
 }

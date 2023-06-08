@@ -21,7 +21,7 @@ class DeviceWearerServiceTest{
   @Test
   fun `getAllDeviceWearersShouldReturnAListOfItemsWhenThereAreSomeDeviceWearers`() {
     val deviceWearerRepository = Mockito.mock(DeviceWearerRepository::class.java)
-    val expected =  listOf<DeviceWearer>(DeviceWearer(1, "1234", "John", "Smith", "Curfew"), DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"))
+    val expected = listOf<DeviceWearer>(DeviceWearer(1, "1234", "John", "Smith", "Curfew"), DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"))
     Mockito.`when`(deviceWearerRepository.findAll().toList()).thenReturn(expected)
     val deviceWearerService = DeviceWearerService(deviceWearerRepository)
     val actual = deviceWearerService.getAllDeviceWearers()
