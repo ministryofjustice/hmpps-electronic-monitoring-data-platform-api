@@ -42,3 +42,37 @@ The `rename-project.bash` script takes a single argument - the name of the proje
 * The main package name (project name with hyphens removed)
 
 It then performs a search and replace and directory renames so the project is ready to be used.
+
+## How to run app locally
+
+[//]: # ([//]: # for future references: )
+[//]: # (* Add .env file to the root of the project)
+
+[//]: # (* Put following var in .env :)
+
+[//]: # ()
+[//]: # (  POSTGRES_USER=postgres)
+
+[//]: # ()
+[//]: # (  POSTGRES_PASSWORD=root)
+
+[//]: # ()
+[//]: # (  POSTGRES_DB=demo_db)
+
+[//]: # ()
+[//]: # (  DATABASE_URL=jdbc:postgresql://db:5432/demo_db)
+
+[//]: # ()
+[//]: # ()
+[//]: # (* Add `spring.config.import=optional:file:.env[.properties]` to src/main/resources/application.properties)
+
+[//]: # (* Uncomment line 32 in Dockerfile &#40; #COPY --from=builder --chown=appuser:appgroup /app/.env /app)
+
+[//]: # (  &#41;)
+
+[//]: # (* Uncomment  lines 25 and 26 in docker.compose.yml file &#40;`db:)
+
+[//]: # (  container_name: db`&#41;)
+* Run docker compose up --build
+
+
