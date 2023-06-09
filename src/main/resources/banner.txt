@@ -13,5 +13,3 @@ _  _  __  _  _ ___ ___ ____ ___  ___ _  _  ___
  __  ___  ___
 |__| |__|  |
 |  | |    _|_
-                          
-Please change me by generating your own ASCII art and placing in banner.txt
