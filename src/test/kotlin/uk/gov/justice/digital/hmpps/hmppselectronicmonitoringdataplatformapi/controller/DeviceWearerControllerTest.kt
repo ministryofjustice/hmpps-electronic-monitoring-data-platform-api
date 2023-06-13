@@ -10,7 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.ser
 
 class DeviceWearerControllerTest {
   @Test
-  fun `getAllDeviceWearersShouldReturnAnEmptyListWhenThereAreNoDeviceWearers`() {
+  fun `getAllDeviceWearers ShouldReturn AnEmptyListWhenThereAreNoDeviceWearers`() {
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
     val genericlist: List<DeviceWearer> = listOf<DeviceWearer>()
     Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(genericlist)
@@ -23,7 +23,7 @@ class DeviceWearerControllerTest {
   }
 
   @Test
-  fun `getAllDeviceWearersShouldReturnAListOfItemsWhenThereAreSomeDeviceWearers`() {
+  fun `getAllDeviceWearers ShouldReturn AListOfItems WhenThereAreSomeDeviceWearers`() {
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
     val genericlist: List<DeviceWearer> = listOf<DeviceWearer>(DeviceWearer(1, "1234", "John", "Smith", "Curfew"), DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"))
     Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(genericlist)
@@ -31,6 +31,16 @@ class DeviceWearerControllerTest {
     val expected = ResponseEntity(genericlist, HttpStatus.OK)
 
     val result = DeviceWearerController(deviceWearerService).getAllDeviceWearers()
+
+    Assertions.assertThat(result).isEqualTo(expected)
+  }
+
+  @Test
+  fun `getDeviceWearerByID should return null when user does not exist`() {
+    val id = "12"
+    val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
+    val result = DeviceWearerController(deviceWearerService).getDeviceWearerByID(id)
+    val expected = ResponseEntity<DeviceWearer>(HttpStatus.INTERNAL_SERVER_ERROR)
 
     Assertions.assertThat(result).isEqualTo(expected)
   }

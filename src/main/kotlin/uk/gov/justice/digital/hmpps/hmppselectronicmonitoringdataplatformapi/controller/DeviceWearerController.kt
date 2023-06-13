@@ -28,4 +28,11 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
       return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
+
+  @GetMapping("/v1/{id}")
+  fun getDeviceWearerByID(@PathVariable("id") deviceWearerId: String): ResponseEntity<DeviceWearer>{
+
+    return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+
+  }
 }
