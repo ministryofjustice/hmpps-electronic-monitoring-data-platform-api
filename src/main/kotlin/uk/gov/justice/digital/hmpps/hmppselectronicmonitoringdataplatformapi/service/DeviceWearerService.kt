@@ -7,6 +7,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.rep
 
 interface IDeviceWearerService {
   fun getAllDeviceWearers(): List<DeviceWearer>
+  fun getDeviceWearerById(id: String): DeviceWearer?
   fun createDummyDeviceWearers(): List<DeviceWearer>
 }
 
@@ -15,6 +16,10 @@ class DeviceWearerService(@Autowired private val deviceWearerRepository: DeviceW
   IDeviceWearerService {
   override fun getAllDeviceWearers(): List<DeviceWearer> {
     return deviceWearerRepository!!.findAll().toList()
+  }
+
+  override fun getDeviceWearerById(id: String): DeviceWearer? {
+    return deviceWearerRepository!!.findByDeviceWearerId(id)
   }
 
   override fun createDummyDeviceWearers(): List<DeviceWearer> {
