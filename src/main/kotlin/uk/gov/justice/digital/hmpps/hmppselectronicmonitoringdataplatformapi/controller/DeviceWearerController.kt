@@ -30,9 +30,10 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
   }
 
   @GetMapping("/v1/{id}")
-  fun getDeviceWearerByID(@PathVariable("id") deviceWearerId: String): ResponseEntity<DeviceWearer>{
-
-    return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
-
+  fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<DeviceWearer>{
+    val deviceWearers = deviceWearerService.getAllDeviceWearers()
+    val result = deviceWearers.firstOrNull { it.deviceWearerId == deviceWearerId }
+    return ResponseEntity(result, HttpStatus.OK)
+//    return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
   }
 }

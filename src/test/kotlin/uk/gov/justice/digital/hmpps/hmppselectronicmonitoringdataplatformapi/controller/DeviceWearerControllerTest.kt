@@ -36,12 +36,30 @@ class DeviceWearerControllerTest {
   }
 
   @Test
-  fun `getDeviceWearerByID should return null when user does not exist`() {
+  fun `getDeviceWearerByID should return null when device wearer does not exist`() {
     val id = "12"
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
-    val result = DeviceWearerController(deviceWearerService).getDeviceWearerByID(id)
-    val expected = ResponseEntity<DeviceWearer>(HttpStatus.INTERNAL_SERVER_ERROR)
+    val response = null
+//    Mockito.`when`(deviceWearerService.getDeviceWearerById()).thenReturn(response)
+    val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
+//    val expected = ResponseEntity<DeviceWearer>(HttpStatus.INTERNAL_SERVER_ERROR)
+    var expected = ResponseEntity<DeviceWearer>(null, HttpStatus.OK)
 
     Assertions.assertThat(result).isEqualTo(expected)
   }
+
+//  @Test
+//  fun `getDeviceWearerByID should return an item when there are some device wearers`() {
+//    val id = "456an"
+//    val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
+//    val response = DeviceWearer(1, "456an", "John", "Smith", "Curfew")
+//    Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
+//    val expected = ResponseEntity(response, HttpStatus.OK)
+//
+//    val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
+//
+//    Assertions.assertThat(result).isEqualTo(expected)
+//
+//  }
+
 }
