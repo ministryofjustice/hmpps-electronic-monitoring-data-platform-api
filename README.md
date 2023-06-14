@@ -4,75 +4,41 @@
 [![Docker Repository on Quay](https://quay.io/repository/hmpps/hmpps-electronic-monitoring-data-platform-api/status "Docker Repository on Quay")](https://quay.io/repository/hmpps/hmpps-electronic-monitoring-data-platform-api)
 [![API docs](https://img.shields.io/badge/API_docs_-view-85EA2D.svg?logo=swagger)](https://hmpps-electronic-monitoring-data-platform-api-dev.hmpps.service.justice.gov.uk/webjars/swagger-ui/index.html?configUrl=/v3/api-docs)
 
-This is a skeleton project from which to create new kotlin projects from.
+This is the API for the Electronic Monitoring project application.
+- Currently in Discovery/Alpha phase
+- Based off [hmpps-template-kotlin](https://github.com/ministryofjustice/hmpps-template-kotlin) - please see that project for original and setup instructions
 
-# Instructions
 
-If this is a HMPPS project then the project will be created as part of bootstrapping - 
-see https://github.com/ministryofjustice/dps-project-bootstrap.
+## Before you commit
+Our source control policy is to work via trunk-based development and pair programming, with frequent commits to main.
 
-## Creating a CloudPlatform namespace
+Aim to commit in small, regular chunks - a `red` --> `green` --> `refactor` cycle is a good increment.
 
-When deploying to a new namespace, you may wish to use this template kotlin project namespace as the basis for your new namespace:
+If you are **not** pair programming, it's recommended to commit to a short-lived branch and merge in by PR.
+- All linting must pass
+- All code must have tests
+- All tests must pass
 
-<https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-electronic-monitoring-data-platform-api>
+## Resources
+### Cloud resources
+Resources for this app are defined in two other MoJ repositories:
+- The HMPPS Cloud Platform namespace folders for this project([dev](https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-electronic-monitoring-dev), [preprod](https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-electronic-monitoring-preprod), & [prod](https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-electronic-monitoring-prod))
+- [DPS Project Bootstrap /`projects.json`.](https://github.com/ministryofjustice/dps-project-bootstrap/blob/main/projects.json)
+### Local resources
+Locally this API runs using Docker containers. These resources are defined (for local deployment only) in [`Docker-compose.yml`](https://github.com/ministryofjustice/hmpps-electronic-monitoring-data-platform-api/blob/main/docker-compose.yml).
+- A Kotlin API container (the main project)
+- A Postgres DB container
 
-Copy this folder, update all the existing namespace references, and submit a PR to the CloudPlatform team. Further instructions from the CloudPlatform team can be found here: <https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide>
+### Environment variables and secrets
+Cloud variables are defined in [`helm_deploy`](https://github.com/ministryofjustice/hmpps-electronic-monitoring-data-platform-api/tree/main/helm_deploy), as well as the above Cloud Platform and DPS Bootstrap repos
 
-## Renaming from Hmpps Electronic Monitoring Data Platform Api - github Actions
 
-Once the new repository is deployed. Navigate to the repository in github, and select the `Actions` tab.
-Click the link to `Enable Actions on this repository`.
-
-Find the Action workflow named: `rename-project-create-pr` and click `Run workflow`.  This workflow will
-execute the `rename-project.bash` and create Pull Request for you to review.  Review the PR and merge.
-
-Note: ideally this workflow would run automatically however due to a recent change github Actions are not
-enabled by default on newly created repos. There is no way to enable Actions other then to click the button in the UI.
-If this situation changes we will update this project so that the workflow is triggered during the bootstrap project.
-Further reading: <https://github.community/t/workflow-isnt-enabled-in-repos-generated-from-template/136421>
-
-## Manually renaming from Hmpps Electronic Monitoring Data Platform Api
-
-Run the `rename-project.bash` and create a PR.
-
-The `rename-project.bash` script takes a single argument - the name of the project and calculates from it:
-* The main class name (project name converted to pascal case) 
-* The project description (class name with spaces between the words)
-* The main package name (project name with hyphens removed)
-
-It then performs a search and replace and directory renames so the project is ready to be used.
-
-## How to run app locally
-
-[//]: # ([//]: # for future references: )
-[//]: # (* Add .env file to the root of the project)
-
-[//]: # (* Put following var in .env :)
-
-[//]: # ()
-[//]: # (  POSTGRES_USER=postgres)
-
-[//]: # ()
-[//]: # (  POSTGRES_PASSWORD=root)
-
-[//]: # ()
-[//]: # (  POSTGRES_DB=demo_db)
-
-[//]: # ()
-[//]: # (  DATABASE_URL=jdbc:postgresql://db:5432/demo_db)
-
-[//]: # ()
-[//]: # ()
-[//]: # (* Add `spring.config.import=optional:file:.env[.properties]` to src/main/resources/application.properties)
-
-[//]: # (* Uncomment line 32 in Dockerfile &#40; #COPY --from=builder --chown=appuser:appgroup /app/.env /app)
-
-[//]: # (  &#41;)
-
-[//]: # (* Uncomment  lines 25 and 26 in docker.compose.yml file &#40;`db:)
-
-[//]: # (  container_name: db`&#41;)
-* Run docker compose up --build
+## Running & deploying the app
+### How to run app locally
+- Run docker compose up --build
+- [TODO: add detail on how to run & troubleshoot gradle build]
+- [TODO: add detail on running in debug mode]
+### Deploying the app
+The app is integrated with CircleCI for ci/cd build processes. [`.circleci/config.yml`](https://github.com/ministryofjustice/hmpps-electronic-monitoring-data-platform-api/blob/main/.circleci/config.yml) defines the build and deploy workflows in the project.
 
 
