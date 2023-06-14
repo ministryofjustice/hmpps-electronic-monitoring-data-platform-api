@@ -7,10 +7,10 @@ orbs:
 parameters:
   alerts-slack-channel:
     type: string
-    default: dps_alerts_security
+    default: hmmps-electronic-monitoring
   releases-slack-channel:
     type: string
-    default: dps-releases
+    default: hmmps-electronic-monitoring
 executors:
  machine_executor_amd64:
    machine:
