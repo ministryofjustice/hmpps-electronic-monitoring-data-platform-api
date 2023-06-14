@@ -91,6 +91,8 @@ workflows:
           env: "preprod"
           jira_update: true
           jira_env_type: staging
+          slack_notification: true
+          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
           context:
             - hmpps-common-vars
             - hmpps-electronic-monitoring-data-platform-api-preprod
