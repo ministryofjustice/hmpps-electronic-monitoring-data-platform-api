@@ -1,9 +1,8 @@
 
 
-package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.integration.controller
+package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.integration
 
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.integration.IntegrationTestBase
 
 class HelloWorldTest : IntegrationTestBase() {
   @Test

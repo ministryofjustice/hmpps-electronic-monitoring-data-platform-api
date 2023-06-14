@@ -36,30 +36,52 @@ class DeviceWearerControllerTest {
   }
 
   @Test
-  fun `getDeviceWearerByID should return null when device wearer does not exist`() {
-    val id = "12"
+  fun `getDeviceWearerByID should return bad request error when device wearer does not exist`() {
+    val id = "783sd"
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
-    val response = null
-//    Mockito.`when`(deviceWearerService.getDeviceWearerById()).thenReturn(response)
-    val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
-//    val expected = ResponseEntity<DeviceWearer>(HttpStatus.INTERNAL_SERVER_ERROR)
-    var expected = ResponseEntity<DeviceWearer>(null, HttpStatus.OK)
 
+    val response = null
+    Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
+    val expected:ResponseEntity<DeviceWearer> = ResponseEntity(HttpStatus.BAD_REQUEST)
+
+    val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
     Assertions.assertThat(result).isEqualTo(expected)
   }
 
+  @Test
+  fun `getDeviceWearerByID should return an item when there are some device wearers`() {
+    val id = "456an"
+    val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
+
+    val response = DeviceWearer(1, "456an", "John", "Smith", "Curfew")
+    Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
+    val expected = ResponseEntity(response, HttpStatus.OK)
+
+    val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
+    Assertions.assertThat(result).isEqualTo(expected)
+
+  }
+
 //  @Test
-//  fun `getDeviceWearerByID should return an item when there are some device wearers`() {
-//    val id = "456an"
+//  fun `getDeviceWearerByID should return internal server error when there is an internal server issue`() {
+//    val id = "783sd"
 //    val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
-//    val response = DeviceWearer(1, "456an", "John", "Smith", "Curfew")
-//    Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
-//    val expected = ResponseEntity(response, HttpStatus.OK)
+//
+////    val response = null
+////    val exception = assertThrows(ArithmeticException::class.java) {
+////      val blackHole = 1 / 0
+////    }
+//    Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenThrow(Exception())
+//    val expected:ResponseEntity<DeviceWearer> = ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
 //
 //    val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
-//
 //    Assertions.assertThat(result).isEqualTo(expected)
 //
+//
+////    val exception = assertThrows(ArithmeticException::class.java) {
+////      val blackHole = 1 / 0
+////    }
+////    assertEquals("/ by zero", exception.message)
 //  }
 
 }
