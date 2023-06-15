@@ -6,8 +6,7 @@ import org.mockito.Mockito
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.repository.DeviceWearerRepository
 
-
-class DeviceWearerServiceTest{
+class DeviceWearerServiceTest {
   @Test
   fun `getAllDeviceWearers should return an empty list when there is no device wearer`() {
     val deviceWearerRepository = Mockito.mock(DeviceWearerRepository::class.java)
