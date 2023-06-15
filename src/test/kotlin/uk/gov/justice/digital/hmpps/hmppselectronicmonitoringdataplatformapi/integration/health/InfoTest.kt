@@ -2,11 +2,11 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.in
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.integration.IntegrationTestBaseCompatibility
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class InfoTest : IntegrationTestBase() {
+class InfoTest : IntegrationTestBaseCompatibility() {
 
   @Test
   fun `Info page is accessible`() {
