@@ -40,6 +40,10 @@ dependencies {
   testImplementation("org.testcontainers:postgresql:1.18.1")
   api("me.paulschwarz:spring-dotenv:2.5.3")
   developmentOnly("org.springframework.boot:spring-boot-devtools:3.1.0")
+  runtimeOnly("org.flywaydb:flyway-core:9.19.4")
+
+  testImplementation("org.flywaydb:flyway-core:9.19.4")
+  testImplementation("org.testcontainers:localstack:1.18.3")
 }
 
 java {
