@@ -25,7 +25,10 @@ class DeviceWearerControllerTest {
   @Test
   fun `getAllDeviceWearers ShouldReturn AListOfItems WhenThereAreSomeDeviceWearers`() {
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
-    val genericlist: List<DeviceWearer> = listOf<DeviceWearer>(DeviceWearer(1, "1234", "John", "Smith", "Curfew"), DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"))
+    val genericlist: List<DeviceWearer> = listOf<DeviceWearer>(
+      DeviceWearer(1, "1234", "John", "Smith", "Curfew"),
+      DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"),
+    )
     Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(genericlist)
 
     val expected = ResponseEntity(genericlist, HttpStatus.OK)
@@ -42,7 +45,7 @@ class DeviceWearerControllerTest {
 
     val response = null
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
-    val expected:ResponseEntity<DeviceWearer> = ResponseEntity(HttpStatus.BAD_REQUEST)
+    val expected: ResponseEntity<DeviceWearer> = ResponseEntity(HttpStatus.BAD_REQUEST)
 
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
     Assertions.assertThat(result).isEqualTo(expected)
@@ -59,29 +62,17 @@ class DeviceWearerControllerTest {
 
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
     Assertions.assertThat(result).isEqualTo(expected)
-
   }
 
-//  @Test
-//  fun `getDeviceWearerByID should return internal server error when there is an internal server issue`() {
-//    val id = "783sd"
-//    val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
-//
-////    val response = null
-////    val exception = assertThrows(ArithmeticException::class.java) {
-////      val blackHole = 1 / 0
-////    }
-//    Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenThrow(Exception())
-//    val expected:ResponseEntity<DeviceWearer> = ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
-//
-//    val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
-//    Assertions.assertThat(result).isEqualTo(expected)
-//
-//
-////    val exception = assertThrows(ArithmeticException::class.java) {
-////      val blackHole = 1 / 0
-////    }
-////    assertEquals("/ by zero", exception.message)
-//  }
+  @Test
+  fun `getDeviceWearerByID should return internal server error when there is an internal server issue`() {
+    val id = "783sd"
+    val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
 
+    Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenThrow(RuntimeException("Exception"))
+    val expected: ResponseEntity<DeviceWearer> = ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+
+    val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
+    Assertions.assertThat(result).isEqualTo(expected)
+  }
 }
