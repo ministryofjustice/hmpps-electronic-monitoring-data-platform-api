@@ -30,16 +30,16 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
   }
 
   @GetMapping("/v1/id/{id}")
-  fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<DeviceWearer> {
+  fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<Any> {
     try {
       val result = deviceWearerService.getDeviceWearerById(deviceWearerId)
       if (result != null) {
         return ResponseEntity(result, HttpStatus.OK)
       } else {
-        return ResponseEntity(HttpStatus.BAD_REQUEST)
+        return ResponseEntity("No data found for that device wearer",HttpStatus.BAD_REQUEST)
       }
     } catch (e: Exception) {
-      return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+      return ResponseEntity("Something went wrong in our side",HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 }
