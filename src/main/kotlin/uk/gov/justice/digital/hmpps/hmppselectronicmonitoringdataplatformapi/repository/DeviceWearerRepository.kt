@@ -7,5 +7,4 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 @Repository
 interface DeviceWearerRepository : JpaRepository<DeviceWearer, Int> {
   fun findByDeviceWearerId(id: String): DeviceWearer?
-
 }

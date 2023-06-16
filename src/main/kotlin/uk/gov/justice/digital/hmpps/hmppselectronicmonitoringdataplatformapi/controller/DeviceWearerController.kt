@@ -13,24 +13,24 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
 
   @GetMapping("/v1")
   fun getAllDeviceWearers(): ResponseEntity<List<DeviceWearer>> {
-    try {
-      return ResponseEntity(deviceWearerService.getAllDeviceWearers(), HttpStatus.OK)
+    return try {
+      ResponseEntity(deviceWearerService.getAllDeviceWearers(), HttpStatus.OK)
     } catch (e: Exception) {
-      return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+      ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
   @PostMapping("/v1")
   fun createDummyDeviceWearers(): ResponseEntity<List<DeviceWearer>> {
-    try {
-      return ResponseEntity(deviceWearerService.createDummyDeviceWearers(), HttpStatus.OK)
+    return try {
+      ResponseEntity(deviceWearerService.createDummyDeviceWearers(), HttpStatus.OK)
     } catch (e: Exception) {
-      return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+      ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
-  @GetMapping("/v1/{id}")
-  fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<DeviceWearer>{
+  @GetMapping("/v1/id/{id}")
+  fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<DeviceWearer> {
     try {
       val result = deviceWearerService.getDeviceWearerById(deviceWearerId)
       if (result != null) {
@@ -41,6 +41,5 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
     } catch (e: Exception) {
       return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
     }
-
   }
 }

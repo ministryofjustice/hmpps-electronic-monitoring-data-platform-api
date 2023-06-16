@@ -6,8 +6,7 @@ import org.mockito.Mockito
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.repository.DeviceWearerRepository
 
-
-class DeviceWearerServiceTest{
+class DeviceWearerServiceTest {
   @Test
   fun `getAllDeviceWearers should return an empty list when there is no device wearer`() {
     val deviceWearerRepository = Mockito.mock(DeviceWearerRepository::class.java)
@@ -21,7 +20,10 @@ class DeviceWearerServiceTest{
   @Test
   fun `getAllDeviceWearers should return a list of items when there are some device wearers`() {
     val deviceWearerRepository = Mockito.mock(DeviceWearerRepository::class.java)
-    val expected = listOf<DeviceWearer>(DeviceWearer(1, "1234", "John", "Smith", "Curfew"), DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"))
+    val expected = listOf<DeviceWearer>(
+      DeviceWearer(1, "1234", "John", "Smith", "Curfew"),
+      DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"),
+    )
     Mockito.`when`(deviceWearerRepository.findAll().toList()).thenReturn(expected)
     val deviceWearerService = DeviceWearerService(deviceWearerRepository)
     val actual = deviceWearerService.getAllDeviceWearers()
