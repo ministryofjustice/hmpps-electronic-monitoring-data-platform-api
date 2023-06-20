@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.BaseResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.DeviceWearerResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.DeviceWearerService
 
 class DeviceWearerControllerTest {
@@ -51,7 +52,6 @@ class DeviceWearerControllerTest {
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
     Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-
   }
 
   @Test
@@ -61,12 +61,12 @@ class DeviceWearerControllerTest {
 
     val response = DeviceWearer(1, "456an", "John", "Smith", "Curfew")
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
-    val expected : ResponseEntity<DeviceWearer> = ResponseEntity(response, HttpStatus.OK)
+    val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(response), HttpStatus.OK)
 
-    val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
-//    Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
+    val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id) as ResponseEntity<DeviceWearerResponse>
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-//    Assertions.assertThat(result.body).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result.body.deviceWearer).isEqualTo(expected.body.deviceWearer)
+    Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
   }
 
   @Test
