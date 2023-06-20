@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.BaseResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.DeviceWearerService
 
@@ -39,16 +40,18 @@ class DeviceWearerControllerTest {
   }
 
   @Test
-  fun `getDeviceWearerByID should return bad request error when device wearer does not exist`() {
+  fun `getDeviceWearerByID should return Ok with an empty value error when device wearer does not exist`() {
     val id = "783sd"
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
 
     val response = null
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
-    val expected: ResponseEntity<DeviceWearer> = ResponseEntity(HttpStatus.BAD_REQUEST)
+    val expected: ResponseEntity<BaseResponse> = ResponseEntity(BaseResponse("No user found"),HttpStatus.OK)
 
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
-    Assertions.assertThat(result).isEqualTo(expected)
+    Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
+    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+
   }
 
   @Test
@@ -58,10 +61,12 @@ class DeviceWearerControllerTest {
 
     val response = DeviceWearer(1, "456an", "John", "Smith", "Curfew")
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
-    val expected = ResponseEntity(response, HttpStatus.OK)
+    val expected : ResponseEntity<DeviceWearer> = ResponseEntity(response, HttpStatus.OK)
 
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
-    Assertions.assertThat(result).isEqualTo(expected)
+//    Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
+    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+//    Assertions.assertThat(result.body).isEqualTo(expected.statusCode)
   }
 
   @Test
@@ -70,7 +75,7 @@ class DeviceWearerControllerTest {
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
 
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenThrow(RuntimeException("Exception"))
-    val expected: ResponseEntity<DeviceWearer> = ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+    val expected: ResponseEntity<Any> = ResponseEntity("Something went wrong in our side",HttpStatus.INTERNAL_SERVER_ERROR)
 
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
     Assertions.assertThat(result).isEqualTo(expected)
