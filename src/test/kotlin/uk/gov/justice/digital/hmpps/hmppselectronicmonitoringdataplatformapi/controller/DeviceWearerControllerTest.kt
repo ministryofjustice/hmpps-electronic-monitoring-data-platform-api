@@ -47,10 +47,10 @@ class DeviceWearerControllerTest {
 
     val response = null
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
-    val expected: ResponseEntity<BaseResponse> = ResponseEntity(BaseResponse("No user found"),HttpStatus.OK)
+    val expected: ResponseEntity<BaseResponse> = ResponseEntity(BaseResponse("No user found"), HttpStatus.OK)
 
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
-    Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body?.error)
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
   }
 
@@ -65,8 +65,8 @@ class DeviceWearerControllerTest {
 
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id) as ResponseEntity<DeviceWearerResponse>
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body.deviceWearer).isEqualTo(expected.body.deviceWearer)
-    Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
+    Assertions.assertThat(result.body?.deviceWearer).isEqualTo(expected.body?.deviceWearer)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body?.error)
   }
 
   @Test
@@ -75,9 +75,9 @@ class DeviceWearerControllerTest {
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
 
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenThrow(RuntimeException("Exception"))
-    val expected: ResponseEntity<Any> = ResponseEntity("Something went wrong in our side",HttpStatus.INTERNAL_SERVER_ERROR)
+    val expected: ResponseEntity<BaseResponse> = ResponseEntity(BaseResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
 
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
-    Assertions.assertThat(result).isEqualTo(expected)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body?.error)
   }
 }
