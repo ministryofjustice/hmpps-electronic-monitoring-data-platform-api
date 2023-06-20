@@ -15,29 +15,22 @@ import java.time.Duration
 @ActiveProfiles("test")
 class IntegrationTestBase {
 
-   @Autowired
-   private val jdbcTemplate: JdbcTemplate? = null
+  @Autowired private val jdbcTemplate: JdbcTemplate? = null
 
-   @Transactional
-   protected fun cleanDB() {
-     val tablesToTruncate = listOf("DeviceWearer").joinToString()
-     val sql = """
-            TRUNCATE TABLE $tablesToTruncate CASCADE
-        """.trimIndent()
-     jdbcTemplate?.execute(sql)
-   }
+  @Transactional
+  protected fun cleanDB() {
+    val tablesToTruncate = listOf("DeviceWearer").joinToString()
+    val sql = "TRUNCATE TABLE $tablesToTruncate CASCADE"
+    jdbcTemplate?.execute(sql)
+  }
 
-   @Autowired
-   lateinit var webTestClient: WebTestClient
+  @Autowired lateinit var webTestClient: WebTestClient
 
-   @BeforeEach
-   fun setUp() {
-     webTestClient = webTestClient
-       .mutate()
-       .responseTimeout(Duration.ofMillis(30000))
-       .build()
-   }
- }
+  @BeforeEach
+  fun setUp() {
+    webTestClient = webTestClient.mutate().responseTimeout(Duration.ofMillis(30000)).build()
+  }
+}
 
 //  @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 //  @Autowired
@@ -95,7 +88,7 @@ class IntegrationTestBase {
 //      registry.add("spring.datasource.username", container::getUsername)
 //    }
 //  }
-//}
+// }
 
 // fun postgres(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() -> Unit) =
 //  PostgreSQLContainer<Nothing>(DockerImageName.parse(imageName)).apply(opts)
