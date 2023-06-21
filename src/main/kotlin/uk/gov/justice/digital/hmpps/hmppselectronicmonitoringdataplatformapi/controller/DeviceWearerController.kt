@@ -40,11 +40,11 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
     try {
       val result = deviceWearerService.getDeviceWearerById(deviceWearerId)
       if (result != null) {
-        return ResponseEntity(DeviceWearerResponse(result),HttpStatus.OK)
+        return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
       }
-      return ResponseEntity(BaseResponse("No user found"),HttpStatus.OK)
+      return ResponseEntity(BaseResponse("No user found"), HttpStatus.OK)
     } catch (e: Exception) {
-      return ResponseEntity(BaseResponse("Something went wrong in our side"),HttpStatus.INTERNAL_SERVER_ERROR)
+      return ResponseEntity(BaseResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 }
