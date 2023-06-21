@@ -23,7 +23,7 @@ dependencies {
   implementation("jakarta.persistence:jakarta.persistence-api:3.1.0")
   implementation("com.google.code.gson:gson:2.8.9")
   implementation("org.springframework.boot:spring-boot-starter-hateoas:3.1.0")
-  implementation("org.springframework.boot:spring-boot-starter-web:3.1.0")
+  // implementation("org.springframework.boot:spring-boot-starter-web:3.1.0")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
