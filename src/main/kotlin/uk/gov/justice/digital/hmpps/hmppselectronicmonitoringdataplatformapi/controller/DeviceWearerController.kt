@@ -12,6 +12,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.DeviceWearerResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.IDeviceWearerService
+import java.util.*
 
 @RequestMapping("device-wearers")
 @RestController
@@ -38,13 +39,34 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
   @GetMapping("/v1/id/{id}")
   fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<BaseResponse> {
     try {
+      var id = UUID.fromString(deviceWearerId);
+      //  return ResponseEntity(DeviceWearerResponse(deviceWearerService.getDeviceWearerById(deviceWearerId)), HttpStatus.OK)
       val result = deviceWearerService.getDeviceWearerById(deviceWearerId)
       if (result != null) {
+
         return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
       }
+
       return ResponseEntity(BaseResponse("No user found"), HttpStatus.OK)
+
+
     } catch (e: Exception) {
-      return ResponseEntity(BaseResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
+      when (e) {
+        is IllegalArgumentException -> {
+          return ResponseEntity(BaseResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
+        }
+
+        else -> {
+          return ResponseEntity(BaseResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+      }
     }
   }
 }
+
+
+//   catch (IllegalArgumentException exception){
+//    //handle the case where string is not valid UUID
+//     ResponseEntity(HttpStatus.BAD_REQUEST) //just guessing
+
+

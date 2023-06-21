@@ -9,6 +9,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.DeviceWearerResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.DeviceWearerService
+import java.util.*
 
 class DeviceWearerControllerTest {
   @Test
@@ -42,7 +43,7 @@ class DeviceWearerControllerTest {
 
   @Test
   fun `getDeviceWearerByID should return Ok with an empty value error when device wearer does not exist`() {
-    val id = "783sd"
+    val id: String = UUID.randomUUID().toString()
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
 
     val response = null
@@ -56,10 +57,10 @@ class DeviceWearerControllerTest {
 
   @Test
   fun `getDeviceWearerByID should return an item when there are some device wearers`() {
-    val id = "456an"
+    val id: String = UUID.randomUUID().toString()
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
 
-    val response = DeviceWearer(1, "456an", "John", "Smith", "Curfew")
+    val response = DeviceWearer(1, id, "John", "Smith", "Curfew")
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(response), HttpStatus.OK)
 
@@ -72,7 +73,7 @@ class DeviceWearerControllerTest {
 
   @Test
   fun `getDeviceWearerByID should return internal server error when there is an internal server issue`() {
-    val id = "783sd"
+    val id: String = UUID.randomUUID().toString()
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
 
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenThrow(RuntimeException("Exception"))
@@ -81,5 +82,22 @@ class DeviceWearerControllerTest {
 
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body?.error)
+  }
+
+  @Test
+  fun `getDeviceWearerByID should return bad request when it does not receive a valid id`() {
+    val id = "456an"
+    val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
+
+    val response = DeviceWearer(1, "456an", "John", "Smith", "Curfew")
+    Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
+    val expected: ResponseEntity<BaseResponse> = ResponseEntity(BaseResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
+
+
+    val result =
+      DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
+    Assertions.assertThat(result?.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result?.body?.error).isEqualTo(expected.body?.error)
+
   }
 }
