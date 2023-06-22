@@ -34,7 +34,12 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
       return ResponseEntity(BaseResponse("No search string provided"), HttpStatus.BAD_REQUEST)
     }
     val deviceWearers: List<DeviceWearer> = deviceWearerService.getAllDeviceWearers()
-    val matchingDeviceWearers = deviceWearers.filter { it.firstName == queryString }
+    val matchingDeviceWearers = deviceWearers.filter {
+      it.firstName.contains(queryString, ignoreCase = true) ||
+        it.lastName.contains(queryString, ignoreCase = true) ||
+        it.type.contains(queryString, ignoreCase = true) ||
+        it.deviceWearerId.contains(queryString, ignoreCase = true)
+    }
     if (matchingDeviceWearers.isEmpty()) {
       return ResponseEntity(BaseResponse("No matching users found"), HttpStatus.OK)
     }
