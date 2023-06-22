@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.BaseResponse
@@ -28,13 +28,12 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
     }
   }
 
-  @PostMapping("/v1")
-  fun createDummyDeviceWearers(): ResponseEntity<List<DeviceWearer>> {
-    return try {
-      ResponseEntity(deviceWearerService.createDummyDeviceWearers(), HttpStatus.OK)
-    } catch (e: Exception) {
-      ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+  @GetMapping("/v1/search")
+  fun searchDeviceWearers(@RequestParam("search") queryString: String?): ResponseEntity<BaseResponse> {
+    if (queryString.isNullOrBlank()) {
+      return ResponseEntity(BaseResponse("No search string provided"), HttpStatus.BAD_REQUEST)
     }
+    return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
   }
 
   @GetMapping("/v1/id/{id}")
