@@ -93,11 +93,9 @@ class DeviceWearerControllerTest {
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
     val expected: ResponseEntity<BaseResponse> = ResponseEntity(BaseResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
 
-
     val result =
       DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
     Assertions.assertThat(result?.statusCode).isEqualTo(expected.statusCode)
     Assertions.assertThat(result?.body?.error).isEqualTo(expected.body?.error)
-
   }
 }
