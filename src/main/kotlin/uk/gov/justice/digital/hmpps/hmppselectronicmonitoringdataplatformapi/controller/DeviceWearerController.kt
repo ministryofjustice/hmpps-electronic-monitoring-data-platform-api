@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.BaseResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.DeviceWearerResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.IDeviceWearerService
@@ -20,11 +19,11 @@ import java.util.*
 class DeviceWearerController(@Autowired private val deviceWearerService: IDeviceWearerService) {
 
   @GetMapping("/v1")
-  fun getAllDeviceWearers(): ResponseEntity<BaseResponse> {
+  fun getAllDeviceWearers(): ResponseEntity<DeviceWearerResponse> {
     try {
       val result: List<DeviceWearer> = deviceWearerService.getAllDeviceWearers()
       if (result.isEmpty()) {
-        return ResponseEntity(BaseResponse("No users found"), HttpStatus.OK)
+        return ResponseEntity(DeviceWearerResponse("No users found"), HttpStatus.OK)
       }
       return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
     } catch (e: Exception) {
@@ -33,14 +32,14 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
   }
 
   @GetMapping("/v1/search")
-  fun searchDeviceWearers(@RequestParam("search") queryString: String?): ResponseEntity<BaseResponse> {
+  fun searchDeviceWearers(@RequestParam("search") queryString: String?): ResponseEntity<DeviceWearerResponse> {
     try {
       if (queryString.isNullOrBlank()) {
-        return ResponseEntity(BaseResponse("No search string provided"), HttpStatus.BAD_REQUEST)
+        return ResponseEntity(DeviceWearerResponse("No search string provided"), HttpStatus.BAD_REQUEST)
       }
       val matchingDeviceWearers = filterDeviceWearers(queryString)
       if (matchingDeviceWearers.isEmpty()) {
-        return ResponseEntity(BaseResponse("No matching users found"), HttpStatus.OK)
+        return ResponseEntity(DeviceWearerResponse("No matching users found"), HttpStatus.OK)
       }
       return ResponseEntity(DeviceWearerResponse(matchingDeviceWearers), HttpStatus.OK)
     } catch (e: Exception) {
@@ -71,16 +70,16 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
 //  }
 
   @GetMapping("/v1/id/{id}")
-  fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<BaseResponse> {
+  fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<DeviceWearerResponse> {
     try {
       if (!StaticHelpers().ValidateUUID(deviceWearerId)) {
-        return ResponseEntity(BaseResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
+        return ResponseEntity(DeviceWearerResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
       }
       val result = deviceWearerService.getDeviceWearerById(deviceWearerId)
-        ?: return ResponseEntity(BaseResponse("No user found"), HttpStatus.OK)
+        ?: return ResponseEntity(DeviceWearerResponse("No user found"), HttpStatus.OK)
       return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
     } catch (e: Exception) {
-      return ResponseEntity(BaseResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
+      return ResponseEntity(DeviceWearerResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 }
