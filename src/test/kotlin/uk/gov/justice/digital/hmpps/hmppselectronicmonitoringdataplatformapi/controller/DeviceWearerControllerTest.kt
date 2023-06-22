@@ -97,4 +97,14 @@ class DeviceWearerControllerTest {
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
     Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
   }
+
+  @Test
+  fun `searchDeviceWearers should return a bad request error if no query string is provided`() {
+    val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
+    val expected: ResponseEntity<BaseResponse> = ResponseEntity(BaseResponse("No search string provided"), HttpStatus.BAD_REQUEST)
+
+    val result = DeviceWearerController(deviceWearerService).searchDeviceWearers("")
+    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
+  }
 }
