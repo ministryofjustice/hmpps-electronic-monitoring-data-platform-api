@@ -38,7 +38,7 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
     if (matchingDeviceWearers.isEmpty()) {
       return ResponseEntity(BaseResponse("No matching users found"), HttpStatus.OK)
     }
-    return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+    return ResponseEntity(DeviceWearerResponse(matchingDeviceWearers), HttpStatus.OK)
   }
 
   @GetMapping("/v1/id/{id}")
