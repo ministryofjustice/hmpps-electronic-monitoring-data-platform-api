@@ -5,10 +5,14 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 
 class DeviceWearerResponse : BaseResponse {
   val deviceWearers: List<DeviceWearer>
-  constructor(deviceWearerList: List<DeviceWearer>) : super() {
+  constructor(deviceWearerList: List<DeviceWearer>, error: String = "") : super(error) {
     this.deviceWearers = deviceWearerList
   }
-  constructor(deviceWearer: DeviceWearer) : super() {
+  constructor(deviceWearer: DeviceWearer, error: String = "") : super(error) {
     this.deviceWearers = listOf<DeviceWearer>(deviceWearer)
+  }
+  constructor(error: String) : super(error) {
+    this.deviceWearers = listOf<DeviceWearer>()
+    this.error = error
   }
 }
