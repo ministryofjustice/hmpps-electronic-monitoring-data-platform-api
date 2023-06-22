@@ -2,13 +2,12 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.he
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
-import java.util.*
 
 class StaticHelpersTest {
 
   @Test
   fun `StaticHelper ValidateUUID returns true when the input is a valid UUID`() {
-    val id = UUID.randomUUID().toString()
+    val id = "cf124f91-a5f2-41bc-840c-5a3e7fcca0ac"
     val result = StaticHelpers().ValidateUUID(id)
     Assertions.assertThat(result).isEqualTo(true)
   }
