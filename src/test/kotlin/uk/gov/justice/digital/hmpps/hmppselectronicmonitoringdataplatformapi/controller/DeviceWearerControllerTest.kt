@@ -118,7 +118,11 @@ class DeviceWearerControllerTest {
     // val queryString = "I really quite enjoy cheesecake."
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
     val expected: ResponseEntity<BaseResponse> = ResponseEntity(BaseResponse("No matching users found"), HttpStatus.OK)
-
+    val allUsers: List<DeviceWearer> = listOf<DeviceWearer>(
+      DeviceWearer(1, "1234", "John", "Smith", "Curfew"),
+      DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"),
+    )
+    Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(allUsers)
     val result = DeviceWearerController(deviceWearerService).searchDeviceWearers(queryString)
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
@@ -149,13 +153,20 @@ class DeviceWearerControllerTest {
     @JvmStatic
     fun matchingSearches() = Stream.of(
       Arguments.of("John"),
-      // Arguments.of("Smith"),
+      Arguments.of("ohn"),
+      Arguments.of("john"),
+      Arguments.of("Smith"),
+      Arguments.of("smith"),
+      Arguments.of("Curfew"),
+      Arguments.of("few"),
+      Arguments.of("34"),
+      Arguments.of("1234"),
     )
 
     @JvmStatic
     fun nonMatchingSearches() = Stream.of(
       Arguments.of("I really quite enjoy cheesecake."),
-      // Arguments.of("John"),
+      Arguments.of("12233333333333333"),
     )
   }
 }
