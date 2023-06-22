@@ -15,11 +15,11 @@ interface IDeviceWearerService {
 class DeviceWearerService(@Autowired private val deviceWearerRepository: DeviceWearerRepository) :
   IDeviceWearerService {
   override fun getAllDeviceWearers(): List<DeviceWearer> {
-    return deviceWearerRepository!!.findAll().toList()
+    return deviceWearerRepository.findAll().toList()
   }
 
   override fun getDeviceWearerById(id: String): DeviceWearer? {
-    return deviceWearerRepository!!.findByDeviceWearerId(id)
+    return deviceWearerRepository.findByDeviceWearerId(id)
   }
 
   override fun createDummyDeviceWearers(): List<DeviceWearer> {
@@ -29,6 +29,6 @@ class DeviceWearerService(@Autowired private val deviceWearerRepository: DeviceW
     val deviceWearer2 = DeviceWearer(deviceWearerId = "UID456784", firstName = "John", lastName = "Smith", type = "Dummy")
     deviceWearerRepository.save(deviceWearer2)
 
-    return deviceWearerRepository!!.findAll().toList()
+    return deviceWearerRepository.findAll().toList()
   }
 }
