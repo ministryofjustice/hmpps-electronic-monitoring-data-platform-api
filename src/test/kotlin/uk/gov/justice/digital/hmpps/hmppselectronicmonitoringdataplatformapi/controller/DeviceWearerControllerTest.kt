@@ -2,6 +2,9 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.co
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mockito
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -9,6 +12,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.DeviceWearerResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.DeviceWearerService
+import java.util.stream.Stream
 
 class DeviceWearerControllerTest {
   @Test
@@ -108,9 +112,10 @@ class DeviceWearerControllerTest {
     Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
   }
 
-  @Test
-  fun `searchDeviceWearers should return Ok with an empty value error if no device wearers found`() {
-    val queryString = "I really quite enjoy cheesecake."
+  @ParameterizedTest(name = "searchDeviceWearers should return Ok with an empty value error when the search string is: {0}")
+  @MethodSource("nonMatchingSearches")
+  fun `searchDeviceWearers should return Ok with an empty value error if no device wearers found`(queryString: String) {
+    // val queryString = "I really quite enjoy cheesecake."
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
     val expected: ResponseEntity<BaseResponse> = ResponseEntity(BaseResponse("No matching users found"), HttpStatus.OK)
 
@@ -120,9 +125,10 @@ class DeviceWearerControllerTest {
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body?.error)
   }
 
-  @Test
-  fun `searchDeviceWearers should return Ok with a list of matching values if matching device wearers found`() {
-    val queryString = "John"
+  @ParameterizedTest(name = "searchDeviceWearers should return Ok with a list of matching values when the search string is: {0}")
+  @MethodSource("matchingSearches")
+  fun `searchDeviceWearers should return Ok with a list of matching values if matching device wearers found`(queryString: String) {
+    // val queryString = "John"
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
     val expectedData = DeviceWearer(1, "1234", "John", "Smith", "Curfew")
     val allUsers: List<DeviceWearer> = listOf<DeviceWearer>(
@@ -137,5 +143,19 @@ class DeviceWearerControllerTest {
     Assertions.assertThat(result?.statusCode).isEqualTo(expected.statusCode)
     Assertions.assertThat(result?.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
     Assertions.assertThat(result?.body?.error).isEqualTo(expected.body.error)
+  }
+
+  private companion object {
+    @JvmStatic
+    fun matchingSearches() = Stream.of(
+      Arguments.of("John"),
+      // Arguments.of("Smith"),
+    )
+
+    @JvmStatic
+    fun nonMatchingSearches() = Stream.of(
+      Arguments.of("I really quite enjoy cheesecake."),
+      // Arguments.of("John"),
+    )
   }
 }
