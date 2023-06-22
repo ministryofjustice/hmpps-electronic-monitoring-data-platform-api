@@ -16,16 +16,15 @@ import java.util.stream.Stream
 
 class DeviceWearerControllerTest {
   @Test
-  fun `getAllDeviceWearers ShouldReturn AnEmptyListWhenThereAreNoDeviceWearers`() {
+  fun `getAllDeviceWearers Should return Ok with an empty value error when there are no device wearers`() {
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
-    val genericlist: List<DeviceWearer> = listOf<DeviceWearer>()
-    Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(genericlist)
-
-    val expected = ResponseEntity(genericlist, HttpStatus.OK)
+    Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(listOf<DeviceWearer>())
+    val expected: ResponseEntity<BaseResponse> = ResponseEntity(BaseResponse("No users found"), HttpStatus.OK)
 
     val result = DeviceWearerController(deviceWearerService).getAllDeviceWearers()
 
-    Assertions.assertThat(result).isEqualTo(expected)
+    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
   @Test
@@ -36,12 +35,13 @@ class DeviceWearerControllerTest {
       DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"),
     )
     Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(genericlist)
+    val expected = ResponseEntity(DeviceWearerResponse(genericlist), HttpStatus.OK)
 
-    val expected = ResponseEntity(genericlist, HttpStatus.OK)
+    val result = DeviceWearerController(deviceWearerService).getAllDeviceWearers() as? ResponseEntity<DeviceWearerResponse>
 
-    val result = DeviceWearerController(deviceWearerService).getAllDeviceWearers()
-
-    Assertions.assertThat(result).isEqualTo(expected)
+    Assertions.assertThat(result?.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result?.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    Assertions.assertThat(result?.body?.error).isEqualTo(expected.body.error)
   }
 
   @Test

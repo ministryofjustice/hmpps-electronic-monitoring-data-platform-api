@@ -20,31 +20,55 @@ import java.util.*
 class DeviceWearerController(@Autowired private val deviceWearerService: IDeviceWearerService) {
 
   @GetMapping("/v1")
-  fun getAllDeviceWearers(): ResponseEntity<List<DeviceWearer>> {
-    return try {
-      ResponseEntity(deviceWearerService.getAllDeviceWearers(), HttpStatus.OK)
+  fun getAllDeviceWearers(): ResponseEntity<BaseResponse> {
+    try {
+      val result: List<DeviceWearer> = deviceWearerService.getAllDeviceWearers()
+      if (result.isEmpty()) {
+        return ResponseEntity(BaseResponse("No users found"), HttpStatus.OK)
+      }
+      return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
     } catch (e: Exception) {
-      ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+      return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
   @GetMapping("/v1/search")
   fun searchDeviceWearers(@RequestParam("search") queryString: String?): ResponseEntity<BaseResponse> {
-    if (queryString.isNullOrBlank()) {
-      return ResponseEntity(BaseResponse("No search string provided"), HttpStatus.BAD_REQUEST)
+    try {
+      if (queryString.isNullOrBlank()) {
+        return ResponseEntity(BaseResponse("No search string provided"), HttpStatus.BAD_REQUEST)
+      }
+      val matchingDeviceWearers = filterDeviceWearers(queryString)
+      if (matchingDeviceWearers.isEmpty()) {
+        return ResponseEntity(BaseResponse("No matching users found"), HttpStatus.OK)
+      }
+      return ResponseEntity(DeviceWearerResponse(matchingDeviceWearers), HttpStatus.OK)
+    } catch (e: Exception) {
+      return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
     }
+  }
+
+  fun filterDeviceWearers(queryString: String): List<DeviceWearer> {
     val deviceWearers: List<DeviceWearer> = deviceWearerService.getAllDeviceWearers()
-    val matchingDeviceWearers = deviceWearers.filter {
+
+    return deviceWearers.filter {
       it.firstName.contains(queryString, ignoreCase = true) ||
         it.lastName.contains(queryString, ignoreCase = true) ||
         it.type.contains(queryString, ignoreCase = true) ||
         it.deviceWearerId.contains(queryString, ignoreCase = true)
     }
-    if (matchingDeviceWearers.isEmpty()) {
-      return ResponseEntity(BaseResponse("No matching users found"), HttpStatus.OK)
-    }
-    return ResponseEntity(DeviceWearerResponse(matchingDeviceWearers), HttpStatus.OK)
   }
+//  TODO: Sketch of how we could do per-field matching?
+//  fun filterDeviceWearers(matchObject: DeviceWearer): List<DeviceWearer> {
+//    val deviceWearers: List<DeviceWearer> = deviceWearerService.getAllDeviceWearers()
+//
+//    return deviceWearers.filter {
+//      it.firstName.contains(matchObject.firstName, ignoreCase = true) ||
+//        it.lastName.contains(matchObject.lastName, ignoreCase = true) ||
+//        it.type.contains(matchObject.type, ignoreCase = true) ||
+//        it.deviceWearerId.contains(matchObject.deviceWearerId, ignoreCase = true)
+//    }
+//  }
 
   @GetMapping("/v1/id/{id}")
   fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<BaseResponse> {
