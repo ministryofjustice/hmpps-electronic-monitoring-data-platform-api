@@ -107,4 +107,16 @@ class DeviceWearerControllerTest {
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
     Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
   }
+
+  @Test
+  fun `searchDeviceWearers should return Ok with an empty value error if no device wearers found`() {
+    val queryString = "I really quite enjoy cheesecake."
+    val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
+    val expected: ResponseEntity<BaseResponse> = ResponseEntity(BaseResponse("No matching users found"), HttpStatus.OK)
+
+    val result = DeviceWearerController(deviceWearerService).searchDeviceWearers(queryString)
+
+    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body?.error)
+  }
 }
