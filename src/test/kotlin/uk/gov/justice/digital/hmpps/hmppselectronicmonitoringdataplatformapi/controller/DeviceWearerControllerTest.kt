@@ -66,7 +66,7 @@ class DeviceWearerControllerTest {
     val result =
       DeviceWearerController(deviceWearerService).getDeviceWearerById(id) as? ResponseEntity<DeviceWearerResponse>
     Assertions.assertThat(result?.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result?.body?.deviceWearer).isEqualTo(expected.body.deviceWearer)
+    Assertions.assertThat(result?.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
     Assertions.assertThat(result?.body?.error).isEqualTo(expected.body.error)
   }
 
@@ -118,5 +118,24 @@ class DeviceWearerControllerTest {
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body?.error)
+  }
+
+  @Test
+  fun `searchDeviceWearers should return Ok with a list of matching values if matching device wearers found`() {
+    val queryString = "John"
+    val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
+    val expectedData = DeviceWearer(1, "1234", "John", "Smith", "Curfew")
+    val allUsers: List<DeviceWearer> = listOf<DeviceWearer>(
+      expectedData,
+      DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"),
+    )
+    Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(allUsers)
+    val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(expectedData), HttpStatus.OK)
+
+    val result = DeviceWearerController(deviceWearerService).searchDeviceWearers(queryString) as? ResponseEntity<DeviceWearerResponse>
+
+    Assertions.assertThat(result?.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result?.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    Assertions.assertThat(result?.body?.error).isEqualTo(expected.body.error)
   }
 }

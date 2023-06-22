@@ -3,6 +3,12 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.re
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.BaseResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 
-class DeviceWearerResponse(deviceWearer: DeviceWearer) : BaseResponse() {
-  val deviceWearer: DeviceWearer = deviceWearer
+class DeviceWearerResponse : BaseResponse {
+  val deviceWearers: List<DeviceWearer>
+  constructor(deviceWearerList: List<DeviceWearer>) : super() {
+    this.deviceWearers = deviceWearerList
+  }
+  constructor(deviceWearer: DeviceWearer) : super() {
+    this.deviceWearers = listOf<DeviceWearer>(deviceWearer)
+  }
 }
