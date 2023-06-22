@@ -3,29 +3,21 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.in
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.transaction.annotation.Transactional
+import org.testcontainers.containers.JdbcDatabaseContainer
+import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
+import org.testcontainers.utility.DockerImageName
 import java.time.Duration
 
-@ContextConfiguration(initializers = [BaseITInitializer::class])
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+)
 @ActiveProfiles("test")
-class IntegrationTestBase {
-
-  @Autowired
-  private val jdbcTemplate: JdbcTemplate? = null
-
-  @Transactional
-  protected fun cleanDB() {
-    val tablesToTruncate = listOf("DeviceWearer").joinToString()
-    val sql = """
-        TRUNCATE TABLE $tablesToTruncate CASCADE
-    """.trimIndent()
-    jdbcTemplate?.execute(sql)
-  }
+@Testcontainers
+abstract class IntegrationTestBase {
 
   @Autowired
   lateinit var webTestClient: WebTestClient
@@ -37,4 +29,16 @@ class IntegrationTestBase {
       .responseTimeout(Duration.ofMillis(30000))
       .build()
   }
+
+  companion object {
+    @Container
+    val container = postgres("postgres:15.3") {
+      withDatabaseName("test_db")
+      withUsername("postgres")
+      withPassword("root")
+    }
+  }
 }
+
+fun postgres(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() -> Unit) =
+  PostgreSQLContainer<Nothing>(DockerImageName.parse(imageName)).apply(opts)

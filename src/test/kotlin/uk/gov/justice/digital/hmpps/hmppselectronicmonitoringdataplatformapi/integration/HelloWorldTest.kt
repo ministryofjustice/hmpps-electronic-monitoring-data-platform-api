@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.in
 
 import org.junit.jupiter.api.Test
 
-class HelloWorldTest : IntegrationTestBaseCompatibility() {
+class HelloWorldTest : IntegrationTestBase() {
   @Test
   fun `test hello endpoint`() {
     webTestClient.get()

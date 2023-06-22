@@ -2,12 +2,12 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.in
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.integration.IntegrationTestBaseCompatibility
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.integration.IntegrationTestBase
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.function.Consumer
 
-class HealthCheckTest : IntegrationTestBaseCompatibility() {
+class HealthCheckTest : IntegrationTestBase() {
 
   @Test
   fun `Health page reports ok`() {

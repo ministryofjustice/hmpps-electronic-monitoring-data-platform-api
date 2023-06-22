@@ -95,7 +95,7 @@ class DeviceWearerControllerTest {
 
     val result =
       DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
-    Assertions.assertThat(result?.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result?.body?.error).isEqualTo(expected.body?.error)
+    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
   }
 }
