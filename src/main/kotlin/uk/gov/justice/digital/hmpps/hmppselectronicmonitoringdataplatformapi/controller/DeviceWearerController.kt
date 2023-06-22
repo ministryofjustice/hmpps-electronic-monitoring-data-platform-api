@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.BaseResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.DeviceWearerResponse
@@ -39,34 +40,14 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
   @GetMapping("/v1/id/{id}")
   fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<BaseResponse> {
     try {
-      var id = UUID.fromString(deviceWearerId);
-      //  return ResponseEntity(DeviceWearerResponse(deviceWearerService.getDeviceWearerById(deviceWearerId)), HttpStatus.OK)
+      if (!StaticHelpers().ValidateUUID(deviceWearerId)) {
+        return ResponseEntity(BaseResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
+      }
       val result = deviceWearerService.getDeviceWearerById(deviceWearerId)
-      if (result != null) {
-
-        return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
-      }
-
-      return ResponseEntity(BaseResponse("No user found"), HttpStatus.OK)
-
-
+        ?: return ResponseEntity(BaseResponse("No user found"), HttpStatus.OK)
+      return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
     } catch (e: Exception) {
-      when (e) {
-        is IllegalArgumentException -> {
-          return ResponseEntity(BaseResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
-        }
-
-        else -> {
-          return ResponseEntity(BaseResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
-        }
-      }
+      return ResponseEntity(BaseResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 }
-
-
-//   catch (IllegalArgumentException exception){
-//    //handle the case where string is not valid UUID
-//     ResponseEntity(HttpStatus.BAD_REQUEST) //just guessing
-
-
