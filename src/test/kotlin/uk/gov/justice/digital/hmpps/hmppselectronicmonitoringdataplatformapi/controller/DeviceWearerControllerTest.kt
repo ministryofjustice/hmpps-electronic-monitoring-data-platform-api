@@ -9,7 +9,6 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.DeviceWearerResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.DeviceWearerService
-import java.util.*
 
 class DeviceWearerControllerTest {
   @Test
@@ -43,7 +42,7 @@ class DeviceWearerControllerTest {
 
   @Test
   fun `getDeviceWearerByID should return Ok with an empty value error when device wearer does not exist`() {
-    val id: String = UUID.randomUUID().toString()
+    val id = "c6a5aa13-c948-41ca-8d6a-dfe9ff2e8fd3"
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
 
     val response = null
@@ -57,7 +56,7 @@ class DeviceWearerControllerTest {
 
   @Test
   fun `getDeviceWearerByID should return an item when there are some device wearers`() {
-    val id: String = UUID.randomUUID().toString()
+    val id = "4db8a1bb-c0ef-4222-8f9b-5f62636d75c1"
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
 
     val response = DeviceWearer(1, id, "John", "Smith", "Curfew")
@@ -73,7 +72,7 @@ class DeviceWearerControllerTest {
 
   @Test
   fun `getDeviceWearerByID should return internal server error when there is an internal server issue`() {
-    val id: String = UUID.randomUUID().toString()
+    val id = "db2451a6-ef09-45a7-a940-b4c46bd94b1b"
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
 
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenThrow(RuntimeException("Exception"))
