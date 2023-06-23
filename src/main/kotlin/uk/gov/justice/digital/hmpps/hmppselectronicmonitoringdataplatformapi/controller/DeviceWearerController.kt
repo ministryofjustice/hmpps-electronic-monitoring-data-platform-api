@@ -30,6 +30,7 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
       return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
+
   @GetMapping("/v1/try")
   fun getAllDeviceWearersTry(): ResponseEntity<List<DeviceWearer>> {
     return try {

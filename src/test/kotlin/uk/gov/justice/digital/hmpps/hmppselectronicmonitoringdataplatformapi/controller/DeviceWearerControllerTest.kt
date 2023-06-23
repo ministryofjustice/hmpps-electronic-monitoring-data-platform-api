@@ -38,9 +38,9 @@ class DeviceWearerControllerTest {
 
     val result = DeviceWearerController(deviceWearerService).getAllDeviceWearers()
 
-    Assertions.assertThat(result?.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result?.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
-    Assertions.assertThat(result?.body?.error).isEqualTo(expected.body.error)
+    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
   @Test
@@ -68,9 +68,9 @@ class DeviceWearerControllerTest {
 
     val result =
       DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
-    Assertions.assertThat(result?.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result?.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
-    Assertions.assertThat(result?.body?.error).isEqualTo(expected.body.error)
+    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
   @Test
@@ -98,7 +98,7 @@ class DeviceWearerControllerTest {
     val result =
       DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
   @Test
@@ -108,7 +108,7 @@ class DeviceWearerControllerTest {
 
     val result = DeviceWearerController(deviceWearerService).searchDeviceWearers("")
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body.error).isEqualTo(expected.body.error)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
   @ParameterizedTest(name = "searchDeviceWearers should return Ok with an empty value error when the search string is: {0}")

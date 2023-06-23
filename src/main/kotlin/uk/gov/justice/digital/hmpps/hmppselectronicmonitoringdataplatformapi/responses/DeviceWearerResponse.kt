@@ -13,6 +13,5 @@ class DeviceWearerResponse : BaseResponse {
   }
   constructor(error: String) : super(error) {
     this.deviceWearers = listOf<DeviceWearer>()
-    this.error = error
   }
 }
