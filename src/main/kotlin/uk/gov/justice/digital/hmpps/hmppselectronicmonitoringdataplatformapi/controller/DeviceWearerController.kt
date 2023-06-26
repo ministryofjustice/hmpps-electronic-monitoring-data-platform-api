@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
@@ -27,22 +28,26 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
     }
   }
 
-  @GetMapping("/v2/search")
+  @GetMapping("/v2/search/{queryString}") // /v2/search/John
+  fun searchDeviceWearersV2PathVariable(@PathVariable("queryString") queryString: String?): ResponseEntity<DeviceWearerResponse> {
+    return searchDeviceWearersV2(queryString)
+  }
+
+  @GetMapping("/v2/search") // /v2/search?search=John
   fun searchDeviceWearersV2(@RequestParam("search") queryString: String?): ResponseEntity<DeviceWearerResponse> {
-    try {
+    return try {
+      var result: List<DeviceWearer> = listOf()
       if (queryString.isNullOrBlank()) {
-        val result = deviceWearerService.getAllDeviceWearers()
-        return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
+        result = deviceWearerService.getAllDeviceWearers()
+      } else {
+        result = deviceWearerService.getMatchingDeviceWearers(queryString) ?: listOf()
       }
-      else {
-        val result = deviceWearerService.getMatchingDeviceWearers(queryString)
-        return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
-      }
+      ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
     } catch (e: Exception) {
-      return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+      ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
-  
+
   @GetMapping("/v1/search/{queryString}")
   fun searchDeviceWearers(@PathVariable("queryString") queryString: String?): ResponseEntity<DeviceWearerResponse> {
     try {
@@ -58,7 +63,7 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
       return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
-  
+
   fun filterDeviceWearers(queryString: String): List<DeviceWearer> {
     val deviceWearers: List<DeviceWearer> = deviceWearerService.getAllDeviceWearers()
     return deviceWearers.filter {
@@ -68,7 +73,7 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
         it.deviceWearerId.contains(queryString, ignoreCase = true)
     }
   }
-  
+
   @GetMapping("/v1/id/{id}")
   fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<DeviceWearerResponse> {
     try {
