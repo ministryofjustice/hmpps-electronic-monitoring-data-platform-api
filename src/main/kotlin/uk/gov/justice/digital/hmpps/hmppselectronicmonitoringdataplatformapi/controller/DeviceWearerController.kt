@@ -36,7 +36,7 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
         return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
       }
       else {
-        val result = deviceWearerService.getAllDeviceWearersSearch(queryString)
+        val result = deviceWearerService.getMatchingDeviceWearers(queryString)
         return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
       }
     } catch (e: Exception) {

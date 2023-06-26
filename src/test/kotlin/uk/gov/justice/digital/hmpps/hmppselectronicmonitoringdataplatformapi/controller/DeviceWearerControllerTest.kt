@@ -119,7 +119,6 @@ class DeviceWearerControllerTest {
   @ParameterizedTest(name = "searchDeviceWearers should return Ok with an empty value error when the search string is: {0}")
   @MethodSource("nonMatchingSearches")
   fun `searchDeviceWearers should return Ok with an empty value error if no device wearers found`(queryString: String) {
-    // val queryString = "I really quite enjoy cheesecake."
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse("No matching users found"), HttpStatus.OK)
 
@@ -133,7 +132,6 @@ class DeviceWearerControllerTest {
   @ParameterizedTest(name = "searchDeviceWearers should return Ok with a list of matching values when the search string is: {0}")
   @MethodSource("matchingSearches")
   fun `searchDeviceWearers should return Ok with a list of matching values if matching device wearers found`(queryString: String) {
-    // val queryString = "John"
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
     val expectedData = allUsers[0]
 
@@ -154,6 +152,20 @@ class DeviceWearerControllerTest {
 
     val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2("")
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
+  }
+
+  @ParameterizedTest(name = "searchDeviceWearers v2 should return Ok with an empty list when the search string is: {0}")
+  @MethodSource("nonMatchingSearches")
+  fun `searchDeviceWearers v2 should return Ok with an empty list if no device wearers found`(queryString: String) {
+    val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
+    val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(listOf()), HttpStatus.OK)
+
+    Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(allUsers)
+    val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2(queryString)
+
+    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result?.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
