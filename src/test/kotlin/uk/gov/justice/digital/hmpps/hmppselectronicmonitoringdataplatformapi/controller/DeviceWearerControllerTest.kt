@@ -169,6 +169,22 @@ class DeviceWearerControllerTest {
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
+  @ParameterizedTest(name = "searchDeviceWearers v2 should return Ok with a list of matching values when the search string is: {0}")
+  @MethodSource("matchingSearches")
+  fun `searchDeviceWearers v2 should return Ok with a list of matching values if matching device wearers found`(queryString: String) {
+    val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
+    val expectedData = allUsers[0]
+
+    Mockito.`when`(deviceWearerService.getMatchingDeviceWearers(queryString)).thenReturn(listOf(expectedData))
+    val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(expectedData), HttpStatus.OK)
+
+    val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2(queryString) as? ResponseEntity<DeviceWearerResponse>
+
+    Assertions.assertThat(result?.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result?.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    Assertions.assertThat(result?.body?.error).isEqualTo(expected.body.error)
+  }
+
   private companion object {
     @JvmStatic
     fun matchingSearches() = Stream.of(
