@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
@@ -43,8 +42,9 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
       return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
-  @GetMapping("/v1/search")
-  fun searchDeviceWearers(@RequestParam("search") queryString: String?): ResponseEntity<DeviceWearerResponse> {
+  
+  @GetMapping("/v1/search/{queryString}")
+  fun searchDeviceWearers(@PathVariable("queryString") queryString: String?): ResponseEntity<DeviceWearerResponse> {
     try {
       if (queryString.isNullOrBlank()) {
         return ResponseEntity(DeviceWearerResponse("No search string provided"), HttpStatus.BAD_REQUEST)
@@ -58,6 +58,7 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
       return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
+  
   fun filterDeviceWearers(queryString: String): List<DeviceWearer> {
     val deviceWearers: List<DeviceWearer> = deviceWearerService.getAllDeviceWearers()
     return deviceWearers.filter {
@@ -67,6 +68,7 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
         it.deviceWearerId.contains(queryString, ignoreCase = true)
     }
   }
+  
   @GetMapping("/v1/id/{id}")
   fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<DeviceWearerResponse> {
     try {
