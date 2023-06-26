@@ -9,11 +9,39 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 @Repository
 interface DeviceWearerRepository : JpaRepository<DeviceWearer, Int> {
   fun findByDeviceWearerId(id: String): DeviceWearer?
-//  @Query(value = "SELECT * FROM DeviceWearer", nativeQuery = true)
-@Query(
-  value = "SELECT * FROM device_wearer u WHERE u.first_name = 'Jane'",
-  nativeQuery = true)
-fun findByDeviceWearerIdSearch(@Param("firstName") firstName: String): List<DeviceWearer>?
+
+  //  @Query(value = "SELECT * FROM DeviceWearer", nativeQuery = true)
+  @Query(
+    value = "SELECT * FROM device_wearer u WHERE u.first_name = 'Jane'",
+    nativeQuery = true,
+  )
+  fun findByDeviceWearerIdSearch(@Param("firstName") firstName: String): List<DeviceWearer>?
+
+
+  @Query(
+    value = "SELECT * FROM device_wearer u\n" +
+      "    WHERE (LOWER(u.first_name) Like CONCAT('%',:parameter,'%')) OR\n" +
+      "    (LOWER(u.last_name) Like CONCAT('%',:parameter,'%')) OR\n" +
+      "    (LOWER(u.type) Like CONCAT('%',:parameter,'%')) OR\n" +
+      "    (LOWER(u.device_wearer_id) Like CONCAT('%',:parameter,'%'))",
+    nativeQuery = true,
+  )
+  fun searchDatabase(@Param("parameter") parameter: String): List<DeviceWearer>?
+
+//  fun generateSearchQuery(searchParameter: String): String {
+//    return """SELECT * FROM device_wearer u
+//    WHERE (LOWER(u.first_name) Like '%${searchParameter}%') OR
+//    (LOWER(u.last_name) Like '%${searchParameter}%') OR
+//    (LOWER(u.type) Like '%${searchParameter}%') OR
+//    (LOWER(u.device_wearer_id) Like '%${searchParameter}%')"""
+//  }
+//
+//  fun find(searchParameter: String): List<DeviceWearer>? {
+//    val query = generateSearchQuery(searchParameter)
+//    return searchDatabase(query)
+//  }
+
+
 }
 
 //@Query(

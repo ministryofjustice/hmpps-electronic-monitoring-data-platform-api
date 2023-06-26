@@ -31,14 +31,20 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
     }
   }
 
-  @GetMapping("/v1/try")
-  fun getAllDeviceWearersTry(): ResponseEntity<List<DeviceWearer>> {
-    return try {
-      println("Getting")
-      ResponseEntity(deviceWearerService.getAllDeviceWearersSearch(), HttpStatus.OK)
+  @GetMapping("/v2/search")
+  fun getAllDeviceWearersTry(@RequestParam("search") queryString: String): ResponseEntity<DeviceWearerResponse> {
+    try {
+      if (queryString.isNullOrBlank()) {
+        val result = deviceWearerService.getAllDeviceWearers()
+        return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
+      }
+      else {
+        val result = deviceWearerService.getAllDeviceWearersSearch(queryString)
+        return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
+      }
     } catch (e: Exception) {
-      ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+      return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+    } as Nothing
   }
 
   @GetMapping("/v1/search")

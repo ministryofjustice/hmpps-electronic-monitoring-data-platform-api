@@ -5,8 +5,8 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 
 class DeviceWearerResponse : BaseResponse {
   val deviceWearers: List<DeviceWearer>
-  constructor(deviceWearerList: List<DeviceWearer>, error: String = "") : super(error) {
-    this.deviceWearers = deviceWearerList
+  constructor(deviceWearerList: List<DeviceWearer>?, error: String = "") : super(error) {
+    this.deviceWearers = deviceWearerList ?:listOf()
   }
   constructor(deviceWearer: DeviceWearer, error: String = "") : super(error) {
     this.deviceWearers = listOf<DeviceWearer>(deviceWearer)
