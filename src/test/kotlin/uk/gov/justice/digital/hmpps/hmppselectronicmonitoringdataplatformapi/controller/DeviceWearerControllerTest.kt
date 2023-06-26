@@ -14,6 +14,11 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.ser
 import java.util.stream.Stream
 
 class DeviceWearerControllerTest {
+  val allUsers: List<DeviceWearer> = listOf<DeviceWearer>(
+    DeviceWearer(1, "1234", "John", "Smith", "Curfew"),
+    DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"),
+  )
+
   @Test
   fun `getAllDeviceWearers Should return Ok with an empty value error when there are no device wearers`() {
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
@@ -117,10 +122,7 @@ class DeviceWearerControllerTest {
     // val queryString = "I really quite enjoy cheesecake."
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse("No matching users found"), HttpStatus.OK)
-    val allUsers: List<DeviceWearer> = listOf<DeviceWearer>(
-      DeviceWearer(1, "1234", "John", "Smith", "Curfew"),
-      DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"),
-    )
+
     Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(allUsers)
     val result = DeviceWearerController(deviceWearerService).searchDeviceWearers(queryString)
 
@@ -133,11 +135,8 @@ class DeviceWearerControllerTest {
   fun `searchDeviceWearers should return Ok with a list of matching values if matching device wearers found`(queryString: String) {
     // val queryString = "John"
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
-    val expectedData = DeviceWearer(1, "1234", "John", "Smith", "Curfew")
-    val allUsers: List<DeviceWearer> = listOf<DeviceWearer>(
-      expectedData,
-      DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"),
-    )
+    val expectedData = allUsers[0]
+
     Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(allUsers)
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(expectedData), HttpStatus.OK)
 
@@ -146,6 +145,16 @@ class DeviceWearerControllerTest {
     Assertions.assertThat(result?.statusCode).isEqualTo(expected.statusCode)
     Assertions.assertThat(result?.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
     Assertions.assertThat(result?.body?.error).isEqualTo(expected.body.error)
+  }
+
+  @Test
+  fun `searchDeviceWearers v2 should return all users if no query string is provided`() {
+    val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
+    val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(allUsers), HttpStatus.OK)
+
+    val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2("")
+    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
   private companion object {
