@@ -1,5 +1,4 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.controller
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,11 +11,9 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.DeviceWearerResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.IDeviceWearerService
 import java.util.*
-
 @RequestMapping("device-wearers")
 @RestController
 class DeviceWearerController(@Autowired private val deviceWearerService: IDeviceWearerService) {
-
   @GetMapping("/v1")
   fun getAllDeviceWearers(): ResponseEntity<DeviceWearerResponse> {
     try {
@@ -30,6 +27,22 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
     }
   }
 
+  @GetMapping("/v2/search")
+  fun searchDeviceWearersV2(@RequestParam("search") queryString: String?): ResponseEntity<DeviceWearerResponse> {
+    try {
+      if (queryString.isNullOrBlank()) {
+        val result = deviceWearerService.getAllDeviceWearers()
+        return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
+      }
+      else {
+        val result = deviceWearerService.getMatchingDeviceWearers(queryString)
+        return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
+      }
+    } catch (e: Exception) {
+      return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
+  
   @GetMapping("/v1/search/{queryString}")
   fun searchDeviceWearers(@PathVariable("queryString") queryString: String?): ResponseEntity<DeviceWearerResponse> {
     try {
@@ -45,10 +58,9 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
       return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
-
+  
   fun filterDeviceWearers(queryString: String): List<DeviceWearer> {
     val deviceWearers: List<DeviceWearer> = deviceWearerService.getAllDeviceWearers()
-
     return deviceWearers.filter {
       it.firstName.contains(queryString, ignoreCase = true) ||
         it.lastName.contains(queryString, ignoreCase = true) ||
@@ -56,18 +68,7 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
         it.deviceWearerId.contains(queryString, ignoreCase = true)
     }
   }
-//  TODO: Sketch of how we could do per-field matching?
-//  fun filterDeviceWearers(matchObject: DeviceWearer): List<DeviceWearer> {
-//    val deviceWearers: List<DeviceWearer> = deviceWearerService.getAllDeviceWearers()
-//
-//    return deviceWearers.filter {
-//      it.firstName.contains(matchObject.firstName, ignoreCase = true) ||
-//        it.lastName.contains(matchObject.lastName, ignoreCase = true) ||
-//        it.type.contains(matchObject.type, ignoreCase = true) ||
-//        it.deviceWearerId.contains(matchObject.deviceWearerId, ignoreCase = true)
-//    }
-//  }
-
+  
   @GetMapping("/v1/id/{id}")
   fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<DeviceWearerResponse> {
     try {
