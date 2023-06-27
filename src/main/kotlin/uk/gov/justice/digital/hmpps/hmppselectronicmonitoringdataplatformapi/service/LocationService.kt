@@ -6,7 +6,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.rep
 
 interface ILocationService {
   fun getAllGPSData(): List<GPSData>
-
+  fun getGPSDataForUser(deviceWearerId: String): List<GPSData>
 }
 
 @Service
@@ -14,5 +14,8 @@ class LocationService(@Autowired private val gpsDataRepository: GPSDataRepositor
   ILocationService {
   override fun getAllGPSData(): List<GPSData> {
     return gpsDataRepository.findAll().toList()
+  }
+  override fun getGPSDataForUser(deviceWearerId: String): List<GPSData> {
+    return gpsDataRepository.findByDeviceWearerId(deviceWearerId) ?: listOf()
   }
 }
