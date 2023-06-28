@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.GPSData
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.GPSDataResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.LocationService
+import java.time.LocalDate
 import java.util.*
 
 class LocationControllerTest {
@@ -19,7 +20,7 @@ class LocationControllerTest {
 
   @Test
   fun `getAllGPSData Should return a list of all location data`() {
-    val gpsDataList: List<GPSData> = listOf(GPSData(UUID.randomUUID(), UUID.randomUUID().toString(), 20.0, 20.0))
+    val gpsDataList: List<GPSData> = listOf(GPSData(1, UUID.randomUUID().toString(), 20.0, 20.0))
 
     Mockito.`when`(locationService.getAllGPSData()).thenReturn(gpsDataList)
 
@@ -58,7 +59,7 @@ class LocationControllerTest {
   @Test
   fun `getGPSDataByDeviceWearerId Should return a list of location data`() {
     val deviceWearerId: String = UUID.randomUUID().toString()
-    val gpsDataList: List<GPSData> = listOf(GPSData(UUID.randomUUID(), deviceWearerId, 20.0, 20.0))
+    val gpsDataList: List<GPSData> = listOf(GPSData(1, deviceWearerId, 20.0, 20.0))
 
     Mockito.`when`(locationService.getGPSDataForUser(deviceWearerId)).thenReturn(gpsDataList)
 
