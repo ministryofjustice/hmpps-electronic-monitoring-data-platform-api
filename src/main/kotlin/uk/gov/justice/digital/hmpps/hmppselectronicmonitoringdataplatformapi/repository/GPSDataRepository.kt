@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.re
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.GPSData
@@ -11,7 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 interface GPSDataRepository : JpaRepository<GPSData, Int> {
 
   @Query(
-    value = "SELECT * FROM device_wearer u WHERE u.first_name = 'Jane'",
+    value = "SELECT * FROM gps_data u WHERE u.deviceWearerId = :deviceWearerId",
     nativeQuery = true,
   )
   fun findByDeviceWearerId(@Param("deviceWearerId") deviceWearerId: String): List<GPSData>?
