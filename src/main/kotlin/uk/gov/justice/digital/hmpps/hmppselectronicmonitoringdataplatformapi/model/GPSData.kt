@@ -12,7 +12,7 @@ import java.util.*
 data class GPSData(
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  val id: UUID = UUID.randomUUID(),
+  val id: Int = 0,
   val deviceWearerId: String = "",
   val latitude: Double = 0.0,
   val longitude: Double = 0.0,
