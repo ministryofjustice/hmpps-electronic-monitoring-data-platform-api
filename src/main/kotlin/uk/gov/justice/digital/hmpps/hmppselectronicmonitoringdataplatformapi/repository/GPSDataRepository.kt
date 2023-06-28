@@ -10,7 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 interface GPSDataRepository : JpaRepository<GPSData, Int> {
 
   @Query(
-    value = "SELECT * FROM gps_data u WHERE u.deviceWearerId = :deviceWearerId",
+    value = "SELECT * FROM gps_data u WHERE u.device_wearer_id = :deviceWearerId",
     nativeQuery = true,
   )
   fun findByDeviceWearerId(@Param("deviceWearerId") deviceWearerId: String): List<GPSData>?
