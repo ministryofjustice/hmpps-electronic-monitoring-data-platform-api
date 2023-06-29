@@ -1,10 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "device_wearer")
@@ -15,5 +11,9 @@ data class DeviceWearer(
   val deviceWearerId: String = "0",
   val firstName: String = "",
   val lastName: String = "",
-  val type: String = "",
+  val type: String = ""
 )
+{
+  @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, mappedBy = "deviceWearer")
+  val devices = listOf<Device>()
+}

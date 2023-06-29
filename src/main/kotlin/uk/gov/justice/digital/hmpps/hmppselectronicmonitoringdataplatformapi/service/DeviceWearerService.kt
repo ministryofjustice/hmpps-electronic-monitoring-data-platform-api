@@ -7,7 +7,6 @@ interface IDeviceWearerService {
   fun getAllDeviceWearers(): List<DeviceWearer>
   fun getMatchingDeviceWearers(parameter: String): List<DeviceWearer>?
   fun getDeviceWearerById(id: String): DeviceWearer?
-  fun createDummyDeviceWearers(): List<DeviceWearer>
 }
 
 @Service
@@ -21,12 +20,5 @@ class DeviceWearerService(@Autowired private val deviceWearerRepository: DeviceW
   }
   override fun getDeviceWearerById(id: String): DeviceWearer? {
     return deviceWearerRepository.findByDeviceWearerId(id)
-  }
-  override fun createDummyDeviceWearers(): List<DeviceWearer> {
-    val deviceWearer1 = DeviceWearer(deviceWearerId = "abc123UID", firstName = "Billiam", lastName = "Doors", type = "Dummy")
-    deviceWearerRepository.save(deviceWearer1)
-    val deviceWearer2 = DeviceWearer(deviceWearerId = "UID456784", firstName = "John", lastName = "Smith", type = "Dummy")
-    deviceWearerRepository.save(deviceWearer2)
-    return deviceWearerRepository.findAll().toList()
   }
 }
