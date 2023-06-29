@@ -1,4 +1,5 @@
-TRUNCATE TABLE device_wearer;
+
+TRUNCATE TABLE device_wearer, device, gps_data;
 
 INSERT INTO device_wearer (id, device_wearer_id, first_name, last_name, type)
 VALUES (1, '3fc55bb7-ba52-4854-be96-661f710328fc', 'John', 'Smith', 'Historical Case Centric'),
@@ -6,7 +7,9 @@ VALUES (1, '3fc55bb7-ba52-4854-be96-661f710328fc', 'John', 'Smith', 'Historical 
        (3, 'cdfd3e77-0015-40bf-b9b7-0b608a2826ca', 'Michael', 'Jordan', 'Historical Case Centric')
 ;
 
-TRUNCATE TABLE gps_data;
+INSERT INTO device (id, device_id, model_id, firmware_version, device_type, status, battery_life_remaining, date_tag_fitted, date_tag_removed, device_wearer_id)
+VALUES (1, '1', '1', '1.0', 'GPS', 'OK', 80, '2000-10-30T01:32:00.000-05:00', NULL, 1)
+;
 
 INSERT INTO gps_data (id, device_wearer_id, latitude, location_Time, longitude)
 VALUES (1, '3fc55bb7-ba52-4854-be96-661f710328fc', 20.0, '2000-10-31T01:30:00.000-05:00', 21.0),
