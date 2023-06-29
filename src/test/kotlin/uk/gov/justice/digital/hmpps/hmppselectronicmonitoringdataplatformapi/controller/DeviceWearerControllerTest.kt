@@ -6,6 +6,9 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mockito
+import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
@@ -83,7 +86,7 @@ class DeviceWearerControllerTest {
     val id = "db2451a6-ef09-45a7-a940-b4c46bd94b1b"
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
 
-    Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenThrow(RuntimeException("Exception"))
+    Mockito.`when`(deviceWearerService.getDeviceWearerById(any<String>())).thenThrow(RuntimeException("Exception"))
     val expected: ResponseEntity<DeviceWearerResponse> =
       ResponseEntity(DeviceWearerResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
 
@@ -95,15 +98,13 @@ class DeviceWearerControllerTest {
   fun `getDeviceWearerByID should return bad request when it does not receive a valid id`() {
     val id = "456an"
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
-
-    val response = DeviceWearer(1, "456an", "John", "Smith", "Curfew")
-    Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
 
     val result =
       DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
+    verify(deviceWearerService, times(0)).getDeviceWearerById(any())
   }
 
   @Test
@@ -165,7 +166,7 @@ class DeviceWearerControllerTest {
     val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2(queryString)
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result?.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
