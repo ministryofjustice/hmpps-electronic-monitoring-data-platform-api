@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.GPSData
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.GPSDataResponse
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.ILocationService
 import java.util.*
 
@@ -16,31 +16,31 @@ import java.util.*
 @RestController
 class LocationController(@Autowired private val locationService: ILocationService) {
   @GetMapping("/v1")
-  fun getAllGPSData(): ResponseEntity<GPSDataResponse> {
+  fun getAllLocations(): ResponseEntity<LocationResponse> {
     try {
-      val result: List<GPSData> = locationService.getAllGPSData()
+      val result: List<Location> = locationService.getAllLocationData()
       if (result.isEmpty()) {
-        return ResponseEntity(GPSDataResponse("No data found"), HttpStatus.OK)
+        return ResponseEntity(LocationResponse("No data found"), HttpStatus.OK)
       }
-      return ResponseEntity(GPSDataResponse(result), HttpStatus.OK)
+      return ResponseEntity(LocationResponse(result), HttpStatus.OK)
     } catch (e: Exception) {
-      return ResponseEntity(GPSDataResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
+      return ResponseEntity(LocationResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
   @GetMapping("/v1/device-wearer-id/{id}")
-  fun getGPSDataByDeviceWearerId(@PathVariable("id") deviceWearerId: String): ResponseEntity<GPSDataResponse> {
+  fun getLocationsDataByDeviceWearerId(@PathVariable("id") deviceWearerId: String): ResponseEntity<LocationResponse> {
     try {
       if (!StaticHelpers().ValidateUUID(deviceWearerId)) {
-        return ResponseEntity(GPSDataResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
+        return ResponseEntity(LocationResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
       }
-      val result = locationService.getGPSDataForUser(deviceWearerId)
+      val result = locationService.getAllLocationDataForDeviceWearer(deviceWearerId)
       if (result.isEmpty()) {
-        return ResponseEntity(GPSDataResponse("No data found"), HttpStatus.OK)
+        return ResponseEntity(LocationResponse("No data found"), HttpStatus.OK)
       }
-      return ResponseEntity(GPSDataResponse(result), HttpStatus.OK)
+      return ResponseEntity(LocationResponse(result), HttpStatus.OK)
     } catch (e: Exception) {
-      return ResponseEntity(GPSDataResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
+      return ResponseEntity(LocationResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 }

@@ -29,6 +29,10 @@ data class Device(
   @JoinColumn(name = "device_wearer_id")
   val deviceWearer: DeviceWearer? = null
 )
+{
+  @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, mappedBy = "device")
+  val locations = listOf<Location>()
+}
 
 
 
