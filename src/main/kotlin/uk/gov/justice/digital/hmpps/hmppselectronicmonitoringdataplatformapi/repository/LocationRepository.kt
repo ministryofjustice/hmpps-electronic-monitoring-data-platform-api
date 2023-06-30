@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
+import java.time.LocalDateTime
 import java.util.*
 
 @Repository
@@ -27,5 +28,5 @@ interface LocationRepository : JpaRepository<Location, Int> {
   )
   fun findLocationsByDeviceWearerIdAndTimeFrame(@Param("deviceWearerId") deviceWearerId: String,
                                                 @Param("startDate") startDate: Date,
-                                                @Param("startDate") endDate: Date)
+                                                @Param("startDate") endDate: Date) : List<Location>?
 }

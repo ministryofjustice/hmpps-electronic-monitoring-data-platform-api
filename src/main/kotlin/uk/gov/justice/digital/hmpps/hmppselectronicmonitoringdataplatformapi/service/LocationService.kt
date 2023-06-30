@@ -3,19 +3,26 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.repository.LocationRepository
+import java.time.LocalDateTime
+import java.util.*
 
 interface ILocationService {
-  fun getAllLocationData(): List<Location>
-  fun getAllLocationDataForDeviceWearer(deviceWearerId: String): List<Location>
+  fun getAllLocations(): List<Location>
+  fun getAllLocationsForDeviceWearer(deviceWearerId: String): List<Location>
+
+  fun getAllLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId: String, startDate: Date, endDate: Date): List<Location>
 }
 
 @Service
 class LocationService(@Autowired private val locationRepository: LocationRepository) :
   ILocationService {
-  override fun getAllLocationData(): List<Location> {
+  override fun getAllLocations(): List<Location> {
     return locationRepository.findAll().toList()
   }
-  override fun getAllLocationDataForDeviceWearer(deviceWearerId: String): List<Location> {
+  override fun getAllLocationsForDeviceWearer(deviceWearerId: String): List<Location> {
     return locationRepository.findLocationsByDeviceWearerId(deviceWearerId) ?: listOf()
+  }
+  override fun getAllLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId: String, startDate: Date, endDate: Date): List<Location> {
+    return locationRepository.findLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate) ?: listOf()
   }
 }
