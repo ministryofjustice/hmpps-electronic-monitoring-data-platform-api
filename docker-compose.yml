@@ -39,10 +39,13 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - ./db/data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
       - ./db/dev/databases.sql:/docker-entrypoint-initdb.d/1-dev-database.sql
       - ./db/dev/roles.sql:/docker-entrypoint-initdb.d/2-dev-roles.sql
 
 networks:
   hmpps:
   db-network:
+
+volumes:
+  db-data:
