@@ -16,6 +16,6 @@ class LocationService(@Autowired private val locationRepository: LocationReposit
     return locationRepository.findAll().toList()
   }
   override fun getAllLocationDataForDeviceWearer(deviceWearerId: String): List<Location> {
-    return locationRepository.findLocationByDeviceWearerId(deviceWearerId) ?: listOf()
+    return locationRepository.findLocationsByDeviceWearerId(deviceWearerId) ?: listOf()
   }
 }
