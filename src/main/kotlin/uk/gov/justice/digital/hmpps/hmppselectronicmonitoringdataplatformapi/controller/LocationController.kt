@@ -18,7 +18,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
   @GetMapping("/v1")
   fun getAllLocations(): ResponseEntity<LocationResponse> {
     try {
-      val result: List<Location> = locationService.getAllLocationData()
+      val result: List<Location> = locationService.getAllLocations()
       if (result.isEmpty()) {
         return ResponseEntity(LocationResponse("No data found"), HttpStatus.OK)
       }
@@ -34,7 +34,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
       if (!StaticHelpers().ValidateUUID(deviceWearerId)) {
         return ResponseEntity(LocationResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
       }
-      val result = locationService.getAllLocationDataForDeviceWearer(deviceWearerId)
+      val result = locationService.getAllLocationsForDeviceWearer(deviceWearerId)
       if (result.isEmpty()) {
         return ResponseEntity(LocationResponse("No data found"), HttpStatus.OK)
       }
