@@ -9,9 +9,9 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 @Repository
 interface LocationRepository : JpaRepository<Location, Int> {
   @Query(
-    value = "SELECT * " +
-      "FROM location l JOIN device d ON l.device_id = d.id" +
-      " JOIN device_wearer dw ON dw.id = d.device_wearer_id " +
+    value = "SELECT DISTINCT l.*" +
+      "FROM location as l JOIN device as d ON l.device_id = d.id" +
+      " JOIN device_wearer as dw ON dw.id = d.device_wearer_id " +
       " WHERE dw.device_wearer_id = :deviceWearerId",
     nativeQuery = true,
   )
