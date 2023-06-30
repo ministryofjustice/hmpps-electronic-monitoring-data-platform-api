@@ -28,28 +28,28 @@ class LocationControllerTest {
       status = "status",
       batteryLifeRemaining = 20,
     )
-    val gpsDataList: List<Location> = listOf(Location(1, device, 20.0, 20.0))
+    val locationList: List<Location> = listOf(Location(1, device, 20.0, 20.0))
 
-    Mockito.`when`(locationService.getAllLocationData()).thenReturn(gpsDataList)
+    Mockito.`when`(locationService.getAllLocationData()).thenReturn(locationList)
 
-    val expected: ResponseEntity<LocationResponse> = ResponseEntity(LocationResponse(gpsDataList), HttpStatus.OK)
+    val expected: ResponseEntity<LocationResponse> = ResponseEntity(LocationResponse(locationList), HttpStatus.OK)
 
     val result = LocationController(locationService).getAllLocations()
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body?.gpsData).isEqualTo(expected.body.gpsData)
+    Assertions.assertThat(result.body?.location).isEqualTo(expected.body.location)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
   @Test
-  fun `getAllLocations Should return No data found when no gps data exists`() {
+  fun `getAllLocations Should return No data found when no location exists`() {
     Mockito.`when`(locationService.getAllLocationData()).thenReturn(listOf())
 
     val expected = ResponseEntity(LocationResponse("No data found"), HttpStatus.OK)
     val result = LocationController(locationService).getAllLocations()
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body?.gpsData).isEqualTo(expected.body.gpsData)
+    Assertions.assertThat(result.body?.location).isEqualTo(expected.body.location)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
@@ -65,7 +65,7 @@ class LocationControllerTest {
   }
 
   @Test
-  fun `getLocationsDataByDeviceWearerId Should return a list of location data`() {
+  fun `getLocationsByDeviceWearerId Should return a list of location data`() {
     val device = Device(
       id = 1,
         deviceId = "deviceId",
@@ -85,12 +85,12 @@ class LocationControllerTest {
     val result = LocationController(locationService).getLocationsDataByDeviceWearerId(deviceWearerId)
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body?.gpsData).isEqualTo(expected.body.gpsData)
+    Assertions.assertThat(result.body?.location).isEqualTo(expected.body.location)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
   @Test
-  fun `getLocationsDataByDeviceWearerId should return bad request when it does not receive a valid id`() {
+  fun `getLocationsByDeviceWearerId should return bad request when it does not receive a valid id`() {
     val userId = "456an"
     val expected: ResponseEntity<LocationResponse> = ResponseEntity(LocationResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
 
@@ -102,7 +102,7 @@ class LocationControllerTest {
   }
 
   @Test
-  fun `getLocationsDataByDeviceWearerId Should return No data found when no gps data exists`() {
+  fun `getLocationsByDeviceWearerId Should return No data found when no location exists`() {
     val userId = "b537065a-094e-47eb-8fab-9698a9664d35"
     Mockito.`when`(locationService.getAllLocationDataForDeviceWearer(userId)).thenReturn(listOf())
 
@@ -110,12 +110,12 @@ class LocationControllerTest {
     val result = LocationController(locationService).getLocationsDataByDeviceWearerId(userId)
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body?.gpsData).isEqualTo(expected.body.gpsData)
+    Assertions.assertThat(result.body?.location).isEqualTo(expected.body.location)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
   @Test
-  fun `getLocationsDataByDeviceWearerId should return internal server error when there is an internal server issue`() {
+  fun `getLocationsByDeviceWearerId should return internal server error when there is an internal server issue`() {
     Mockito.`when`(locationService.getAllLocationDataForDeviceWearer(any<String>())).thenThrow(RuntimeException("Exception"))
     val expected: ResponseEntity<LocationResponse> =
       ResponseEntity(LocationResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
