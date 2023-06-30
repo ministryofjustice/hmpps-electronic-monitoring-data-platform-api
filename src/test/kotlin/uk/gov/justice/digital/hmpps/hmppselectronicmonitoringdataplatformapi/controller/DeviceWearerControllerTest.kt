@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.co
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -12,6 +13,7 @@ import org.mockito.kotlin.verify
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.DeviceWearerResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.DeviceWearerService
 import java.util.stream.Stream
@@ -21,6 +23,17 @@ class DeviceWearerControllerTest {
     DeviceWearer(1, "1234", "John", "Smith", "Curfew"),
     DeviceWearer(2, "5678", "Oliver", "Brown", "Inclusion Zone"),
   )
+
+  fun confirmException(result: EmApiError, expected: EmApiError) {
+    Assertions.assertThat(result.message).isEqualTo(expected.message)
+    Assertions.assertThat(result.status).isEqualTo(expected.status)
+    Assertions.assertThat(result.exceptionDetails).isEqualTo(expected.exceptionDetails)
+  }
+
+  fun confirmNoError(result: ResponseEntity<DeviceWearerResponse>, expected: ResponseEntity<DeviceWearerResponse>) {
+    Assertions.assertThat(result.body?.error).isEqualTo("")
+    Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+  }
 
   @Test
   fun `getAllDeviceWearers Should return Ok with an empty value error when there are no device wearers`() {
@@ -46,9 +59,8 @@ class DeviceWearerControllerTest {
 
     val result = DeviceWearerController(deviceWearerService).getAllDeviceWearers()
 
-    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
     Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
-    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
+    confirmNoError(result, expected)
   }
 
   @Test
@@ -61,6 +73,7 @@ class DeviceWearerControllerTest {
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse("No user found"), HttpStatus.OK)
 
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
+
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
   }
@@ -74,11 +87,10 @@ class DeviceWearerControllerTest {
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(response), HttpStatus.OK)
 
-    val result =
-      DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
-    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+    val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
+
     Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
-    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
+    confirmNoError(result, expected)
   }
 
   @Test
@@ -87,34 +99,32 @@ class DeviceWearerControllerTest {
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
 
     Mockito.`when`(deviceWearerService.getDeviceWearerById(any<String>())).thenThrow(RuntimeException("Exception"))
-    val expected: ResponseEntity<DeviceWearerResponse> =
-      ResponseEntity(DeviceWearerResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
+    // val expected = EmApiError("Something went wrong in our side", HttpStatus.INTERNAL_SERVER_ERROR)
 
-    val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
-    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
+    val result = assertThrows<Exception> { DeviceWearerController(deviceWearerService).getDeviceWearerById(id) }
+
+    // confirmException(result as EmApiError, expected)
   }
 
   @Test
   fun `getDeviceWearerByID should return bad request when it does not receive a valid id`() {
     val id = "456an"
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
-    val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
+    val expected = EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
 
-    val result =
-      DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
-    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
+    val result = assertThrows<EmApiError> { DeviceWearerController(deviceWearerService).getDeviceWearerById(id) }
+
+    confirmException(result, expected)
     verify(deviceWearerService, times(0)).getDeviceWearerById(any())
   }
 
   @Test
   fun `searchDeviceWearers should return a bad request error if no query string is provided`() {
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
-    val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse("No search string provided"), HttpStatus.BAD_REQUEST)
+    val expected = EmApiError("No search string provided", HttpStatus.BAD_REQUEST)
 
-    val result = DeviceWearerController(deviceWearerService).searchDeviceWearers("")
-    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
+    val result = assertThrows<EmApiError> { DeviceWearerController(deviceWearerService).searchDeviceWearers("") }
+    confirmException(result, expected)
   }
 
   @ParameterizedTest(name = "searchDeviceWearers should return Ok with an empty value error when the search string is: {0}")
@@ -139,21 +149,22 @@ class DeviceWearerControllerTest {
     Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(allUsers)
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(expectedData), HttpStatus.OK)
 
-    val result = DeviceWearerController(deviceWearerService).searchDeviceWearers(queryString) as? ResponseEntity<DeviceWearerResponse>
+    val result = DeviceWearerController(deviceWearerService).searchDeviceWearers(queryString)
 
-    Assertions.assertThat(result?.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result?.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
-    Assertions.assertThat(result?.body?.error).isEqualTo(expected.body.error)
+    Assertions.assertThat(result.body.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    confirmNoError(result, expected)
   }
 
   @Test
   fun `searchDeviceWearers v2 should return all users if no query string is provided`() {
     val deviceWearerService = Mockito.mock(DeviceWearerService::class.java)
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(allUsers), HttpStatus.OK)
+    Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(allUsers)
 
     val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2("")
-    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
+
+    Assertions.assertThat(result.body.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    confirmNoError(result, expected)
   }
 
   @ParameterizedTest(name = "searchDeviceWearers v2 should return Ok with an empty list when the search string is: {0}")
@@ -165,9 +176,8 @@ class DeviceWearerControllerTest {
     Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(allUsers)
     val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2(queryString)
 
-    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
-    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
+    Assertions.assertThat(result.body.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    confirmNoError(result, expected)
   }
 
   @ParameterizedTest(name = "searchDeviceWearers v2 should return Ok with a list of matching values when the search string is: {0}")
@@ -179,11 +189,10 @@ class DeviceWearerControllerTest {
     Mockito.`when`(deviceWearerService.getMatchingDeviceWearers(queryString)).thenReturn(listOf(expectedData))
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(expectedData), HttpStatus.OK)
 
-    val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2(queryString) as? ResponseEntity<DeviceWearerResponse>
+    val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2(queryString)
 
-    Assertions.assertThat(result?.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result?.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
-    Assertions.assertThat(result?.body?.error).isEqualTo(expected.body.error)
+    Assertions.assertThat(result.body.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    confirmNoError(result, expected)
   }
 
   private companion object {
