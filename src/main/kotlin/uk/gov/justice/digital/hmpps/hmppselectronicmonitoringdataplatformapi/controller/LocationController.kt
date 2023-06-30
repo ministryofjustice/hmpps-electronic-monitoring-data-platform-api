@@ -12,7 +12,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.res
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.ILocationService
 import java.util.*
 
-@RequestMapping("location")
+@RequestMapping("locations")
 @RestController
 class LocationController(@Autowired private val locationService: ILocationService) {
   @GetMapping("/v1")
