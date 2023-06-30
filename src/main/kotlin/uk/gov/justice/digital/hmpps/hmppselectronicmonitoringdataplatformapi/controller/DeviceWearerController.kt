@@ -70,7 +70,7 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
 
   @GetMapping("/v1/id/{id}")
   fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<DeviceWearerResponse> {
-    if (!StaticHelpers().ValidateUUID(deviceWearerId)) {
+    if (!StaticHelpers().validateUUID(deviceWearerId)) {
       throw EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
     }
     val result = deviceWearerService.getDeviceWearerById(deviceWearerId)
