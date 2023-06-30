@@ -10,23 +10,23 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.rep
 
 class LocationServiceTest {
   @Test
-  fun `getAllGPSData should call to fetch all data from the database`() {
-    val gpsDataRepository = Mockito.mock(LocationRepository::class.java)
-    val locationService = LocationService(gpsDataRepository)
+  fun `getAllLocations should call to fetch all data from the database`() {
+    val locationRepository = Mockito.mock(LocationRepository::class.java)
+    val locationService = LocationService(locationRepository)
     locationService.getAllLocationData()
-    verify(gpsDataRepository, times(1)).findAll()
+    verify(locationRepository, times(1)).findAll()
   }
 
   @Test
-  fun `getGPSDataForUser should call findByDeviceWearerId to fetch data from the database and return an empty list if no matches`() {
-    val gpsDataRepository = Mockito.mock(LocationRepository::class.java)
-    val locationService = LocationService(gpsDataRepository)
+  fun `getLocationsForDeviceWearer should call findByDeviceWearerId to fetch data from the database and return an empty list if no matches`() {
+    val locationRepository = Mockito.mock(LocationRepository::class.java)
+    val locationService = LocationService(locationRepository)
     val userId = "test user ID"
     val expectedResult: List<Location> = listOf()
 
     val result: List<Location> = locationService.getAllLocationDataForDeviceWearer(userId)
 
-    verify(gpsDataRepository, times(1)).findLocationByDeviceWearerId(userId)
+    verify(locationRepository, times(1)).findLocationByDeviceWearerId(userId)
     Assertions.assertThat(result).isEqualTo(expectedResult)
   }
 }
