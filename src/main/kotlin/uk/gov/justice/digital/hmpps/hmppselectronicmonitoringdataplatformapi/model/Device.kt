@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mo
 import jakarta.persistence.*
 import org.springframework.format.annotation.DateTimeFormat
 import java.util.*
+import com.fasterxml.jackson.annotation.JsonIgnore
 
 @Entity
 @Table(name = "device")
@@ -23,6 +24,7 @@ data class Device(
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   val dateTagRemoved: Date? = Date(Long.MIN_VALUE),
 
+  @JsonIgnore
   @ManyToOne(cascade = [(CascadeType.REMOVE)], fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "device_wearer_id")
   val deviceWearer: DeviceWearer? = null

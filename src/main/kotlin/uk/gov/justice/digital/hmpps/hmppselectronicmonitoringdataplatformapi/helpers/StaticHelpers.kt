@@ -1,8 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers
 
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class StaticHelpers {
@@ -18,7 +16,7 @@ class StaticHelpers {
 
   fun validateData(date: String): Boolean {
     try {
-      val localDateTime = LocalDateTime.parse(date)
+      LocalDateTime.parse(date)
     } catch (e: Exception) {
       return false
     }
