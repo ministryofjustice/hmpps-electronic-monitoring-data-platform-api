@@ -9,11 +9,9 @@ import org.mockito.kotlin.verify
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Device
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.LocationService
-import java.util.UUID
 
 class LocationControllerTest {
 
@@ -77,7 +75,7 @@ class LocationControllerTest {
         status = "status",
         batteryLifeRemaining = 20,
       )
-    val deviceWearerId: String = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val deviceWearerId = "3fc55bb7-ba52-4854-be96-661f710328fc"
     val locationDataList: List<Location> = listOf(Location(1, device, 20.0, 20.0))
 
     Mockito.`when`(locationService.getAllLocationDataForDeviceWearer(deviceWearerId)).thenReturn(locationDataList)
