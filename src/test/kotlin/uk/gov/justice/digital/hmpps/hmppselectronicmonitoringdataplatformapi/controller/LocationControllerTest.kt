@@ -8,11 +8,10 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Device
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.LocationService
-import java.util.UUID
 
 class LocationControllerTest {
 
@@ -20,7 +19,16 @@ class LocationControllerTest {
 
   @Test
   fun `getAllLocations Should return a list of all location data`() {
-    val gpsDataList: List<Location> = listOf(Location(1, DeviceWearer(), 20.0, 20.0))
+    val device = Device(
+      id = 1,
+      deviceId = "deviceId",
+      modelId = "modelId",
+      firmwareVersion = "firmwareVersion",
+      deviceType = "deviceType",
+      status = "status",
+      batteryLifeRemaining = 20,
+    )
+    val gpsDataList: List<Location> = listOf(Location(1, device, 20.0, 20.0))
 
     Mockito.`when`(locationService.getAllLocationData()).thenReturn(gpsDataList)
 
@@ -58,14 +66,17 @@ class LocationControllerTest {
 
   @Test
   fun `getLocationsDataByDeviceWearerId Should return a list of location data`() {
-    val deviceWearer = DeviceWearer(
-      id=1,
-      deviceWearerId=UUID.randomUUID().toString(),
-      firstName="firstName",
-      lastName="lastName",
-      type="type")
-    val deviceWearerId: String = deviceWearer.deviceWearerId
-    val locationDataList: List<Location> = listOf(Location(1, deviceWearer, 20.0, 20.0))
+    val device = Device(
+      id = 1,
+        deviceId = "deviceId",
+        modelId = "modelId",
+        firmwareVersion = "firmwareVersion",
+        deviceType = "deviceType",
+        status = "status",
+        batteryLifeRemaining = 20,
+      )
+    val deviceWearerId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val locationDataList: List<Location> = listOf(Location(1, device, 20.0, 20.0))
 
     Mockito.`when`(locationService.getAllLocationDataForDeviceWearer(deviceWearerId)).thenReturn(locationDataList)
 
