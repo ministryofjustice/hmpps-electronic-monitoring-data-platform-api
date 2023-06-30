@@ -124,4 +124,51 @@ class LocationControllerTest {
 
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
+
+  @Test
+  fun `getLocationsByDeviceWearerIdAndTimeFrame should return bad request when it does not receive valid deviceWearerId`() {
+    val deviceWearerId = "456an"
+    val startDate = "2000-11-30T01:32:00"
+    val endDate = "2000-12-10T01:32:00"
+
+    val expected: ResponseEntity<LocationResponse> = ResponseEntity(LocationResponse("Insert a valid device wearer id"), HttpStatus.BAD_REQUEST)
+
+    val result = LocationController(locationService).getLocationsDataByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
+
+    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
+    verify(locationService, times(0)).getAllLocationsForDeviceWearer(any())
+  }
+
+  @Test
+  fun `getLocationsByDeviceWearerIdAndTimeFrame should return bad request when it does not receive valid startDate`() {
+    val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
+    val startDate = "2000-11-30T01:64"
+    val endDate = "2000-12-10T01:32:00"
+
+    val expected: ResponseEntity<LocationResponse> = ResponseEntity(LocationResponse("Insert a valid start date"), HttpStatus.BAD_REQUEST)
+
+    val result = LocationController(locationService).getLocationsDataByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
+
+    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
+    verify(locationService, times(0)).getAllLocationsForDeviceWearer(any())
+  }
+
+  @Test
+  fun `getLocationsByDeviceWearerIdAndTimeFrame should return bad request when it does not receive valid endDate`() {
+    val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
+    val startDate = "2000-11-30T01:32:00"
+    val endDate = "2000-12-10T01:32:67"
+
+    val expected: ResponseEntity<LocationResponse> = ResponseEntity(LocationResponse("Insert a valid end date"), HttpStatus.BAD_REQUEST)
+
+    val result = LocationController(locationService).getLocationsDataByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
+
+    Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
+    verify(locationService, times(0)).getAllLocationsForDeviceWearer(any())
+  }
+
+
 }
