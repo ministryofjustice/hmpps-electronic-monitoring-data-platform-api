@@ -26,7 +26,7 @@ class LocationServiceTest {
 
     val result: List<Location> = locationService.getAllLocationDataForDeviceWearer(userId)
 
-    verify(locationRepository, times(1)).findLocationByDeviceWearerId(userId)
+    verify(locationRepository, times(1)).findLocationsByDeviceWearerId(userId)
     Assertions.assertThat(result).isEqualTo(expectedResult)
   }
 }
