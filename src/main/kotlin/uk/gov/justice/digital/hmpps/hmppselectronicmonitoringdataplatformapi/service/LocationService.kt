@@ -1,21 +1,21 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.GPSData
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.repository.GPSDataRepository
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.repository.LocationRepository
 
 interface ILocationService {
-  fun getAllGPSData(): List<GPSData>
-  fun getGPSDataForUser(deviceWearerId: String): List<GPSData>
+  fun getAllLocationData(): List<Location>
+  fun getAllLocationDataForDeviceWearer(deviceWearerId: String): List<Location>
 }
 
 @Service
-class LocationService(@Autowired private val gpsDataRepository: GPSDataRepository) :
+class LocationService(@Autowired private val gpsDataRepository: LocationRepository) :
   ILocationService {
-  override fun getAllGPSData(): List<GPSData> {
+  override fun getAllLocationData(): List<Location> {
     return gpsDataRepository.findAll().toList()
   }
-  override fun getGPSDataForUser(deviceWearerId: String): List<GPSData> {
-    return gpsDataRepository.findByDeviceWearerId(deviceWearerId) ?: listOf()
+  override fun getAllLocationDataForDeviceWearer(deviceWearerId: String): List<Location> {
+    return gpsDataRepository.findLocationByDeviceWearerId(deviceWearerId) ?: listOf()
   }
 }
