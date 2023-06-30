@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
@@ -31,7 +32,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
   @GetMapping("/v1/device-wearer-id/{id}")
   fun getLocationsDataByDeviceWearerId(@PathVariable("id") deviceWearerId: String): ResponseEntity<LocationResponse> {
     try {
-      if (!StaticHelpers().ValidateUUID(deviceWearerId)) {
+      if (!StaticHelpers().validateUUID(deviceWearerId)) {
         return ResponseEntity(LocationResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
       }
       val result = locationService.getAllLocationsForDeviceWearer(deviceWearerId)
@@ -42,5 +43,23 @@ class LocationController(@Autowired private val locationService: ILocationServic
     } catch (e: Exception) {
       return ResponseEntity(LocationResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
     }
+  }
+
+  @GetMapping("/v1/serach-by-time")
+  fun getLocationsDataByDeviceWearerIdAndTimeFrame(@RequestParam("deviceWearerId") deviceWearerId: String, @RequestParam("startDate") startDate: String, @RequestParam("endDate") endDate: String): ResponseEntity<LocationResponse> {
+    var errorMessage = ""
+    if (!StaticHelpers().validateUUID(deviceWearerId)) {
+      errorMessage = "Insert a valid device wearer id"
+    }
+    if (!StaticHelpers().validateData(startDate)) {
+      errorMessage = "Insert a valid start date"
+    }
+    if (!StaticHelpers().validateData(endDate)) {
+      errorMessage = "Insert a valid end date"
+    }
+    if (errorMessage != "") {
+      return ResponseEntity(LocationResponse(errorMessage), HttpStatus.BAD_REQUEST)
+    }
+    return TODO()
   }
 }
