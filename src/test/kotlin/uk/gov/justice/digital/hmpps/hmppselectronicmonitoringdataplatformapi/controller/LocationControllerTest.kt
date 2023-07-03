@@ -23,6 +23,7 @@ class LocationControllerTest {
     Assertions.assertThat(result.body?.error).isEqualTo("")
     Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
   }
+
   @Test
   fun `getAllLocations Should return a list of all location data`() {
     val device = Device(
@@ -215,6 +216,21 @@ class LocationControllerTest {
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getAllLocationsByDeviceWearerIdAndTimeFrame(any(), any(), any())
   }
+
+  @Test
+  fun `getLocationsByDeviceWearerIdAndTimeFrame should return internal server error when there is an internal server issue`() {
+    Mockito.`when`(locationService.getAllLocationsByDeviceWearerIdAndTimeFrame(any<String>(), any<Date>(), any<Date>())).thenThrow(RuntimeException("Exception"))
+    val expected: ResponseEntity<LocationResponse> =
+      ResponseEntity(LocationResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
+    val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
+    val startDate = "2000-10-31T01:30:07.000-05:00"
+    val endDate = "2000-10-31T01:30:20.000-05:00"
+
+    val result = LocationController(locationService).getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
+
+    Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
+  }
+
 
   // test when we are calling service
 }
