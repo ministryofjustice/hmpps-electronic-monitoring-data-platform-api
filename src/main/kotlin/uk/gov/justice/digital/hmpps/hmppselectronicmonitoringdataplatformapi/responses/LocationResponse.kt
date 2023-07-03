@@ -3,14 +3,14 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 
 class LocationResponse : BaseResponse {
-  val location: List<Location>
+  val locations: List<Location>
   constructor(locationList: List<Location>?, error: String = "") : super(error) {
-    this.location = locationList ?:listOf()
+    this.locations = locationList ?:listOf()
   }
   constructor(locationList: Location, error: String = "") : super(error) {
-    this.location = listOf<Location>(locationList)
+    this.locations = listOf<Location>(locationList)
   }
   constructor(error: String) : super(error) {
-    this.location = listOf<Location>()
+    this.locations = listOf<Location>()
   }
 }
