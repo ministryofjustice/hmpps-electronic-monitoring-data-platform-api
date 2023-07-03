@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.DateConverter
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.ILocationService
@@ -28,24 +29,28 @@ class LocationController(@Autowired private val locationService: ILocationServic
       }
       return ResponseEntity(LocationResponse(result), HttpStatus.OK)
     } catch (e: Exception) {
-      return ResponseEntity(LocationResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
+      throw EmApiError()
+
+      // return ResponseEntity(LocationResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
   @GetMapping("/v1/device-wearer-id/{id}")
   fun getLocationsDataByDeviceWearerId(@PathVariable("id") deviceWearerId: String): ResponseEntity<LocationResponse> {
-    try {
+   // try {
       if (!StaticHelpers().validateUUID(deviceWearerId)) {
-        return ResponseEntity(LocationResponse("Insert a valid id"), HttpStatus.BAD_REQUEST)
+        throw EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
       }
       val result = locationService.getAllLocationsForDeviceWearer(deviceWearerId)
       if (result.isEmpty()) {
         return ResponseEntity(LocationResponse("No data found"), HttpStatus.OK)
       }
       return ResponseEntity(LocationResponse(result), HttpStatus.OK)
-    } catch (e: Exception) {
-      return ResponseEntity(LocationResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+   // } catch (e: Exception) {
+     // throw EmApiError()
+
+     // return ResponseEntity(LocationResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
+  //  }
   }
 
   @GetMapping("/v1/serach-by-time")
