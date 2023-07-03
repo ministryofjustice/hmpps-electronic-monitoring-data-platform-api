@@ -13,6 +13,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.res
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.ILocationService
 import java.util.*
 
+
 @RequestMapping("locations")
 @RestController
 class LocationController(@Autowired private val locationService: ILocationService) {
@@ -51,10 +52,10 @@ class LocationController(@Autowired private val locationService: ILocationServic
     if (!StaticHelpers().validateUUID(deviceWearerId)) {
       errorMessage = "Insert a valid device wearer id"
     }
-    if (!StaticHelpers().validateData(startDate)) {
+    if (!StaticHelpers().isValidISODateTime(startDate)) {
       errorMessage = "Insert a valid start date"
     }
-    if (!StaticHelpers().validateData(endDate)) {
+    if (!StaticHelpers().isValidISODateTime(endDate)) {
       errorMessage = "Insert a valid end date"
     }
     if (errorMessage != "") {
