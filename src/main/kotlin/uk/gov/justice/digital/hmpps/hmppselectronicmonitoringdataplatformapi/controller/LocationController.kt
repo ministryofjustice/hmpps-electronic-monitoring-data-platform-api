@@ -1,4 +1,5 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.controller
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -11,6 +12,8 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.hel
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.ILocationService
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -48,6 +51,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
 
   @GetMapping("/v1/serach-by-time")
   fun getLocationsByDeviceWearerIdAndTimeFrame(@RequestParam("deviceWearerId") deviceWearerId: String, @RequestParam("startDate") startDate: String, @RequestParam("endDate") endDate: String): ResponseEntity<LocationResponse> {
+
     var errorMessage = ""
     if (!StaticHelpers().validateUUID(deviceWearerId)) {
       errorMessage = "Insert a valid device wearer id"
@@ -61,6 +65,12 @@ class LocationController(@Autowired private val locationService: ILocationServic
     if (errorMessage != "") {
       return ResponseEntity(LocationResponse(errorMessage), HttpStatus.BAD_REQUEST)
     }
-    return ResponseEntity(LocationResponse(listOf()), HttpStatus.OK)
+    val df2: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+
+    val start: Date = df2.parse(startDate)
+    val end: Date = df2.parse(endDate)
+    val result = locationService.getAllLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end)
+
+    return ResponseEntity(LocationResponse(result), HttpStatus.OK)
   }
 }
