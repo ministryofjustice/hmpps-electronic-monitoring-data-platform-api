@@ -17,6 +17,10 @@ class LocationControllerTest {
 
   val locationService = Mockito.mock(LocationService::class.java)
 
+  fun confirmNoError(result: ResponseEntity<LocationResponse>, expected: ResponseEntity<LocationResponse>) {
+    Assertions.assertThat(result.body?.error).isEqualTo("")
+    Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+  }
   @Test
   fun `getAllLocations Should return a list of all location data`() {
     val device = Device(
@@ -37,7 +41,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getAllLocations()
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body?.location).isEqualTo(expected.body.location)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
@@ -49,7 +53,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getAllLocations()
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body?.location).isEqualTo(expected.body.location)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
@@ -85,7 +89,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getLocationsDataByDeviceWearerId(deviceWearerId)
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body?.location).isEqualTo(expected.body.location)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
@@ -110,7 +114,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getLocationsDataByDeviceWearerId(userId)
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
-    Assertions.assertThat(result.body?.location).isEqualTo(expected.body.location)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
   }
 
@@ -133,7 +137,7 @@ class LocationControllerTest {
 
     val expected: ResponseEntity<LocationResponse> = ResponseEntity(LocationResponse("Insert a valid device wearer id"), HttpStatus.BAD_REQUEST)
 
-    val result = LocationController(locationService).getLocationsDataByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
+    val result = LocationController(locationService).getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
@@ -148,7 +152,7 @@ class LocationControllerTest {
 
     val expected: ResponseEntity<LocationResponse> = ResponseEntity(LocationResponse("Insert a valid start date"), HttpStatus.BAD_REQUEST)
 
-    val result = LocationController(locationService).getLocationsDataByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
+    val result = LocationController(locationService).getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
@@ -163,10 +167,21 @@ class LocationControllerTest {
 
     val expected: ResponseEntity<LocationResponse> = ResponseEntity(LocationResponse("Insert a valid end date"), HttpStatus.BAD_REQUEST)
 
-    val result = LocationController(locationService).getLocationsDataByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
+    val result = LocationController(locationService).getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
 
     Assertions.assertThat(result.statusCode).isEqualTo(expected.statusCode)
     Assertions.assertThat(result.body?.error).isEqualTo(expected.body.error)
     verify(locationService, times(0)).getAllLocationsForDeviceWearer(any())
+  }
+  @Test
+  fun `getLocationsByDeviceWearerIdAndTimeFrame should return empty list when receive valid dates and id but no data inside` () {
+    val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
+    val startDate = "2000-10-31T01:30:07.000-05:00"
+    val endDate = "2000-10-31T01:30:20.000-05:00"
+    val expected = ResponseEntity(LocationResponse("No data found"), HttpStatus.OK)
+    val result = LocationController(locationService).getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
+
+    confirmNoError(result, expected)
+    Assertions.assertThat(result.body?.locations).isEqualTo(listOf<LocationResponse>())
   }
 }

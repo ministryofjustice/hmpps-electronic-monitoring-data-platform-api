@@ -47,7 +47,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
   }
 
   @GetMapping("/v1/serach-by-time")
-  fun getLocationsDataByDeviceWearerIdAndTimeFrame(@RequestParam("deviceWearerId") deviceWearerId: String, @RequestParam("startDate") startDate: String, @RequestParam("endDate") endDate: String): ResponseEntity<LocationResponse> {
+  fun getLocationsByDeviceWearerIdAndTimeFrame(@RequestParam("deviceWearerId") deviceWearerId: String, @RequestParam("startDate") startDate: String, @RequestParam("endDate") endDate: String): ResponseEntity<LocationResponse> {
     var errorMessage = ""
     if (!StaticHelpers().validateUUID(deviceWearerId)) {
       errorMessage = "Insert a valid device wearer id"
@@ -61,6 +61,6 @@ class LocationController(@Autowired private val locationService: ILocationServic
     if (errorMessage != "") {
       return ResponseEntity(LocationResponse(errorMessage), HttpStatus.BAD_REQUEST)
     }
-    return TODO()
+    return ResponseEntity(LocationResponse(listOf()), HttpStatus.OK)
   }
 }
