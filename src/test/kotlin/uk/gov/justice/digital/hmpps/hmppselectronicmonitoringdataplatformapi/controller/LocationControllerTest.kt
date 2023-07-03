@@ -8,12 +8,11 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.DateConverter
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Device
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.LocationService
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 class LocationControllerTest {
@@ -204,10 +203,8 @@ class LocationControllerTest {
     )
 
     val locationDataList: List<Location> = listOf(Location(1, device, 20.0, 20.0))
-    val df2: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-
-    var start: Date = df2.parse(startDate)
-    var end: Date = df2.parse(endDate)
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
 
     Mockito.`when`(locationService.getAllLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end)).thenReturn(locationDataList)
 
@@ -216,6 +213,7 @@ class LocationControllerTest {
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
+    verify(locationService, times(1)).getAllLocationsByDeviceWearerIdAndTimeFrame(any(), any(), any())
   }
 
   // test when we are calling service

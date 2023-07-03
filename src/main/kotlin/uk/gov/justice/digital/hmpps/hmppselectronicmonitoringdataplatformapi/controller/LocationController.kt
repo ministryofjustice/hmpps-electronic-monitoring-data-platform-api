@@ -8,12 +8,11 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.DateConverter
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.ILocationService
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -65,10 +64,9 @@ class LocationController(@Autowired private val locationService: ILocationServic
     if (errorMessage != "") {
       return ResponseEntity(LocationResponse(errorMessage), HttpStatus.BAD_REQUEST)
     }
-    val df2: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
 
-    val start: Date = df2.parse(startDate)
-    val end: Date = df2.parse(endDate)
     val result = locationService.getAllLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end)
 
     return ResponseEntity(LocationResponse(result), HttpStatus.OK)
