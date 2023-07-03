@@ -12,6 +12,9 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.LocationService
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class LocationControllerTest {
 
@@ -184,4 +187,36 @@ class LocationControllerTest {
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(listOf<LocationResponse>())
   }
+
+  @Test
+  fun `getLocationsByDeviceWearerIdAndTimeFrame should return location list when receive valid dates and id and data exist` () {
+    val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
+    val startDate = "2000-10-31T01:30:07.000-05:00"
+    val endDate = "2000-10-31T01:30:20.000-05:00"
+    val device = Device(
+      id = 1,
+      deviceId = "deviceId",
+      modelId = "modelId",
+      firmwareVersion = "firmwareVersion",
+      deviceType = "deviceType",
+      status = "status",
+      batteryLifeRemaining = 20,
+    )
+
+    val locationDataList: List<Location> = listOf(Location(1, device, 20.0, 20.0))
+    val df2: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+
+    var start: Date = df2.parse(startDate)
+    var end: Date = df2.parse(endDate)
+
+    Mockito.`when`(locationService.getAllLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end)).thenReturn(locationDataList)
+
+    val expected: ResponseEntity<LocationResponse> = ResponseEntity(LocationResponse(locationDataList), HttpStatus.OK)
+    val result = LocationController(locationService).getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
+
+    confirmNoError(result, expected)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
+  }
+
+  // test when we are calling service
 }
