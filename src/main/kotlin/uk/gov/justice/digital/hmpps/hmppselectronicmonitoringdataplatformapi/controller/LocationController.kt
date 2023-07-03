@@ -51,24 +51,29 @@ class LocationController(@Autowired private val locationService: ILocationServic
   @GetMapping("/v1/serach-by-time")
   fun getLocationsByDeviceWearerIdAndTimeFrame(@RequestParam("deviceWearerId") deviceWearerId: String, @RequestParam("startDate") startDate: String, @RequestParam("endDate") endDate: String): ResponseEntity<LocationResponse> {
 
-    var errorMessage = ""
-    if (!StaticHelpers().validateUUID(deviceWearerId)) {
-      errorMessage = "Insert a valid device wearer id"
-    }
-    if (!StaticHelpers().isValidISODateTime(startDate)) {
-      errorMessage = "Insert a valid start date"
-    }
-    if (!StaticHelpers().isValidISODateTime(endDate)) {
-      errorMessage = "Insert a valid end date"
-    }
-    if (errorMessage != "") {
-      return ResponseEntity(LocationResponse(errorMessage), HttpStatus.BAD_REQUEST)
-    }
-    val start: Date = DateConverter().convertFromStringToDate(startDate)
-    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    try {
+      var errorMessage = ""
+      if (!StaticHelpers().validateUUID(deviceWearerId)) {
+        errorMessage = "Insert a valid device wearer id"
+      }
+      if (!StaticHelpers().isValidISODateTime(startDate)) {
+        errorMessage = "Insert a valid start date"
+      }
+      if (!StaticHelpers().isValidISODateTime(endDate)) {
+        errorMessage = "Insert a valid end date"
+      }
+      if (errorMessage != "") {
+        return ResponseEntity(LocationResponse(errorMessage), HttpStatus.BAD_REQUEST)
+      }
+      val start: Date = DateConverter().convertFromStringToDate(startDate)
+      val end: Date = DateConverter().convertFromStringToDate(endDate)
 
-    val result = locationService.getAllLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end)
+      val result = locationService.getAllLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end)
 
-    return ResponseEntity(LocationResponse(result), HttpStatus.OK)
+      return ResponseEntity(LocationResponse(result), HttpStatus.OK)
+    } catch (e: Exception) {
+      return ResponseEntity(LocationResponse("Something went wrong in our side"), HttpStatus.INTERNAL_SERVER_ERROR)
+    }
   }
+
 }
