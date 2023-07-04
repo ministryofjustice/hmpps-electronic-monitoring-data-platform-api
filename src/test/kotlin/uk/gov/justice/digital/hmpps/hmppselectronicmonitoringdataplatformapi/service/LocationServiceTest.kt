@@ -37,8 +37,8 @@ class LocationServiceTest {
     val locationService = LocationService(locationRepository)
     val deviceWearerId = "test user ID"
 
-    val startDate = DateConverter().convertFromStringToDate("2000-11-30T01:32:00.000-05:00")
-    val endDate = DateConverter().convertFromStringToDate("2000-12-10T01:32:00.000-05:00")
+    val startDate = DateConverter().convertFromStringToDate("2000-11-30T01:32:00.000-00:00")
+    val endDate = DateConverter().convertFromStringToDate("2000-12-10T01:32:00.000-00:00")
     val expectedResult: List<Location> = listOf()
 
     val result: List<Location> = locationService.getAllLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
