@@ -138,8 +138,8 @@ class LocationControllerTest {
   @Test
   fun `getLocationsByDeviceWearerIdAndTimeFrame should return bad request when it does not receive valid deviceWearerId`() {
     val deviceWearerId = "456an"
-    val startDate = "2000-10-31T01:30:00.000-05:00"
-    val endDate = "2000-10-31T01:30:00.000-05:00"
+    val startDate = "2000-10-31T01:30:00.000-00:00"
+    val endDate = "2000-10-31T01:30:00.000-00:00"
 
     val expected = EmApiError("Insert a valid device wearer id", HttpStatus.BAD_REQUEST)
     val result = assertThrows<EmApiError> {
@@ -161,8 +161,8 @@ class LocationControllerTest {
   @Test
   fun `getLocationsByDeviceWearerIdAndTimeFrame should return bad request when it does not receive valid startDate`() {
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
-    val startDate = "2000-10-31T01:30:67.000-05:00"
-    val endDate = "2000-10-31T01:30:00.000-05:00"
+    val startDate = "2000-10-31T01:30:67.000-00:00"
+    val endDate = "2000-10-31T01:30:00.000-00:00"
 
     val expected = EmApiError("Insert a valid start date", HttpStatus.BAD_REQUEST)
     val result = assertThrows<EmApiError> {
@@ -184,8 +184,8 @@ class LocationControllerTest {
   @Test
   fun `getLocationsByDeviceWearerIdAndTimeFrame should return bad request when it does not receive valid endDate`() {
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
-    val startDate = "2000-10-31T01:30:00.000-05:00"
-    val endDate = "2000-10-31T01:30:67.000-05:00"
+    val startDate = "2000-10-31T01:30:00.000-00:00"
+    val endDate = "2000-10-31T01:30:67.000-00:00"
 
     val expected = EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
     val result = assertThrows<EmApiError> {
@@ -207,8 +207,8 @@ class LocationControllerTest {
   @Test
   fun `getLocationsByDeviceWearerIdAndTimeFrame should return empty list when receive valid dates and id but no data inside`() {
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
-    val startDate = "2000-10-31T01:30:07.000-05:00"
-    val endDate = "2000-10-31T01:30:20.000-05:00"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01:30:20.000-00:00"
     val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     val result =
       LocationController(locationService).getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
@@ -226,8 +226,8 @@ class LocationControllerTest {
   @Test
   fun `getLocationsByDeviceWearerIdAndTimeFrame should return location list when receive valid dates and id and data exist`() {
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
-    val startDate = "2000-10-31T01:30:07.000-05:00"
-    val endDate = "2000-10-31T01:30:20.000-05:00"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01:30:20.000-00:00"
     val device = Device(
       id = 1,
       deviceId = "deviceId",
@@ -261,8 +261,8 @@ class LocationControllerTest {
   @Test
   fun `getLocationsByDeviceWearerIdAndTimeFrame should return list of two locations when receive valid dates and id and data exist`() {
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
-    val startDate = "2000-10-31T01:30:07.000-05:00"
-    val endDate = "2000-10-31T01:30:20.000-05:00"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01:30:20.000-00:00"
     val device = Device(
       id = 1,
       deviceId = "deviceId",
@@ -298,8 +298,8 @@ class LocationControllerTest {
     Mockito.`when`(locationService.getAllLocationsByDeviceWearerIdAndTimeFrame(any<String>(), any<Date>(), any<Date>()))
       .thenThrow(RuntimeException("Exception"))
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
-    val startDate = "2000-10-31T01:30:07.000-05:00"
-    val endDate = "2000-10-31T01:30:20.000-05:00"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01:30:20.000-00:00"
 
     assertThrows<Exception> {
       LocationController(locationService).getLocationsByDeviceWearerIdAndTimeFrame(
