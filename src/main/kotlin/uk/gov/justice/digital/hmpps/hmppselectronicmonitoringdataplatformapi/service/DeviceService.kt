@@ -7,9 +7,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.rep
 
 interface IDeviceService {
   fun getAllDevices(): List<Device>
-
   fun getDevicesByDeviceWearerId(deviceWearerId: String): List<Device>
-
 }
 
 @Service

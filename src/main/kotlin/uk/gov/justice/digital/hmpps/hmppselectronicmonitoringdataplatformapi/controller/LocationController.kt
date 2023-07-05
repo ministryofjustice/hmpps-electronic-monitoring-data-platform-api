@@ -34,7 +34,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
     if (!StaticHelpers().validateUUID(deviceWearerId)) {
       throw EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
     }
-    val result = locationService.getAllLocationsForDeviceWearer(deviceWearerId)
+    val result = locationService.getLocationsByDeviceWearerId(deviceWearerId)
     if (result.isEmpty()) {
       return ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     }
@@ -63,7 +63,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
     val start: Date = DateConverter().convertFromStringToDate(startDate)
     val end: Date = DateConverter().convertFromStringToDate(endDate)
 
-    val result = locationService.getAllLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end)
+    val result = locationService.getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end)
     if (result.isEmpty()) {
       return ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     }
