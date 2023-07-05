@@ -25,7 +25,7 @@ class LocationServiceTest {
     val deviceWearerId = "test user ID"
     val expectedResult: List<Location> = listOf()
 
-    val result: List<Location> = locationService.getAllLocationsForDeviceWearer(deviceWearerId)
+    val result: List<Location> = locationService.getLocationsByDeviceWearerId(deviceWearerId)
 
     verify(locationRepository, times(1)).findLocationsByDeviceWearerId(deviceWearerId)
     Assertions.assertThat(result).isEqualTo(expectedResult)
@@ -41,7 +41,7 @@ class LocationServiceTest {
     val endDate = DateConverter().convertFromStringToDate("2000-12-10T01:32:00.000-00:00")
     val expectedResult: List<Location> = listOf()
 
-    val result: List<Location> = locationService.getAllLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
+    val result: List<Location> = locationService.getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
 
     verify(locationRepository, times(1)).findLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
     Assertions.assertThat(result).isEqualTo(expectedResult)
