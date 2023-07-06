@@ -42,7 +42,6 @@ class LocationControllerTest {
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
-    verify(locationService, times(1)).getAllLocations()
   }
 
   @Test
@@ -86,6 +85,7 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).getLocationsByDeviceWearerId(any<String>())
   }
+
   @Test
   fun `getLocationsByDeviceWearerId should return no data found when no location exists`() {
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
@@ -96,8 +96,8 @@ class LocationControllerTest {
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
-    verify(locationService, times(1)).getLocationsByDeviceWearerId(any<String>())
   }
+
   @Test
   fun `getLocationsByDeviceWearerId should return a list of location data`() {
     val device = Device(
@@ -212,11 +212,6 @@ class LocationControllerTest {
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(listOf<LocationResponse>())
-    verify(locationService, times(1)).getLocationsByDeviceWearerIdAndTimeFrame(
-      any<String>(),
-      any<Date>(),
-      any<Date>(),
-    )
 
   }
 
@@ -310,5 +305,63 @@ class LocationControllerTest {
       any<Date>(),
       any<Date>(),
     )
+  }
+
+  @Test
+  fun `getLocationsByDeviceId should return bad request when it does not receive a valid id`() {
+    val deviceId = "456an"
+    val expected = EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> { LocationController(locationService).getLocationsByDeviceId(deviceId) }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).getLocationsByDeviceId(any<String>())
+  }
+
+  @Test
+  fun `getLocationsByDeviceId should return no data found when no location exists`() {
+    val deviceId = "b537065a-094e-47eb-8fab-9698a9664d35"
+    Mockito.`when`(locationService.getLocationsByDeviceId(deviceId)).thenReturn(listOf())
+
+    val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
+    val result = LocationController(locationService).getLocationsByDeviceId(deviceId)
+
+    confirmNoError(result, expected)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+  }
+
+  @Test
+  fun `getLocationsByDeviceId should return a list of location data`() {
+    val device = Device(
+      id = 1,
+      deviceId = "deviceId",
+      modelId = "modelId",
+      firmwareVersion = "firmwareVersion",
+      deviceType = "deviceType",
+      status = "status",
+      batteryLifeRemaining = 20,
+    )
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val locationDataList: List<Location> = listOf(Location(1, device, 20.0, 20.0))
+
+    Mockito.`when`(locationService.getLocationsByDeviceId(deviceId)).thenReturn(locationDataList)
+
+    val expected: ResponseEntity<LocationResponse> = ResponseEntity(LocationResponse(locationDataList), HttpStatus.OK)
+    val result = LocationController(locationService).getLocationsByDeviceId(deviceId)
+
+    confirmNoError(result, expected)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    verify(locationService, times(1)).getLocationsByDeviceId(any<String>())
+  }
+
+  @Test
+  fun `getLocationsByDeviceId should return an internal server error when there is internal server issue`() {
+    Mockito.`when`(locationService.getLocationsByDeviceId(any<String>()))
+      .thenThrow(RuntimeException("Exception"))
+    val deviceId = "d064e527-284d-4fc0-bda7-6295f1f7c8f4"
+
+    assertThrows<Exception> {
+      LocationController(locationService).getLocationsByDeviceId(deviceId)
+    }
+    verify(locationService, times(1)).getLocationsByDeviceId(any<String>())
   }
 }

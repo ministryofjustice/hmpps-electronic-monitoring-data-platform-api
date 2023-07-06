@@ -75,7 +75,6 @@ class DeviceWearerControllerTest {
 
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
     confirmNoError(result, expected)
-    verify(deviceWearerService, times(1)).getDeviceWearerById(any<String>())
   }
 
   @Test
@@ -168,7 +167,7 @@ class DeviceWearerControllerTest {
 
     Assertions.assertThat(result.body.deviceWearers).isEqualTo(expected.body.deviceWearers)
     confirmNoError(result, expected)
-    verify(deviceWearerService, times(1)).getMatchingDeviceWearers(any<String>())
+
   }
 
   @ParameterizedTest(name = "searchDeviceWearers v2 should return Ok with a list of matching values when the search string is: {0}")

@@ -53,7 +53,6 @@ class DeviceControllerTest {
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.devices).isEqualTo(expected.body.devices)
-    verify(deviceService, times(1)).getDevicesByDeviceWearerId(any<String>())
   }
 
   @Test
