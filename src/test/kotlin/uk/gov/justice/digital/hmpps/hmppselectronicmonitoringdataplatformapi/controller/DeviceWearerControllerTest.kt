@@ -42,7 +42,7 @@ class DeviceWearerControllerTest {
   @Test
   fun `getAllDeviceWearers should return Ok with a message when there are no device wearers`() {
     Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(listOf<DeviceWearer>())
-    val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(message ="No data found"), HttpStatus.OK)
+    val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(message = "No data found"), HttpStatus.OK)
     val result = DeviceWearerController(deviceWearerService).getAllDeviceWearers()
 
     confirmNoError(result, expected)
@@ -178,11 +178,14 @@ class DeviceWearerControllerTest {
     Mockito.`when`(deviceWearerService.getMatchingDeviceWearers(queryString)).thenReturn(listOf(expectedData))
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(expectedData), HttpStatus.OK)
 
-    val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2(queryString)
+    val result1 = DeviceWearerController(deviceWearerService).searchDeviceWearersV2(queryString)
+    val result2 = DeviceWearerController(deviceWearerService).searchDeviceWearersV2PathVariable(queryString)
 
-    Assertions.assertThat(result.body.deviceWearers).isEqualTo(expected.body.deviceWearers)
-    confirmNoError(result, expected)
-    verify(deviceWearerService, times(1)).getMatchingDeviceWearers(any<String>())
+    Assertions.assertThat(result1.body.deviceWearers)
+      .isEqualTo(result2.body.deviceWearers)
+      .isEqualTo(expected.body.deviceWearers)
+    confirmNoError(result1, expected)
+    verify(deviceWearerService, times(2)).getMatchingDeviceWearers(any<String>())
   }
 
   private companion object {
