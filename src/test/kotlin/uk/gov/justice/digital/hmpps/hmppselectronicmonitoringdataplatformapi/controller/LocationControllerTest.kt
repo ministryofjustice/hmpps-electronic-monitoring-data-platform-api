@@ -85,6 +85,7 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).getLocationsByDeviceWearerId(any<String>())
   }
+
   @Test
   fun `getLocationsByDeviceWearerId should return no data found when no location exists`() {
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
@@ -96,6 +97,7 @@ class LocationControllerTest {
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
   }
+
   @Test
   fun `getLocationsByDeviceWearerId should return a list of location data`() {
     val device = Device(
@@ -348,6 +350,18 @@ class LocationControllerTest {
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    verify(locationService, times(1)).getLocationsByDeviceId(any<String>())
+  }
+
+  @Test
+  fun `getLocationsByDeviceId should return an internal server error when there is internal server issue`() {
+    Mockito.`when`(locationService.getLocationsByDeviceId(any<String>()))
+      .thenThrow(RuntimeException("Exception"))
+    val deviceId = "d064e527-284d-4fc0-bda7-6295f1f7c8f4"
+
+    assertThrows<Exception> {
+      LocationController(locationService).getLocationsByDeviceId(deviceId)
+    }
     verify(locationService, times(1)).getLocationsByDeviceId(any<String>())
   }
 }

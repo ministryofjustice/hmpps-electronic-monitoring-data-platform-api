@@ -23,17 +23,4 @@ class DeviceServiceTest {
     Assertions.assertThat(result).isEqualTo(expected)
   }
 
-//  @Test
-//  fun `getAllDevicesByDeviceWearerId should call to fetch all devices for the specific device wearer and return empty if no info`() {
-//    val deviceRepository = Mockito.mock(DeviceRepository::class.java)
-//    val deviceService = DeviceService(deviceRepository)
-//    val deviceWearerId = "test user ID"
-//    // val location = null
-//    // val deviceWearerId = "3fc55bb7-ba52-4854-be96-661f710328fc"
-//
-//    val expected: List<Device> = listOf()
-//    val result: List<Device> = deviceService.getAllDevicesByDeviceWearerId(deviceWearerId)
-
-//    verify(deviceRepository, times(1)).findDevicesByDeviceWearerId(deviceWearerId)
-//    Assertions.assertThat(result).isEqualTo(expected)
   }
