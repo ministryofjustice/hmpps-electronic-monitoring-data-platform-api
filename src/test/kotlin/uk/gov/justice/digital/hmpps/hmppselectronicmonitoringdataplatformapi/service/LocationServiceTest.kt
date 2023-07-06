@@ -10,21 +10,21 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.repository.LocationRepository
 
 class LocationServiceTest {
+  val locationRepository = Mockito.mock(LocationRepository::class.java)
+
   @Test
   fun `getAllLocations should call to fetch all data from the database`() {
-    val locationRepository = Mockito.mock(LocationRepository::class.java)
     val locationService = LocationService(locationRepository)
     locationService.getAllLocations()
     verify(locationRepository, times(1)).findAll()
   }
 
   @Test
-  fun `getLocationsForDeviceWearer should call findByDeviceWearerId to fetch data from the database and return an empty list if no matches`() {
-    val locationRepository = Mockito.mock(LocationRepository::class.java)
+  fun `getLocationsByDeviceWearer should call findByDeviceWearerId to fetch data from the database and return an empty list if no matches`() {
     val locationService = LocationService(locationRepository)
-    val deviceWearerId = "test user ID"
-    val expectedResult: List<Location> = listOf()
+    val deviceWearerId = "test device wearer id"
 
+    val expectedResult: List<Location> = listOf()
     val result: List<Location> = locationService.getLocationsByDeviceWearerId(deviceWearerId)
 
     verify(locationRepository, times(1)).findLocationsByDeviceWearerId(deviceWearerId)
@@ -33,17 +33,27 @@ class LocationServiceTest {
 
   @Test
   fun `getAllLocationsByDeviceWearerIdAndTimeFrame should call findLocationsByDeviceWearerIdAndTimeFrame to fetch data from the database and return an empty list if no matches`() {
-    val locationRepository = Mockito.mock(LocationRepository::class.java)
     val locationService = LocationService(locationRepository)
-    val deviceWearerId = "test user ID"
-
+    val deviceWearerId = "test device wearer id"
     val startDate = DateConverter().convertFromStringToDate("2000-11-30T01:32:00.000-00:00")
     val endDate = DateConverter().convertFromStringToDate("2000-12-10T01:32:00.000-00:00")
-    val expectedResult: List<Location> = listOf()
 
+    val expectedResult: List<Location> = listOf()
     val result: List<Location> = locationService.getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
 
     verify(locationRepository, times(1)).findLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
+    Assertions.assertThat(result).isEqualTo(expectedResult)
+  }
+
+  @Test
+  fun `getLocationsByDevice should call findByDeviceId to fetch data from the database and return an empty list if no matches`() {
+    val locationService = LocationService(locationRepository)
+    val deviceId = "test device id"
+
+    val expectedResult: List<Location> = listOf()
+    val result: List<Location> = locationService.getLocationsByDeviceId(deviceId)
+
+    verify(locationRepository, times(1)).findLocationsByDeviceId(deviceId)
     Assertions.assertThat(result).isEqualTo(expectedResult)
   }
 }
