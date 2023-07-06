@@ -70,4 +70,15 @@ class LocationController(@Autowired private val locationService: ILocationServic
     return ResponseEntity(LocationResponse(result), HttpStatus.OK)
   }
 
+  @GetMapping("/v1/device-id/{id}")
+  fun getLocationsByDeviceId(@PathVariable("id") deviceId: String): ResponseEntity<LocationResponse> {
+    if (!StaticHelpers().validateUUID(deviceId)) {
+      throw EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
+    }
+    val result = locationService.getLocationsByDeviceId(deviceId)
+    if (result.isEmpty()) {
+      return ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
+    }
+    return ResponseEntity(LocationResponse(result), HttpStatus.OK)
+  }
 }

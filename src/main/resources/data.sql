@@ -8,7 +8,7 @@ VALUES (1, '3fc55bb7-ba52-4854-be96-661f710328fc', 'John', 'Smith', 'Historical 
 ;
 
 INSERT INTO device (id, device_id, model_id, firmware_version, device_type, status, battery_life_remaining, date_tag_fitted, date_tag_removed, device_wearer_id)
-VALUES (1, '1', '1', '1.0', 'GPS', 'OK', 80, '2000-10-30T01:32:00.000-00:00', NULL, 1)
+VALUES (1, 'd064e527-284d-4fc0-bda7-6295f1f7c8f4', '4fbda134-1bee-11ee-be56-0242ac120002', '1.0', 'GPS', 'OK', 80, '2000-10-30T01:32:00.000-00:00', NULL, 1)
 ;
 
 INSERT INTO location (id, device_id, latitude, location_Time, longitude)
