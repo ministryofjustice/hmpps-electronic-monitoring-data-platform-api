@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 
 @Entity
@@ -15,5 +16,6 @@ data class DeviceWearer(
 )
 {
   @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, mappedBy = "deviceWearer")
+  @JsonIgnore
   val devices = listOf<Device>()
 }

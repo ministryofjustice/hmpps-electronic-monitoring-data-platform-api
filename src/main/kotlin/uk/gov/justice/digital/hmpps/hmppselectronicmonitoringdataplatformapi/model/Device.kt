@@ -30,6 +30,7 @@ data class Device(
   val deviceWearer: DeviceWearer? = null
 )
 {
+  @JsonIgnore
   @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, mappedBy = "device")
   val locations = listOf<Location>()
 }
