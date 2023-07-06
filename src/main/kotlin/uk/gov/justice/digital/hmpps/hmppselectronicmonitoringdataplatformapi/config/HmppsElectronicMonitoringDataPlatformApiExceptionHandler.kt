@@ -8,9 +8,22 @@ import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
 
 @RestControllerAdvice
 class HmppsElectronicMonitoringDataPlatformApiExceptionHandler {
+
+  val devMode = false
+
+  @ExceptionHandler
+  fun handleEmApiError(e: EmApiError): ResponseEntity<EmApiError> {
+    return if (devMode) {
+      ResponseEntity(EmApiError(e.message, e.status, e.exceptionDetails), e.status)
+    } else {
+      ResponseEntity(EmApiError(e.message, e.status), e.status)
+    }
+  }
+
   @ExceptionHandler(ValidationException::class)
   fun handleValidationException(e: Exception): ResponseEntity<ErrorResponse> {
     log.info("Validation exception: {}", e.message)
