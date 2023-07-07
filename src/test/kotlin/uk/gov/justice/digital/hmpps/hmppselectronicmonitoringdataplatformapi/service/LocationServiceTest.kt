@@ -39,7 +39,8 @@ class LocationServiceTest {
     val endDate = DateConverter().convertFromStringToDate("2000-12-10T01:32:00.000-00:00")
 
     val expectedResult: List<Location> = listOf()
-    val result: List<Location> = locationService.getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
+    val result: List<Location> =
+      locationService.getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
 
     verify(locationRepository, times(1)).findLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
     Assertions.assertThat(result).isEqualTo(expectedResult)
@@ -54,6 +55,19 @@ class LocationServiceTest {
     val result: List<Location> = locationService.getLocationsByDeviceId(deviceId)
 
     verify(locationRepository, times(1)).findLocationsByDeviceId(deviceId)
+    Assertions.assertThat(result).isEqualTo(expectedResult)
+  }
+
+  @Test
+  fun `getLocationsByDeviceIdAndTimeFrame should call findLocationsByDeviceIdAndTimeFrame to fetch data from the database and return an empty list if no matches`() {
+    val locationService = LocationService(locationRepository)
+    val deviceId = "test device id"
+    val startDate = DateConverter().convertFromStringToDate("2000-11-30T01:32:00.000-00:00")
+    val endDate = DateConverter().convertFromStringToDate("2000-11-30T01:32:00.000-00:00")
+    val expectedResult: List<Location> = listOf()
+    val result: List<Location> = locationService.getLocationsByDeviceIdAndTimeFrame(deviceId, startDate, endDate)
+
+    verify(locationRepository, times(1)).findLocationsByDeviceIdAndTimeFrame(deviceId, startDate, endDate)
     Assertions.assertThat(result).isEqualTo(expectedResult)
   }
 }

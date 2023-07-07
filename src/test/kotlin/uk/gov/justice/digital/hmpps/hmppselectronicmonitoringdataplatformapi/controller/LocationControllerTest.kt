@@ -364,4 +364,149 @@ class LocationControllerTest {
     }
     verify(locationService, times(1)).getLocationsByDeviceId(any<String>())
   }
+
+  @Test
+  fun `getLocationsByDeviceIdAndTimeFrame should return bad request when it does not receive valid deviceId`() {
+    val deviceId = "456an"
+    val startDate = "2000-10-31T01:30:00.000-00:00"
+    val endDate = "2000-10-31T01:30:00.000-00:00"
+
+    val expected = EmApiError("Insert a valid device id", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).getLocationsByDeviceIdAndTimeFrame(
+        deviceId,
+        startDate,
+        endDate,
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).getLocationsByDeviceIdAndTimeFrame(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+    )
+  }
+
+  @Test
+  fun `getLocationsByDeviceIdAndTimeFrame should return bad request when it does not receive valid startDate`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01"
+    val endDate = "2000-10-31T01:30:00.000-00:00"
+
+    val expected = EmApiError("Insert a valid start date", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).getLocationsByDeviceIdAndTimeFrame(
+        deviceId,
+        startDate,
+        endDate,
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).getLocationsByDeviceIdAndTimeFrame(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+    )
+  }
+
+  @Test
+  fun `getLocationsByDeviceIdAndTimeFrame should return bad request when it does not receive valid endDate`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01"
+
+    val expected = EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).getLocationsByDeviceIdAndTimeFrame(
+        deviceId,
+        startDate,
+        endDate,
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).getLocationsByDeviceIdAndTimeFrame(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+    )
+  }
+
+  @Test
+  fun `getLocationsByDeviceIdAndTimeFrame should return an empty list when insert valid data but nothing in there`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01:30:00.000-00:00"
+
+    val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
+    val result = LocationController(locationService).getLocationsByDeviceIdAndTimeFrame(
+      deviceId,
+      startDate,
+      endDate,
+    )
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
+    confirmNoError(result, expected)
+
+  }
+
+  @Test
+  fun `getLocationsByDeviceIdAndTimeFrame should return a list of data when insert valid data and there is data`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01:30:00.000-00:00"
+    val device = Device(
+      id = 1,
+      deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc",
+      modelId = "modelId",
+      firmwareVersion = "firmwareVersion",
+      deviceType = "deviceType",
+      status = "status",
+      batteryLifeRemaining = 20,
+    )
+
+    val locationDataList: List<Location> = listOf(Location(1, device, 20.0, 20.0))
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
+
+    Mockito.`when`(locationService.getLocationsByDeviceIdAndTimeFrame(deviceId, start, end))
+      .thenReturn(locationDataList)
+
+    val expected: ResponseEntity<LocationResponse> = ResponseEntity(LocationResponse(locationDataList), HttpStatus.OK)
+    val result = LocationController(locationService).getLocationsByDeviceIdAndTimeFrame(
+      deviceId,
+      startDate,
+      endDate,
+    )
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
+    confirmNoError(result, expected)
+    verify(locationService, times(1)).getLocationsByDeviceIdAndTimeFrame(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+    )
+  }
+
+  @Test
+  fun `getLocationsByDeviceIdAndTimeFrame should return internal server error when there is an internal server issue`() {
+    Mockito.`when`(locationService.getLocationsByDeviceIdAndTimeFrame(any<String>(), any<Date>(), any<Date>()))
+      .thenThrow(RuntimeException("Exception"))
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01:30:20.000-00:00"
+
+    assertThrows<Exception> {
+      LocationController(locationService).getLocationsByDeviceIdAndTimeFrame(
+        deviceId,
+        startDate,
+        endDate,
+      )
+    }
+    verify(locationService, times(1)).getLocationsByDeviceIdAndTimeFrame(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+    )
+  }
 }

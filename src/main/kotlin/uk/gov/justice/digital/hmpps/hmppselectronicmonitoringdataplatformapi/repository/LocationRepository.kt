@@ -37,4 +37,15 @@ interface LocationRepository : JpaRepository<Location, Int> {
   )
   fun findLocationsByDeviceId(@Param("deviceId") deviceId: String): List<Location>?
 
+
+  @Query(
+    value = "SELECT DISTINCT l.*" +
+      "FROM location as l JOIN device as d ON l.device_id = d.id" +
+      " WHERE d.device_id = :deviceId and l.location_time >= :startDate and l.location_time <= :endDate",
+    nativeQuery = true,
+  )
+  fun findLocationsByDeviceIdAndTimeFrame(@Param("deviceId") deviceId: String,
+                                          @Param("startDate") startDate: Date,
+                                          @Param("endDate") endDate: Date) : List<Location>?
+
 }
