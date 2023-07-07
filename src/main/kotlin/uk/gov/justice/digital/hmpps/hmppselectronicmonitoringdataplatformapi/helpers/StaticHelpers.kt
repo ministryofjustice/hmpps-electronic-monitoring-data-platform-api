@@ -33,4 +33,10 @@ class StaticHelpers {
       false
     }
   }
-}
+
+  fun isStartDatePriorEndDate(startDate: Date > endDate)
+  val startDate = DateConverter().convertFromStringToDate(startDate)
+  val endDate = DateConverter().convertFromStringToDate(endDate)
+  if (!StaticHelpers().(endDate > startDate){
+
+  }

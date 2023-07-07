@@ -509,4 +509,27 @@ class LocationControllerTest {
       any<Date>(),
     )
   }
+  @Test
+  fun `getLocationsByDeviceIdAndTimeFrame should return bad request when endDate is prior startDate`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-30T01:30:20.000-00:00"
+
+    val expected = EmApiError("End date must to be after start date", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).getLocationsByDeviceIdAndTimeFrame(
+        deviceId,
+        startDate,
+        endDate,
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).getLocationsByDeviceIdAndTimeFrame(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+    )
+  }
+
 }

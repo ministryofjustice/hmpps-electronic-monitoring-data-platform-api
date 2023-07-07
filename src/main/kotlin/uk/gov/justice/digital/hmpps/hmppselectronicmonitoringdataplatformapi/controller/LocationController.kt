@@ -98,6 +98,13 @@ class LocationController(@Autowired private val locationService: ILocationServic
     if (!StaticHelpers().isValidISODateTime(endDate)) {
       errorMessage = "Insert a valid end date"
     }
+
+    val startDate = DateConverter().convertFromStringToDate(startDate)
+    val endDate = DateConverter().convertFromStringToDate(endDate)
+    if (!StaticHelpers().(endDate > startDate){
+      errorMessage = "End date must to be after start date"
+    }
+
     if (errorMessage != "") {
       throw EmApiError(errorMessage, HttpStatus.BAD_REQUEST)
     }
