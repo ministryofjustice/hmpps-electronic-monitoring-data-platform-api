@@ -12,6 +12,8 @@ interface ILocationService {
   fun getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId: String, startDate: Date, endDate: Date): List<Location>
 
   fun getLocationsByDeviceId(deviceId: String): List<Location>
+
+  fun getLocationsByDeviceIdAndTimeFrame(deviceId: String, startDate: Date, endDate: Date): List<Location>
 }
 
 @Service
@@ -28,6 +30,10 @@ class LocationService(@Autowired private val locationRepository: LocationReposit
   }
   override fun getLocationsByDeviceId(deviceId: String): List<Location> {
     return locationRepository.findLocationsByDeviceId(deviceId) ?: listOf()
+  }
+
+  override fun getLocationsByDeviceIdAndTimeFrame(deviceId: String, startDate: Date, endDate: Date): List<Location> {
+    return locationRepository.findLocationsByDeviceIdAndTimeFrame(deviceId, startDate, endDate) ?: listOf()
   }
 }
 
