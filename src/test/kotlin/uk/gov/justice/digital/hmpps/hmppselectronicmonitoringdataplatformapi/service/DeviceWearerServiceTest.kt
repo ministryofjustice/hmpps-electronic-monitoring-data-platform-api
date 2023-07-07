@@ -7,6 +7,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.repository.DeviceWearerRepository
+import java.util.*
 
 class DeviceWearerServiceTest {
   val deviceWearerRepository = Mockito.mock(DeviceWearerRepository::class.java)
@@ -52,10 +53,13 @@ class DeviceWearerServiceTest {
   }
 
   @Test
-  fun `getMatchingDeviceWearers should search the database with a supplied parameter`() {
-    val param = "etdgh34"
+  fun `getMatchingDeviceWearers should search the database with a supplied parameter converted to lowercase`() {
+    val param = "ETdgh34"
+    val expectedParameter = param.lowercase(Locale.getDefault())
     val deviceWearerService = DeviceWearerService(deviceWearerRepository)
+
     deviceWearerService.getMatchingDeviceWearers(param)
-    verify(deviceWearerRepository, times(1)).searchDatabase(param)
+
+    verify(deviceWearerRepository, times(1)).searchDatabase(expectedParameter)
   }
 }
