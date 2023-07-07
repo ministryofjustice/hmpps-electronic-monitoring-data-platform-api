@@ -81,4 +81,34 @@ class LocationController(@Autowired private val locationService: ILocationServic
     }
     return ResponseEntity(LocationResponse(result), HttpStatus.OK)
   }
+
+  @GetMapping("/v1/search-by-time-and-device")
+  fun getLocationsByDeviceIdAndTimeFrame(
+    @RequestParam("deviceId") deviceId: String,
+    @RequestParam("startDate") startDate: String,
+    @RequestParam("endDate") endDate: String,
+  ): ResponseEntity<LocationResponse> {
+    var errorMessage = ""
+    if (!StaticHelpers().validateUUID(deviceId)) {
+      errorMessage = "Insert a valid device id"
+    }
+    if (!StaticHelpers().isValidISODateTime(startDate)) {
+      errorMessage = "Insert a valid start date"
+    }
+    if (!StaticHelpers().isValidISODateTime(endDate)) {
+      errorMessage = "Insert a valid end date"
+    }
+    if (errorMessage != "") {
+      throw EmApiError(errorMessage, HttpStatus.BAD_REQUEST)
+    }
+
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val result = locationService.getLocationsByDeviceIdAndTimeFrame(deviceId, start, end)
+
+    if (result.isEmpty()) {
+      return ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
+    }
+    return ResponseEntity(LocationResponse(result), HttpStatus.OK)
+  }
 }
