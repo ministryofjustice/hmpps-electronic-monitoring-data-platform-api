@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.*
+import javax.xml.stream.events.StartDocument
 
 class StaticHelpers {
 
@@ -34,9 +35,24 @@ class StaticHelpers {
     }
   }
 
-  fun isStartDatePriorEndDate(startDate: Date > endDate)
-  val startDate = DateConverter().convertFromStringToDate(startDate)
-  val endDate = DateConverter().convertFromStringToDate(endDate)
-  if (!StaticHelpers().(endDate > startDate){
+  fun isStartDatePriorEndDate(startDate: Calendar, endDate: Calendar) {} Boolean
+  {
+    val startDate = Calendar.getInstance()
+    val endDate = Calendar.getInstance()
+    var startInMin = startDate[Calendar.HOUR_OF_DAY] * 60 + startDate[Calendar.MINUTE]
+    var endInMin = endDate[Calendar.HOUR_OF_DAY] * 60 + endDate()[Calendar.MINUTE]
 
+    try {
+      startInMin = < endInMin
+        true
+    } catch (e: DateTimeParseException) {
+      false
+    }
   }
+}
+
+
+
+
+
+
