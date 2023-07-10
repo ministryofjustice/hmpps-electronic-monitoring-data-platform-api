@@ -64,10 +64,26 @@ class LocationServiceTest {
     val deviceId = "test device id"
     val startDate = DateConverter().convertFromStringToDate("2000-11-30T01:32:00.000-00:00")
     val endDate = DateConverter().convertFromStringToDate("2000-11-30T01:32:00.000-00:00")
+
     val expectedResult: List<Location> = listOf()
     val result: List<Location> = locationService.getLocationsByDeviceIdAndTimeFrame(deviceId, startDate, endDate)
 
     verify(locationRepository, times(1)).findLocationsByDeviceIdAndTimeFrame(deviceId, startDate, endDate)
+    Assertions.assertThat(result).isEqualTo(expectedResult)
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should call aggregateLocationsByDeviceIdAndTimeFrameAndDuration to fetch data from the database and return an empty list if no matches`() {
+    val locationService = LocationService(locationRepository)
+    val deviceId = "test device id"
+    val startDate = DateConverter().convertFromStringToDate("2000-11-30T01:32:00.000-00:00")
+    val endDate = DateConverter().convertFromStringToDate("2000-11-30T01:32:00.000-00:00")
+    val duration = 1
+
+    val expectedResult: List<Location> = listOf()
+    val result: List<Location> = locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, startDate, endDate, duration)
+
+    verify(locationRepository, times(1)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, startDate, endDate, duration)
     Assertions.assertThat(result).isEqualTo(expectedResult)
   }
 }
