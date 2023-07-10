@@ -46,8 +46,6 @@ class DeviceControllerTest {
   fun `getDevicesByDeviceWearerId should return no data found when no device exists`() {
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
 
-    Mockito.`when`(deviceService.getDevicesByDeviceWearerId(deviceWearerId)).thenReturn(listOf())
-
     val expected = ResponseEntity(DeviceResponse(message = "No data found"), HttpStatus.OK)
     val result = DeviceController(deviceService).getDevicesByDeviceWearerId(deviceWearerId)
 
