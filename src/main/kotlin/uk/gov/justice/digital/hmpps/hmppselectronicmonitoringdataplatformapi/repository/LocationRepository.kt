@@ -48,4 +48,18 @@ interface LocationRepository : JpaRepository<Location, Int> {
                                           @Param("startDate") startDate: Date,
                                           @Param("endDate") endDate: Date) : List<Location>?
 
+
+  @Query(
+    value = "SELECT l.device_id, AVG(l.latitude) as latitude, AVG(l.longitude) as longitude," +
+      "date_trunc('day', location_time) + floor(extract(hour from location_time) / :duration) * :duration * interval '1 hour' as datetime" +
+      "FROM location as l JOIN device as d ON l.device_id = d.id" +
+      " WHERE d.device_id = :deviceId and l.location_time >= :startDate and l.location_time <= :endDate" +
+      " GROUP BY datetime ORDER BY datetime",
+    nativeQuery = true,
+  )
+  fun aggregateLocationsByDeviceIdAndTimeFrameAndDuration(@Param("deviceId") deviceId: String,
+                                                          @Param("startDate") startDate: Date,
+                                                          @Param("endDate") endDate: Date,
+                                                          @Param("duration") duration: Int) : List<Location>?
+
 }
