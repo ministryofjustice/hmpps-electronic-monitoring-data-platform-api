@@ -438,7 +438,7 @@ class LocationControllerTest {
   fun `getLocationsByDeviceIdAndTimeFrame should return an empty list when insert valid data but nothing in there`() {
     val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
     val startDate = "2000-10-31T01:30:07.000-00:00"
-    val endDate = "2000-10-31T01:30:00.000-00:00"
+    val endDate = "2000-10-31T01:30:10.000-00:00"
 
     val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     val result = LocationController(locationService).getLocationsByDeviceIdAndTimeFrame(
@@ -455,7 +455,7 @@ class LocationControllerTest {
   fun `getLocationsByDeviceIdAndTimeFrame should return a list of data when insert valid data and there is data`() {
     val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
     val startDate = "2000-10-31T01:30:07.000-00:00"
-    val endDate = "2000-10-31T01:30:00.000-00:00"
+    val endDate = "2000-10-31T01:35:00.000-00:00"
     val device = Device(
       id = 1,
       deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc",
@@ -515,7 +515,7 @@ class LocationControllerTest {
     val startDate = "2000-10-31T01:30:07.000-00:00"
     val endDate = "2000-10-30T01:30:20.000-00:00"
 
-    val expected = EmApiError("End date must to be after start date", HttpStatus.BAD_REQUEST)
+    val expected = EmApiError("End date is before start date", HttpStatus.BAD_REQUEST)
     val result = assertThrows<EmApiError> {
       LocationController(locationService).getLocationsByDeviceIdAndTimeFrame(
         deviceId,

@@ -47,18 +47,14 @@ class LocationController(@Autowired private val locationService: ILocationServic
     @RequestParam("startDate") startDate: String,
     @RequestParam("endDate") endDate: String,
   ): ResponseEntity<LocationResponse> {
-    var errorMessage = ""
     if (!StaticHelpers().validateUUID(deviceWearerId)) {
-      errorMessage = "Insert a valid device wearer id"
+      throw EmApiError("Insert a valid device wearer id", HttpStatus.BAD_REQUEST)
     }
     if (!StaticHelpers().isValidISODateTime(startDate)) {
-      errorMessage = "Insert a valid start date"
+      throw EmApiError("Insert a valid start date", HttpStatus.BAD_REQUEST)
     }
     if (!StaticHelpers().isValidISODateTime(endDate)) {
-      errorMessage = "Insert a valid end date"
-    }
-    if (errorMessage != "") {
-      throw EmApiError(errorMessage, HttpStatus.BAD_REQUEST)
+      throw EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
     }
     val start: Date = DateConverter().convertFromStringToDate(startDate)
     val end: Date = DateConverter().convertFromStringToDate(endDate)
@@ -88,29 +84,24 @@ class LocationController(@Autowired private val locationService: ILocationServic
     @RequestParam("startDate") startDate: String,
     @RequestParam("endDate") endDate: String,
   ): ResponseEntity<LocationResponse> {
-    var errorMessage = ""
     if (!StaticHelpers().validateUUID(deviceId)) {
-      errorMessage = "Insert a valid device id"
+      throw EmApiError("Insert a valid device id", HttpStatus.BAD_REQUEST)
     }
     if (!StaticHelpers().isValidISODateTime(startDate)) {
-      errorMessage = "Insert a valid start date"
+      throw EmApiError("Insert a valid start date", HttpStatus.BAD_REQUEST)
     }
     if (!StaticHelpers().isValidISODateTime(endDate)) {
-      errorMessage = "Insert a valid end date"
-    }
-
-    val startDate = DateConverter().convertFromStringToDate(startDate)
-    val endDate = DateConverter().convertFromStringToDate(endDate)
-    if (!StaticHelpers().(endDate > startDate){
-      errorMessage = "End date must to be after start date"
-    }
-
-    if (errorMessage != "") {
-      throw EmApiError(errorMessage, HttpStatus.BAD_REQUEST)
+      throw EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
     }
 
     val start: Date = DateConverter().convertFromStringToDate(startDate)
     val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val dateComparison = end.compareTo(start)
+
+    if (dateComparison < 0) {
+      throw EmApiError("End date is before start date", HttpStatus.BAD_REQUEST)
+    }
+
     val result = locationService.getLocationsByDeviceIdAndTimeFrame(deviceId, start, end)
 
     if (result.isEmpty()) {
