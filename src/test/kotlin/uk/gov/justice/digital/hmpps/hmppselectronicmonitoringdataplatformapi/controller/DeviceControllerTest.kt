@@ -89,7 +89,7 @@ class DeviceControllerTest {
   }
 
   @Test
-  fun `getDeviceByDeviceId should return bad request when it does not receive valid deviceWearerId`() {
+  fun `getDeviceByDeviceId should return bad request when it does not receive valid deviceId`() {
     val deviceId = "456an"
 
     val expected = EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
