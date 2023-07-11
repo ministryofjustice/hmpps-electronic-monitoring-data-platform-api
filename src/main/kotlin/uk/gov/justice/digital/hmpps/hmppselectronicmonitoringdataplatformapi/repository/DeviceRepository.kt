@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.re
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Device
 
@@ -17,5 +18,14 @@ interface DeviceRepository : JpaRepository<Device, Int> {
   )
 
   fun findDevicesByDeviceWearerId(deviceWearerId: String): List<Device>?
+
+  @Query(
+    value = "SELECT d.*" +
+      "FROM device as d" +
+      " WHERE d.device_id = :deviceId",
+    nativeQuery = true,
+  )
+  fun findDeviceByDeviceId(@Param("deviceId") deviceId: String): List<Device>?
+
 
 }

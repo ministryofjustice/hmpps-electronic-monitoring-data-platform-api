@@ -23,4 +23,16 @@ class DeviceServiceTest {
     Assertions.assertThat(result).isEqualTo(expected)
   }
 
+  @Test
+  fun `getDeviceByDeviceId should call to fetch the device for the specific device id`() {
+    val deviceRepository = Mockito.mock(DeviceRepository::class.java)
+    val deviceService = DeviceService(deviceRepository)
+    val deviceWearerId = "test user ID"
+
+    val expected: List<Device> = listOf()
+    val result: List<Device> = deviceService.getDeviceByDeviceId(deviceWearerId)
+
+    verify(deviceRepository, times(1)).findDeviceByDeviceId(deviceWearerId)
+    Assertions.assertThat(result).isEqualTo(expected)
+  }
   }

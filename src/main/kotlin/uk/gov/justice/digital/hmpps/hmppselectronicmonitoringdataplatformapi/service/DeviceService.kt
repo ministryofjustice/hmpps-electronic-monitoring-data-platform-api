@@ -8,6 +8,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.rep
 interface IDeviceService {
   fun getAllDevices(): List<Device>
   fun getDevicesByDeviceWearerId(deviceWearerId: String): List<Device>
+  fun getDeviceByDeviceId(deviceId: String): List<Device>
 }
 
 @Service
@@ -19,6 +20,9 @@ class DeviceService(@Autowired private val deviceRepository: DeviceRepository) :
 
   override fun getDevicesByDeviceWearerId(deviceWearerId: String): List<Device> {
     return deviceRepository.findDevicesByDeviceWearerId(deviceWearerId) ?: listOf()
+  }
+  override fun getDeviceByDeviceId(deviceId: String): List<Device> {
+    return deviceRepository.findDeviceByDeviceId(deviceId) ?: listOf()
   }
 
 }
