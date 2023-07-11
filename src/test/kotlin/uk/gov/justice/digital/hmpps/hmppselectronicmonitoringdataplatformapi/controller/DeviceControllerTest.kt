@@ -98,7 +98,7 @@ class DeviceControllerTest {
     }
 
     confirmException(result, expected)
-    verify(deviceService, times(0)).getDevicesByDeviceWearerId(any<String>())
+    verify(deviceService, times(0)).getDeviceByDeviceId(any<String>())
   }
 
   @Test
@@ -111,6 +111,7 @@ class DeviceControllerTest {
     val result = DeviceController(deviceService).getDeviceByDeviceId(deviceId)
 
     confirmNoError(result, expected)
+    verify(deviceService, times(1)).getDeviceByDeviceId(deviceId)
     Assertions.assertThat(result.body?.devices).isEqualTo(expected.body.devices)
   }
 
