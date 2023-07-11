@@ -57,7 +57,7 @@ class DeviceControllerTest {
   fun `getDevicesByDeviceWearerId should return a list of devices`() {
     val deviceWearer = DeviceWearer(
       id = 1,
-      deviceWearerId = "deviceWearerId",
+      deviceWearerId = "3fc55bb7-ba52-4854-be96-661f710328fc",
       firstName = "John",
       lastName = "Smith",
       type = "Historical Case Centric",

@@ -330,7 +330,7 @@ class LocationControllerTest {
   fun `getLocationsByDeviceId should return a list of location data`() {
     val device = Device(
       id = 1,
-      deviceId = "deviceId",
+      deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc",
       modelId = "modelId",
       firmwareVersion = "firmwareVersion",
       deviceType = "deviceType",

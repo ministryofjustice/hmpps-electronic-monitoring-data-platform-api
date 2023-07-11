@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregation
 import java.util.*
 
 @Repository
@@ -60,6 +61,6 @@ interface LocationRepository : JpaRepository<Location, Int> {
   fun aggregateLocationsByDeviceIdAndTimeFrameAndDuration(@Param("deviceId") deviceId: String,
                                                           @Param("startDate") startDate: Date,
                                                           @Param("endDate") endDate: Date,
-                                                          @Param("duration") duration: Int) : List<Location>?
+                                                          @Param("duration") duration: Int) : List<LocationAggregation>?
 
 }
