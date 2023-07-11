@@ -13,6 +13,8 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.hel
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Device
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregation
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationAggregationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.LocationService
 import java.util.*
@@ -28,6 +30,12 @@ class LocationControllerTest {
   }
 
   fun confirmNoError(result: ResponseEntity<LocationResponse>, expected: ResponseEntity<LocationResponse>) {
+    Assertions.assertThat(result.body?.error).isEqualTo("")
+    Assertions.assertThat(result.body?.message).isEqualTo(expected.body?.message)
+    Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+  }
+
+  fun confirmNoErrorForAggregation(result: ResponseEntity<LocationAggregationResponse>, expected: ResponseEntity<LocationAggregationResponse>) {
     Assertions.assertThat(result.body?.error).isEqualTo("")
     Assertions.assertThat(result.body?.message).isEqualTo(expected.body?.message)
     Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
@@ -475,6 +483,7 @@ class LocationControllerTest {
       startDate,
       endDate,
     )
+
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     confirmNoError(result, expected)
     verify(locationService, times(1)).getLocationsByDeviceIdAndTimeFrame(
@@ -528,4 +537,160 @@ class LocationControllerTest {
     )
   }
 
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return bad request when it does not receive valid deviceId`() {
+    val deviceId = "456an"
+    val startDate = "2000-10-31T01:30:00.000-00:00"
+    val endDate = "2000-10-31T01:30:00.000-00:00"
+    val duration = 1
+
+    val expected = EmApiError("Insert a valid device id", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+        deviceId,
+        startDate,
+        endDate,
+        duration
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>()
+    )
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return bad request when it does not receive valid startDate`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01"
+    val endDate = "2000-10-31T01:30:00.000-00:00"
+    val duration = 1
+
+    val expected = EmApiError("Insert a valid start date", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+        deviceId,
+        startDate,
+        endDate,
+        duration
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>()
+    )
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return bad request when it does not receive valid endDate`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:00.000-00:00"
+    val endDate = "2000-10-31T01"
+    val duration = 1
+
+    val expected = EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+        deviceId,
+        startDate,
+        endDate,
+        duration
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>()
+    )
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return bad request when it does not receive valid duration`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:00.000-00:00"
+    val endDate = "2000-10-31T01:30:00.000-00:00"
+    val duration = 48
+
+    val expected = EmApiError("Duration should be from 1 to 24", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+        deviceId,
+        startDate,
+        endDate,
+        duration
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>()
+    )
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return empty list when receive valid data but no data exist`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01:30:10.000-00:00"
+    val duration = 2
+
+    val expected = ResponseEntity(LocationAggregationResponse(message = "No data found"), HttpStatus.OK)
+    val result = LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      deviceId,
+      startDate,
+      endDate,
+      duration
+    )
+
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
+    confirmNoErrorForAggregation(result, expected)
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return a list of data when insert valid data and data exists`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01:35:00.000-00:00"
+    val duration = 8
+
+    val datetime: Date = DateConverter().convertFromStringToDate("2000-10-31T00:00:00.000-00:00")
+    val locationDataList: List<LocationAggregation> = listOf(LocationAggregation(25.0, 20.0, datetime))
+
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
+
+    Mockito.`when`(locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, start, end, duration))
+      .thenReturn(locationDataList)
+
+    val expected: ResponseEntity<LocationAggregationResponse> = ResponseEntity(LocationAggregationResponse(locationDataList), HttpStatus.OK)
+    val result = LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      deviceId,
+      startDate,
+      endDate,
+      duration
+    )
+
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
+    confirmNoErrorForAggregation(result, expected)
+    verify(locationService, times(1)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>()
+    )
+  }
 }

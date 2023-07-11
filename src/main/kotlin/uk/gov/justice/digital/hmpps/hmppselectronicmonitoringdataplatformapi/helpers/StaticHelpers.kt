@@ -33,7 +33,13 @@ class StaticHelpers {
       false
     }
   }
+
+  fun validateDuration(duration: Int): Boolean {
+    return duration in 1..24
+  }
 }
+
+
 
 
 
