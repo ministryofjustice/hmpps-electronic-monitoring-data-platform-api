@@ -29,8 +29,8 @@ class DeviceServiceTest {
     val deviceService = DeviceService(deviceRepository)
     val deviceId = "test device ID"
 
-    val expected: List<Device> = listOf()
-    val result: List<Device> = deviceService.getDeviceByDeviceId(deviceId)
+    val expected: Device? = null
+    val result: Device? = deviceService.getDeviceByDeviceId(deviceId)
 
     verify(deviceRepository, times(1)).findDeviceByDeviceId(deviceId)
     Assertions.assertThat(result).isEqualTo(expected)

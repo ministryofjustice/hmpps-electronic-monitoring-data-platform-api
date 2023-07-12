@@ -34,9 +34,7 @@ class DeviceController(@Autowired private val deviceService: IDeviceService) {
       throw EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
     }
     val result = deviceService.getDeviceByDeviceId(deviceId)
-    if (result.isEmpty()) {
-      return ResponseEntity(DeviceResponse(message = "No data found"), HttpStatus.OK)
-    }
-    return ResponseEntity(DeviceResponse(result.first()), HttpStatus.OK)
+      ?: return ResponseEntity(DeviceResponse(message = "No data found"), HttpStatus.OK)
+    return ResponseEntity(DeviceResponse(result), HttpStatus.OK)
   }
 }
