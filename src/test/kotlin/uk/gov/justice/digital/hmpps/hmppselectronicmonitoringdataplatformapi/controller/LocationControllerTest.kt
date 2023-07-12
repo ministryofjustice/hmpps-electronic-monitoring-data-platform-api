@@ -10,10 +10,7 @@ import org.mockito.kotlin.verify
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.DateConverter
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Device
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregation
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.*
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationAggregationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.LocationService
@@ -668,7 +665,8 @@ class LocationControllerTest {
     val duration = 8
 
     val datetime: Date = DateConverter().convertFromStringToDate("2000-10-31T00:00:00.000-00:00")
-    val locationDataList: List<LocationAggregation> = listOf(LocationAggregation(25.0, 20.0, datetime))
+
+    val locationDataList: List<LocationAggregation> = listOf(LocationAggregationDemo(25.0, 20.0, datetime))
 
     val start: Date = DateConverter().convertFromStringToDate(startDate)
     val end: Date = DateConverter().convertFromStringToDate(endDate)
