@@ -2,8 +2,9 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mo
 
 import java.util.*
 
-data class LocationAggregation(
-  val latitude: Double,
-  val longitude: Double,
+interface LocationAggregation {
+  val latitude: Double
+  val longitude: Double
   val datetime: Date
-  )
+}
+
