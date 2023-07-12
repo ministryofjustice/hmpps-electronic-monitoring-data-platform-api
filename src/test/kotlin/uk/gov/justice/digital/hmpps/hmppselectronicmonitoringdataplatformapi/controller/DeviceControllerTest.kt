@@ -23,6 +23,7 @@ class DeviceControllerTest {
     Assertions.assertThat(result.status).isEqualTo(expected.status)
     Assertions.assertThat(result.exceptionDetails).isEqualTo(expected.exceptionDetails)
   }
+
   fun confirmNoError(result: ResponseEntity<DeviceResponse>, expected: ResponseEntity<DeviceResponse>) {
     Assertions.assertThat(result.body?.error).isEqualTo("")
     Assertions.assertThat(result.body?.message).isEqualTo(expected.body?.message)
@@ -66,7 +67,8 @@ class DeviceControllerTest {
     )
     val deviceWearerId = "3fc55bb7-ba52-4854-be96-661f710328fc"
     val dateTagFitted = DateConverter().convertFromStringToDate("2000-10-30T01:32:00.000-00:00")
-    val devicesList: List<Device> = listOf(Device(1,"1", "1", "1.0", "GPS", "OK", 80, dateTagFitted, null, deviceWearer ))
+    val devicesList: List<Device> =
+      listOf(Device(1, "1", "1", "1.0", "GPS", "OK", 80, dateTagFitted, null, deviceWearer))
 
     Mockito.`when`(deviceService.getDevicesByDeviceWearerId(deviceWearerId)).thenReturn(devicesList)
 
@@ -80,11 +82,69 @@ class DeviceControllerTest {
 
   @Test
   fun `getDevicesByDeviceWearerId should return internal server error when there is an internal server issue`() {
-    Mockito.`when`(deviceService.getDevicesByDeviceWearerId(any<String>()))
-      .thenThrow(RuntimeException("Exception"))
+    Mockito.`when`(deviceService.getDevicesByDeviceWearerId(any<String>())).thenThrow(RuntimeException("Exception"))
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
 
     assertThrows<Exception> { DeviceController(deviceService).getDevicesByDeviceWearerId(deviceWearerId) }
     verify(deviceService, times(1)).getDevicesByDeviceWearerId(any<String>())
+  }
+
+  @Test
+  fun `getDeviceByDeviceId should return bad request when it does not receive valid deviceId`() {
+    val deviceId = "456an"
+
+    val expected = EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      DeviceController(deviceService).getDeviceByDeviceId(deviceId)
+    }
+
+    confirmException(result, expected)
+    verify(deviceService, times(0)).getDeviceByDeviceId(any<String>())
+  }
+
+  @Test
+  fun `getDeviceByDeviceId should return no data found when no device exists`() {
+    val deviceId = "b537065a-094e-47eb-8fab-9698a9664d35"
+
+    Mockito.`when`(deviceService.getDeviceByDeviceId(deviceId)).thenReturn(null)
+
+    val expected = ResponseEntity(DeviceResponse(message = "No data found"), HttpStatus.OK)
+    val result = DeviceController(deviceService).getDeviceByDeviceId(deviceId)
+
+    confirmNoError(result, expected)
+    verify(deviceService, times(1)).getDeviceByDeviceId(deviceId)
+    Assertions.assertThat(result.body?.devices).isEqualTo(expected.body.devices)
+  }
+
+  @Test
+  fun `getDeviceByDeviceId should return a device`() {
+    val deviceWearer = DeviceWearer(
+      id = 1,
+      deviceWearerId = "deviceId",
+      firstName = "John",
+      lastName = "Smith",
+      type = "Historical Case Centric",
+    )
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val dateTagFitted = DateConverter().convertFromStringToDate("2000-10-30T01:32:00.000-00:00")
+    val device = Device(1, "1", "1", "1.0", "GPS", "OK", 80, dateTagFitted, null, deviceWearer)
+
+    Mockito.`when`(deviceService.getDeviceByDeviceId(deviceId)).thenReturn(device)
+
+    val expected: ResponseEntity<DeviceResponse> = ResponseEntity(DeviceResponse(device), HttpStatus.OK)
+    val result = DeviceController(deviceService).getDeviceByDeviceId(deviceId)
+
+    confirmNoError(result, expected)
+    Assertions.assertThat(result.body?.devices).isEqualTo(expected.body.devices)
+    verify(deviceService, times(1)).getDeviceByDeviceId(any<String>())
+  }
+
+  @Test
+  fun `getDeviceByDeviceId should return internal server error when there is an internal server issue`() {
+    Mockito.`when`(deviceService.getDeviceByDeviceId(any<String>())).thenThrow(RuntimeException("Exception"))
+    val deviceId = "b537065a-094e-47eb-8fab-9698a9664d35"
+
+    assertThrows<Exception> { DeviceController(deviceService).getDeviceByDeviceId(deviceId) }
+    verify(deviceService, times(1)).getDeviceByDeviceId(any<String>())
   }
 }

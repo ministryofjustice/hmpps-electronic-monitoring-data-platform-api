@@ -27,4 +27,14 @@ class DeviceController(@Autowired private val deviceService: IDeviceService) {
     }
     return ResponseEntity(DeviceResponse(result), HttpStatus.OK)
   }
+
+  @GetMapping("/v1/device-id/{id}")
+  fun getDeviceByDeviceId(@PathVariable("id") deviceId: String): ResponseEntity<DeviceResponse> {
+    if (!StaticHelpers().validateUUID(deviceId)) {
+      throw EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
+    }
+    val result = deviceService.getDeviceByDeviceId(deviceId)
+      ?: return ResponseEntity(DeviceResponse(message = "No data found"), HttpStatus.OK)
+    return ResponseEntity(DeviceResponse(result), HttpStatus.OK)
+  }
 }
