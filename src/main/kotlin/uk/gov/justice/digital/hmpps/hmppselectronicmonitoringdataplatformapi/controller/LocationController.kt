@@ -12,6 +12,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.hel
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationAggregationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.ILocationService
 import java.util.*
@@ -47,6 +48,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
     @RequestParam("startDate") startDate: String,
     @RequestParam("endDate") endDate: String,
   ): ResponseEntity<LocationResponse> {
+
     if (!StaticHelpers().validateUUID(deviceWearerId)) {
       throw EmApiError("Insert a valid device wearer id", HttpStatus.BAD_REQUEST)
     }
@@ -56,6 +58,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
     if (!StaticHelpers().isValidISODateTime(endDate)) {
       throw EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
     }
+
     val start: Date = DateConverter().convertFromStringToDate(startDate)
     val end: Date = DateConverter().convertFromStringToDate(endDate)
 
@@ -84,6 +87,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
     @RequestParam("startDate") startDate: String,
     @RequestParam("endDate") endDate: String,
   ): ResponseEntity<LocationResponse> {
+
     if (!StaticHelpers().validateUUID(deviceId)) {
       throw EmApiError("Insert a valid device id", HttpStatus.BAD_REQUEST)
     }
@@ -108,5 +112,36 @@ class LocationController(@Autowired private val locationService: ILocationServic
       return ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     }
     return ResponseEntity(LocationResponse(result), HttpStatus.OK)
+  }
+
+  @GetMapping("/v1/aggregate")
+  fun aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+    @RequestParam("deviceId") deviceId: String,
+    @RequestParam("startDate") startDate: String,
+    @RequestParam("endDate") endDate: String,
+    @RequestParam("duration", defaultValue="1") duration: Int
+  ): ResponseEntity<LocationAggregationResponse> {
+
+    if (!StaticHelpers().validateUUID(deviceId)) {
+      throw EmApiError("Insert a valid device id", HttpStatus.BAD_REQUEST)
+    }
+    if (!StaticHelpers().isValidISODateTime(startDate)) {
+      throw EmApiError("Insert a valid start date", HttpStatus.BAD_REQUEST)
+    }
+    if (!StaticHelpers().isValidISODateTime(endDate)) {
+      throw EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
+    }
+    if (!StaticHelpers().validateDuration(duration)) {
+      throw EmApiError("Duration should be from 1 to 24", HttpStatus.BAD_REQUEST)
+    }
+
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val result = locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, start, end, duration)
+
+    if (result.isEmpty()) {
+      return ResponseEntity(LocationAggregationResponse(message = "No data found"), HttpStatus.OK)
+    }
+    return ResponseEntity(LocationAggregationResponse(result), HttpStatus.OK)
   }
 }

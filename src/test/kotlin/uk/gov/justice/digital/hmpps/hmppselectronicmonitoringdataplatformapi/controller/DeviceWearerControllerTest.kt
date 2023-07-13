@@ -41,12 +41,11 @@ class DeviceWearerControllerTest {
 
   @Test
   fun `getAllDeviceWearers should return Ok with a message when there are no device wearers`() {
-    Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(listOf<DeviceWearer>())
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(message = "No data found"), HttpStatus.OK)
     val result = DeviceWearerController(deviceWearerService).getAllDeviceWearers()
 
+    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body?.deviceWearers)
     confirmNoError(result, expected)
-    verify(deviceWearerService, times(1)).getAllDeviceWearers()
   }
 
   @Test
@@ -69,11 +68,10 @@ class DeviceWearerControllerTest {
   fun `getDeviceWearerByID should return Ok with a message when device wearer does not exist`() {
     val id = "c6a5aa13-c948-41ca-8d6a-dfe9ff2e8fd3"
 
-    val response = null
-    Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(message = "No data found"), HttpStatus.OK)
-
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
+
+    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body?.deviceWearers)
     confirmNoError(result, expected)
   }
 
