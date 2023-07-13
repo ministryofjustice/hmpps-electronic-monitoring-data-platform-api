@@ -119,7 +119,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
     @RequestParam("deviceId") deviceId: String,
     @RequestParam("startDate") startDate: String,
     @RequestParam("endDate") endDate: String,
-    @RequestParam("duration") duration: Int = 1
+    @RequestParam("duration", defaultValue="1") duration: Int
   ): ResponseEntity<LocationAggregationResponse> {
 
     if (!StaticHelpers().validateUUID(deviceId)) {
