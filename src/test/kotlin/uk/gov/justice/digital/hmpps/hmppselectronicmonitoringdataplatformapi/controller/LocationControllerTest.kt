@@ -10,7 +10,11 @@ import org.mockito.kotlin.verify
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.DateConverter
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.*
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Device
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregation
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregationDemo
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationAggregationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.LocationService
@@ -32,7 +36,10 @@ class LocationControllerTest {
     Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
   }
 
-  fun confirmNoErrorForAggregation(result: ResponseEntity<LocationAggregationResponse>, expected: ResponseEntity<LocationAggregationResponse>) {
+  fun confirmNoErrorForAggregation(
+    result: ResponseEntity<LocationAggregationResponse>,
+    expected: ResponseEntity<LocationAggregationResponse>,
+  ) {
     Assertions.assertThat(result.body?.error).isEqualTo("")
     Assertions.assertThat(result.body?.message).isEqualTo(expected.body?.message)
     Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
@@ -511,6 +518,7 @@ class LocationControllerTest {
       any<Date>(),
     )
   }
+
   @Test
   fun `getLocationsByDeviceIdAndTimeFrame should return bad request when endDate is prior startDate`() {
     val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
@@ -547,7 +555,7 @@ class LocationControllerTest {
         deviceId,
         startDate,
         endDate,
-        duration
+        duration,
       )
     }
 
@@ -556,7 +564,7 @@ class LocationControllerTest {
       any<String>(),
       any<Date>(),
       any<Date>(),
-      any<Int>()
+      any<Int>(),
     )
   }
 
@@ -573,7 +581,7 @@ class LocationControllerTest {
         deviceId,
         startDate,
         endDate,
-        duration
+        duration,
       )
     }
 
@@ -582,7 +590,7 @@ class LocationControllerTest {
       any<String>(),
       any<Date>(),
       any<Date>(),
-      any<Int>()
+      any<Int>(),
     )
   }
 
@@ -599,7 +607,7 @@ class LocationControllerTest {
         deviceId,
         startDate,
         endDate,
-        duration
+        duration,
       )
     }
 
@@ -608,7 +616,7 @@ class LocationControllerTest {
       any<String>(),
       any<Date>(),
       any<Date>(),
-      any<Int>()
+      any<Int>(),
     )
   }
 
@@ -625,7 +633,7 @@ class LocationControllerTest {
         deviceId,
         startDate,
         endDate,
-        duration
+        duration,
       )
     }
 
@@ -634,7 +642,7 @@ class LocationControllerTest {
       any<String>(),
       any<Date>(),
       any<Date>(),
-      any<Int>()
+      any<Int>(),
     )
   }
 
@@ -650,7 +658,7 @@ class LocationControllerTest {
       deviceId,
       startDate,
       endDate,
-      duration
+      duration,
     )
 
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
@@ -674,12 +682,13 @@ class LocationControllerTest {
     Mockito.`when`(locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, start, end, duration))
       .thenReturn(locationDataList)
 
-    val expected: ResponseEntity<LocationAggregationResponse> = ResponseEntity(LocationAggregationResponse(locationDataList), HttpStatus.OK)
+    val expected: ResponseEntity<LocationAggregationResponse> =
+      ResponseEntity(LocationAggregationResponse(locationDataList), HttpStatus.OK)
     val result = LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
       deviceId,
       startDate,
       endDate,
-      duration
+      duration,
     )
 
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
@@ -688,7 +697,59 @@ class LocationControllerTest {
       any<String>(),
       any<Date>(),
       any<Date>(),
-      any<Int>()
+      any<Int>(),
+    )
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return bad request when it does not receive valid IsoDateTime for startDate`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:07.000"
+    val endDate = "2000-10-31T01:35:00.000-00:00"
+    val duration = 1
+
+    val expected = EmApiError("Insert a valid start date", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+        deviceId,
+        startDate,
+        endDate,
+        duration,
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>(),
+    )
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return bad request when it does not receive valid IsoDateTime for endDate`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01:35:00"
+    val duration = 1
+
+    val expected = EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+        deviceId,
+        startDate,
+        endDate,
+        duration,
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>(),
     )
   }
 }
