@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers
 
-import java.time.LocalDateTime
+import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.*
@@ -16,18 +16,9 @@ class StaticHelpers {
     return true
   }
 
-  fun validateData(date: String): Boolean {
-    try {
-      LocalDateTime.parse(date)
-    } catch (e: Exception) {
-      return false
-    }
-    return true
-  }
-
   fun isValidISODateTime(date: String?): Boolean {
     return try {
-      DateTimeFormatter.ISO_DATE_TIME.parse(date)
+      Instant.from(DateTimeFormatter.ISO_INSTANT.parse(date))
       true
     } catch (e: DateTimeParseException) {
       false
