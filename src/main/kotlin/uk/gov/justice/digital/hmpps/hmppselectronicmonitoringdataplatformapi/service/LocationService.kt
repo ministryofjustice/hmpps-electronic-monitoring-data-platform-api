@@ -1,9 +1,11 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.CSVHelper
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregation
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.repository.LocationRepository
+import java.io.ByteArrayInputStream
 import java.util.*
 
 interface ILocationService {
@@ -17,6 +19,8 @@ interface ILocationService {
   fun getLocationsByDeviceIdAndTimeFrame(deviceId: String, startDate: Date, endDate: Date): List<Location>
 
   fun aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId: String, startDate: Date, endDate: Date, duration: Int): List<LocationAggregation>
+
+  fun loadAllLocations(): ByteArrayInputStream
 }
 
 @Service
@@ -39,6 +43,11 @@ class LocationService(@Autowired private val locationRepository: LocationReposit
   }
   override fun aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId: String, startDate: Date, endDate: Date, duration: Int): List<LocationAggregation> {
     return locationRepository.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, startDate, endDate, duration) ?: listOf()
+  }
+
+  override fun loadAllLocations(): ByteArrayInputStream {
+    val locations = locationRepository.findAll().toList()
+    return CSVHelper().locationsToCSV(locations)
   }
 }
 

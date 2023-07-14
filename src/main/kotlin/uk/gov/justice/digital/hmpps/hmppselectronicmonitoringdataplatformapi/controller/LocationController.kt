@@ -1,13 +1,13 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.controller
 
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.io.InputStreamResource
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.DateConverter
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
@@ -21,13 +21,24 @@ import java.util.*
 @RequestMapping("locations")
 @RestController
 class LocationController(@Autowired private val locationService: ILocationService) {
-  @GetMapping("/v1")
+  @GetMapping("/v1", produces = ["application/json"])
   fun getAllLocations(): ResponseEntity<LocationResponse> {
     val result: List<Location> = locationService.getAllLocations()
     if (result.isEmpty()) {
       return ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     }
     return ResponseEntity(LocationResponse(result), HttpStatus.OK)
+  }
+
+  @GetMapping("/v1", produces = ["text/csv"])
+  fun exportAllLocations(response: HttpServletResponse?): ResponseEntity<InputStreamResource> {
+    val filename = "locations.csv"
+    val file = InputStreamResource(locationService!!.loadAllLocations())
+    return ResponseEntity.ok().header(
+      HttpHeaders.CONTENT_DISPOSITION,
+      "attachment; filename=$filename"
+    )
+      .contentType(MediaType.parseMediaType("application/csv")).body(file)
   }
 
   @GetMapping("/v1/device-wearer-id/{id}")
