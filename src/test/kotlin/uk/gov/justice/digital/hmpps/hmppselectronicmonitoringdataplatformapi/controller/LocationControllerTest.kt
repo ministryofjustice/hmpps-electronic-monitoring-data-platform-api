@@ -13,9 +13,13 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.hel
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Device
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregation
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationAggregationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.LocationService
 import java.util.*
+
+class LocationAggregationDemo(override var latitude: Double, override var longitude: Double, override var datetime: Date) : LocationAggregation;
 
 class LocationControllerTest {
 
@@ -33,15 +37,25 @@ class LocationControllerTest {
     Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
   }
 
+  fun confirmNoErrorForAggregation(
+    result: ResponseEntity<LocationAggregationResponse>,
+    expected: ResponseEntity<LocationAggregationResponse>,
+  ) {
+    Assertions.assertThat(result.body?.error).isEqualTo("")
+    Assertions.assertThat(result.body?.message).isEqualTo(expected.body?.message)
+    Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+  }
+
   @Test
   fun `getAllLocations should return No data found when no location exists`() {
-    Mockito.`when`(locationService.getAllLocations()).thenReturn(listOf())
+    Mockito.`when`(locationService.getAllLocations()).thenReturn(listOf<Location>())
 
     val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     val result = LocationController(locationService).getAllLocations()
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    verify(locationService, times(1)).getAllLocations()
   }
 
   @Test
@@ -60,7 +74,6 @@ class LocationControllerTest {
     Mockito.`when`(locationService.getAllLocations()).thenReturn(locationList)
 
     val expected: ResponseEntity<LocationResponse> = ResponseEntity(LocationResponse(locationList), HttpStatus.OK)
-
     val result = LocationController(locationService).getAllLocations()
 
     confirmNoError(result, expected)
@@ -78,6 +91,7 @@ class LocationControllerTest {
   @Test
   fun `getLocationsByDeviceWearerId should return bad request when it does not receive a valid id`() {
     val deviceWearerId = "456an"
+
     val expected = EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
     val result =
       assertThrows<EmApiError> { LocationController(locationService).getLocationsByDeviceWearerId(deviceWearerId) }
@@ -89,13 +103,15 @@ class LocationControllerTest {
   @Test
   fun `getLocationsByDeviceWearerId should return no data found when no location exists`() {
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
-    Mockito.`when`(locationService.getLocationsByDeviceWearerId(deviceWearerId)).thenReturn(listOf())
+
+    Mockito.`when`(locationService.getLocationsByDeviceWearerId(deviceWearerId)).thenReturn(listOf<Location>())
 
     val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     val result = LocationController(locationService).getLocationsByDeviceWearerId(deviceWearerId)
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    verify(locationService, times(1)).getLocationsByDeviceWearerId(any<String>())
   }
 
   @Test
@@ -206,13 +222,23 @@ class LocationControllerTest {
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
     val startDate = "2000-10-31T01:30:07.000-00:00"
     val endDate = "2000-10-31T01:30:20.000-00:00"
+
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    Mockito.`when`(locationService.getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end))
+      .thenReturn(listOf<Location>())
+
     val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     val result =
       LocationController(locationService).getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(listOf<LocationResponse>())
-
+    verify(locationService, times(1)).getLocationsByDeviceWearerIdAndTimeFrame(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+    )
   }
 
   @Test
@@ -310,6 +336,7 @@ class LocationControllerTest {
   @Test
   fun `getLocationsByDeviceId should return bad request when it does not receive a valid id`() {
     val deviceId = "456an"
+
     val expected = EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
     val result = assertThrows<EmApiError> { LocationController(locationService).getLocationsByDeviceId(deviceId) }
 
@@ -320,20 +347,22 @@ class LocationControllerTest {
   @Test
   fun `getLocationsByDeviceId should return no data found when no location exists`() {
     val deviceId = "b537065a-094e-47eb-8fab-9698a9664d35"
-    Mockito.`when`(locationService.getLocationsByDeviceId(deviceId)).thenReturn(listOf())
+
+    Mockito.`when`(locationService.getLocationsByDeviceId(deviceId)).thenReturn(listOf<Location>())
 
     val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     val result = LocationController(locationService).getLocationsByDeviceId(deviceId)
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    verify(locationService, times(1)).getLocationsByDeviceId(any<String>())
   }
 
   @Test
   fun `getLocationsByDeviceId should return a list of location data`() {
     val device = Device(
       id = 1,
-      deviceId = "deviceId",
+      deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc",
       modelId = "modelId",
       firmwareVersion = "firmwareVersion",
       deviceType = "deviceType",
@@ -440,6 +469,12 @@ class LocationControllerTest {
     val startDate = "2000-10-31T01:30:07.000-00:00"
     val endDate = "2000-10-31T01:30:10.000-00:00"
 
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
+
+    Mockito.`when`(locationService.getLocationsByDeviceIdAndTimeFrame(deviceId, start, end))
+      .thenReturn(listOf<Location>())
+
     val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     val result = LocationController(locationService).getLocationsByDeviceIdAndTimeFrame(
       deviceId,
@@ -448,7 +483,11 @@ class LocationControllerTest {
     )
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     confirmNoError(result, expected)
-
+    verify(locationService, times(1)).getLocationsByDeviceIdAndTimeFrame(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+    )
   }
 
   @Test
@@ -479,6 +518,7 @@ class LocationControllerTest {
       startDate,
       endDate,
     )
+
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     confirmNoError(result, expected)
     verify(locationService, times(1)).getLocationsByDeviceIdAndTimeFrame(
@@ -509,6 +549,7 @@ class LocationControllerTest {
       any<Date>(),
     )
   }
+
   @Test
   fun `getLocationsByDeviceIdAndTimeFrame should return bad request when endDate is prior startDate`() {
     val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
@@ -532,4 +573,226 @@ class LocationControllerTest {
     )
   }
 
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return bad request when it does not receive valid deviceId`() {
+    val deviceId = "456an"
+    val startDate = "2000-10-31T01:30:00.000-00:00"
+    val endDate = "2000-10-31T01:30:00.000-00:00"
+    val duration = 1
+
+    val expected = EmApiError("Insert a valid device id", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+        deviceId,
+        startDate,
+        endDate,
+        duration,
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>(),
+    )
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return bad request when it does not receive valid startDate`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01"
+    val endDate = "2000-10-31T01:30:00.000-00:00"
+    val duration = 1
+
+    val expected = EmApiError("Insert a valid start date", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+        deviceId,
+        startDate,
+        endDate,
+        duration,
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>(),
+    )
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return bad request when it does not receive valid endDate`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:00.000-00:00"
+    val endDate = "2000-10-31T01"
+    val duration = 1
+
+    val expected = EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+        deviceId,
+        startDate,
+        endDate,
+        duration,
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>(),
+    )
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return bad request when it does not receive valid duration`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:00.000-00:00"
+    val endDate = "2000-10-31T01:30:00.000-00:00"
+    val duration = 48
+
+    val expected = EmApiError("Duration should be from 1 to 24", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+        deviceId,
+        startDate,
+        endDate,
+        duration,
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>(),
+    )
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return empty list when receive valid data but no data exist`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01:30:10.000-00:00"
+    val duration = 2
+
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
+
+    Mockito.`when`(locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, start, end, duration))
+      .thenReturn(listOf<LocationAggregation>())
+
+    val expected = ResponseEntity(LocationAggregationResponse(message = "No data found"), HttpStatus.OK)
+    val result = LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      deviceId,
+      startDate,
+      endDate,
+      duration,
+    )
+
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
+    confirmNoErrorForAggregation(result, expected)
+    verify(locationService, times(1)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>(),
+    )
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return a list of data when insert valid data and data exists`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01:35:00.000-00:00"
+    val duration = 8
+
+    val datetime: Date = DateConverter().convertFromStringToDate("2000-10-31T00:00:00.000-00:00")
+
+    val locationDataList: List<LocationAggregation> = listOf(LocationAggregationDemo(25.0, 20.0, datetime))
+
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
+
+    Mockito.`when`(locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, start, end, duration))
+      .thenReturn(locationDataList)
+
+    val expected: ResponseEntity<LocationAggregationResponse> =
+      ResponseEntity(LocationAggregationResponse(locationDataList), HttpStatus.OK)
+    val result = LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      deviceId,
+      startDate,
+      endDate,
+      duration,
+    )
+
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
+    confirmNoErrorForAggregation(result, expected)
+    verify(locationService, times(1)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>(),
+    )
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return bad request when it does not receive valid IsoDateTime for startDate`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:07.000"
+    val endDate = "2000-10-31T01:35:00.000-00:00"
+    val duration = 1
+
+    val expected = EmApiError("Insert a valid start date", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+        deviceId,
+        startDate,
+        endDate,
+        duration,
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>(),
+    )
+  }
+
+  @Test
+  fun `aggregateLocationsByDeviceIdAndTimeFrameAndDuration should return bad request when it does not receive valid IsoDateTime for endDate`() {
+    val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
+    val startDate = "2000-10-31T01:30:07.000-00:00"
+    val endDate = "2000-10-31T01:35:00"
+    val duration = 1
+
+    val expected = EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
+    val result = assertThrows<EmApiError> {
+      LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+        deviceId,
+        startDate,
+        endDate,
+        duration,
+      )
+    }
+
+    confirmException(result, expected)
+    verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>(),
+    )
+  }
 }

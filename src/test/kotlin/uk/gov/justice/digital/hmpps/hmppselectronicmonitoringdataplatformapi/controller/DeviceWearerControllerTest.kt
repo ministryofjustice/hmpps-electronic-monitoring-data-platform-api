@@ -42,9 +42,11 @@ class DeviceWearerControllerTest {
   @Test
   fun `getAllDeviceWearers should return Ok with a message when there are no device wearers`() {
     Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(listOf<DeviceWearer>())
+
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(message = "No data found"), HttpStatus.OK)
     val result = DeviceWearerController(deviceWearerService).getAllDeviceWearers()
 
+    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body?.deviceWearers)
     confirmNoError(result, expected)
     verify(deviceWearerService, times(1)).getAllDeviceWearers()
   }
@@ -71,10 +73,13 @@ class DeviceWearerControllerTest {
 
     val response = null
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
-    val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(message = "No data found"), HttpStatus.OK)
 
+    val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(message = "No data found"), HttpStatus.OK)
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
+
+    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body?.deviceWearers)
     confirmNoError(result, expected)
+    verify(deviceWearerService, times(1)).getDeviceWearerById(any<String>())
   }
 
   @Test
@@ -83,8 +88,8 @@ class DeviceWearerControllerTest {
 
     val response = DeviceWearer(1, id, "John", "Smith", "Curfew")
     Mockito.`when`(deviceWearerService.getDeviceWearerById(id)).thenReturn(response)
-    val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(response), HttpStatus.OK)
 
+    val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(response), HttpStatus.OK)
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
 
     Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
@@ -104,8 +109,8 @@ class DeviceWearerControllerTest {
   @Test
   fun `getDeviceWearerByID should return bad request when it does not receive a valid id`() {
     val id = "456an"
-    val expected = EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
 
+    val expected = EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
     val result = assertThrows<EmApiError> { DeviceWearerController(deviceWearerService).getDeviceWearerById(id) }
 
     confirmException(result, expected)
@@ -162,12 +167,12 @@ class DeviceWearerControllerTest {
   fun `searchDeviceWearers v2 should return Ok with an empty list if no device wearers found`(queryString: String) {
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(listOf()), HttpStatus.OK)
 
-    Mockito.`when`(deviceWearerService.getMatchingDeviceWearers(queryString)).thenReturn(listOf())
+    Mockito.`when`(deviceWearerService.getMatchingDeviceWearers(queryString)).thenReturn(listOf<DeviceWearer>())
     val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2(queryString)
 
     Assertions.assertThat(result.body.deviceWearers).isEqualTo(expected.body.deviceWearers)
     confirmNoError(result, expected)
-
+    verify(deviceWearerService, times(1)).getMatchingDeviceWearers(any<String>())
   }
 
   @ParameterizedTest(name = "searchDeviceWearers v2 should return Ok with a list of matching values when the search string is: {0}")
