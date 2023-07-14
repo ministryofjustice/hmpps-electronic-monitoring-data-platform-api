@@ -41,7 +41,7 @@ class DeviceWearerControllerTest {
 
   @Test
   fun `getAllDeviceWearers should return Ok with a message when there are no device wearers`() {
-    Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(listOf())
+    Mockito.`when`(deviceWearerService.getAllDeviceWearers()).thenReturn(listOf<DeviceWearer>())
 
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(message = "No data found"), HttpStatus.OK)
     val result = DeviceWearerController(deviceWearerService).getAllDeviceWearers()
@@ -167,7 +167,7 @@ class DeviceWearerControllerTest {
   fun `searchDeviceWearers v2 should return Ok with an empty list if no device wearers found`(queryString: String) {
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(listOf()), HttpStatus.OK)
 
-    Mockito.`when`(deviceWearerService.getMatchingDeviceWearers(queryString)).thenReturn(listOf())
+    Mockito.`when`(deviceWearerService.getMatchingDeviceWearers(queryString)).thenReturn(listOf<DeviceWearer>())
     val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2(queryString)
 
     Assertions.assertThat(result.body.deviceWearers).isEqualTo(expected.body.deviceWearers)
