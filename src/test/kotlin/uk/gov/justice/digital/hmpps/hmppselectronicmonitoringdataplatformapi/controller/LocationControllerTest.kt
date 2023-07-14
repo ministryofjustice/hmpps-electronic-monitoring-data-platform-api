@@ -14,11 +14,12 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregation
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregationDemo
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationAggregationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.LocationService
 import java.util.*
+
+class LocationAggregationDemo(override var latitude: Double, override var longitude: Double, override var datetime: Date) : LocationAggregation;
 
 class LocationControllerTest {
 
@@ -47,11 +48,14 @@ class LocationControllerTest {
 
   @Test
   fun `getAllLocations should return No data found when no location exists`() {
+    Mockito.`when`(locationService.getAllLocations()).thenReturn(listOf())
+
     val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     val result = LocationController(locationService).getAllLocations()
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    verify(locationService, times(1)).getAllLocations()
   }
 
   @Test
@@ -100,11 +104,14 @@ class LocationControllerTest {
   fun `getLocationsByDeviceWearerId should return no data found when no location exists`() {
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
 
+    Mockito.`when`(locationService.getLocationsByDeviceWearerId(deviceWearerId)).thenReturn(listOf())
+
     val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     val result = LocationController(locationService).getLocationsByDeviceWearerId(deviceWearerId)
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    verify(locationService, times(1)).getLocationsByDeviceWearerId(any<String>())
   }
 
   @Test
@@ -216,12 +223,22 @@ class LocationControllerTest {
     val startDate = "2000-10-31T01:30:07.000-00:00"
     val endDate = "2000-10-31T01:30:20.000-00:00"
 
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    Mockito.`when`(locationService.getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end))
+      .thenReturn(listOf())
+
     val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     val result =
       LocationController(locationService).getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(listOf<LocationResponse>())
+    verify(locationService, times(1)).getLocationsByDeviceWearerIdAndTimeFrame(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+    )
   }
 
   @Test
@@ -331,11 +348,14 @@ class LocationControllerTest {
   fun `getLocationsByDeviceId should return no data found when no location exists`() {
     val deviceId = "b537065a-094e-47eb-8fab-9698a9664d35"
 
+    Mockito.`when`(locationService.getLocationsByDeviceId(deviceId)).thenReturn(listOf())
+
     val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     val result = LocationController(locationService).getLocationsByDeviceId(deviceId)
 
     confirmNoError(result, expected)
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    verify(locationService, times(1)).getLocationsByDeviceId(any<String>())
   }
 
   @Test
@@ -449,6 +469,12 @@ class LocationControllerTest {
     val startDate = "2000-10-31T01:30:07.000-00:00"
     val endDate = "2000-10-31T01:30:10.000-00:00"
 
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
+
+    Mockito.`when`(locationService.getLocationsByDeviceIdAndTimeFrame(deviceId, start, end))
+      .thenReturn(listOf())
+
     val expected = ResponseEntity(LocationResponse(message = "No data found"), HttpStatus.OK)
     val result = LocationController(locationService).getLocationsByDeviceIdAndTimeFrame(
       deviceId,
@@ -457,6 +483,11 @@ class LocationControllerTest {
     )
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     confirmNoError(result, expected)
+    verify(locationService, times(1)).getLocationsByDeviceIdAndTimeFrame(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+    )
   }
 
   @Test
@@ -653,6 +684,12 @@ class LocationControllerTest {
     val endDate = "2000-10-31T01:30:10.000-00:00"
     val duration = 2
 
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
+
+    Mockito.`when`(locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, start, end, duration))
+      .thenReturn(listOf())
+
     val expected = ResponseEntity(LocationAggregationResponse(message = "No data found"), HttpStatus.OK)
     val result = LocationController(locationService).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
       deviceId,
@@ -663,6 +700,12 @@ class LocationControllerTest {
 
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     confirmNoErrorForAggregation(result, expected)
+    verify(locationService, times(1)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+      any<String>(),
+      any<Date>(),
+      any<Date>(),
+      any<Int>(),
+    )
   }
 
   @Test
