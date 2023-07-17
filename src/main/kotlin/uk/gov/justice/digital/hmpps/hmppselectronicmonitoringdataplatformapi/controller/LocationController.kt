@@ -31,10 +31,11 @@ class LocationController(@Autowired private val locationService: ILocationServic
     return ResponseEntity(LocationResponse(result), HttpStatus.OK)
   }
 
-  @GetMapping("/v1", produces = ["text/csv"])
+  @GetMapping("/v1", produces = ["application/vnd.api+json"])
   fun exportAllLocations(response: HttpServletResponse?): ResponseEntity<InputStreamResource> {
     val filename = "locations.csv"
     val file = InputStreamResource(CSVHelper().locationsToCSV(locationService.getAllLocations()))
+
     return ResponseEntity.ok().header(
       HttpHeaders.CONTENT_DISPOSITION,
       "attachment; filename=$filename",
@@ -59,7 +60,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
     @RequestParam("deviceWearerId") deviceWearerId: String,
     @RequestParam("startDate") startDate: String,
     @RequestParam("endDate") endDate: String,
-  ): ResponseEntity<LocationResponse> {
+   ): ResponseEntity<LocationResponse> {
 
     if (!StaticHelpers().validateUUID(deviceWearerId)) {
       throw EmApiError("Insert a valid device wearer id", HttpStatus.BAD_REQUEST)
@@ -93,15 +94,15 @@ class LocationController(@Autowired private val locationService: ILocationServic
     return ResponseEntity(LocationResponse(result), HttpStatus.OK)
   }
 
-  @GetMapping("/v1/device-id/{id}", produces = ["text/csv"])
-  fun exportLocationsByDeviceId(@PathVariable("id") deviceId: String): ResponseEntity<InputStreamResource>? {
+  @GetMapping("/v1/device-id/{id}", produces = ["application/vnd.api+json"])
+  @Throws(Exception::class)
+  fun exportLocationsByDeviceId(@PathVariable("id") deviceId: String): ResponseEntity<InputStreamResource> {
     if (!StaticHelpers().validateUUID(id = deviceId)) throw EmApiError("Insert a valid id", HttpStatus.BAD_REQUEST)
 
     val filename = "locations.csv"
-    val result = locationService.getLocationsByDeviceId(deviceId)
-
     val file =
-      InputStreamResource(CSVHelper().locationsToCSV(result))
+      InputStreamResource(CSVHelper().locationsToCSV(locationService.getLocationsByDeviceId(deviceId)))
+
     return ResponseEntity.ok().header(
       HttpHeaders.CONTENT_DISPOSITION,
       "attachment; filename=$filename",
@@ -142,12 +143,12 @@ class LocationController(@Autowired private val locationService: ILocationServic
     return ResponseEntity(LocationResponse(result), HttpStatus.OK)
   }
 
-  @GetMapping("/v1/search-by-time-and-device", produces = ["text/csv"])
+  @GetMapping("/v1/search-by-time-and-device", produces = ["application/vnd.api+json"])
   fun exportLocationsByDeviceIdAndTimeFrame(
     @RequestParam("deviceId") deviceId: String,
     @RequestParam("startDate") startDate: String,
     @RequestParam("endDate") endDate: String,
-  ): ResponseEntity<InputStreamResource>? {
+  ): ResponseEntity<InputStreamResource> {
     if (!StaticHelpers().validateUUID(deviceId)) {
       throw EmApiError("Insert a valid device id", HttpStatus.BAD_REQUEST)
     }
@@ -157,6 +158,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
     if (!StaticHelpers().isValidISODateTime(endDate)) {
       throw EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
     }
+
     val start: Date = DateConverter().convertFromStringToDate(startDate)
     val end: Date = DateConverter().convertFromStringToDate(endDate)
     val dateComparison = end.compareTo(start)
@@ -166,7 +168,6 @@ class LocationController(@Autowired private val locationService: ILocationServic
     }
 
     val filename = "locations.csv"
-
     val file =
       InputStreamResource(
         CSVHelper().locationsToCSV(
