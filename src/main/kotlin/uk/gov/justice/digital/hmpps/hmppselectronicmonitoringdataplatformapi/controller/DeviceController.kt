@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.co
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,6 +17,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.ser
 @RestController
 class DeviceController(@Autowired private val deviceService: IDeviceService) {
 
+  @PreAuthorize("hasRole('ROLE_VIEW_PRISONER_DATA')")
   @GetMapping("/v1/device-wearer-id/{id}")
   fun getDevicesByDeviceWearerId(@PathVariable("id") deviceWearerId: String): ResponseEntity<DeviceResponse> {
     if (!StaticHelpers().validateUUID(deviceWearerId)) {
@@ -28,6 +30,7 @@ class DeviceController(@Autowired private val deviceService: IDeviceService) {
     return ResponseEntity(DeviceResponse(result), HttpStatus.OK)
   }
 
+  @PreAuthorize("hasRole('ROLE_VIEW_PRISONER_DATA')")
   @GetMapping("/v1/device-id/{id}")
   fun getDeviceByDeviceId(@PathVariable("id") deviceId: String): ResponseEntity<DeviceResponse> {
     if (!StaticHelpers().validateUUID(deviceId)) {

@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.co
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,6 +17,7 @@ import java.util.*
 @RequestMapping("device-wearers")
 @RestController
 class DeviceWearerController(@Autowired private val deviceWearerService: IDeviceWearerService) {
+  @PreAuthorize("hasRole('ROLE_VIEW_PRISONER_DATA')")
   @GetMapping("/v1")
   fun getAllDeviceWearers(): ResponseEntity<DeviceWearerResponse> {
     try {
@@ -30,11 +32,13 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
     }
   }
 
+  @PreAuthorize("hasRole('ROLE_VIEW_PRISONER_DATA')")
   @GetMapping("/v2/search/{queryString}") // /v2/search/John
   fun searchDeviceWearersV2PathVariable(@PathVariable("queryString") queryString: String?): ResponseEntity<DeviceWearerResponse> {
     return searchDeviceWearersV2(queryString)
   }
 
+  @PreAuthorize("hasRole('ROLE_VIEW_PRISONER_DATA')")
   @GetMapping("/v2/search") // /v2/search?search=John
   fun searchDeviceWearersV2(@RequestParam("search") queryString: String?): ResponseEntity<DeviceWearerResponse> {
     var result: List<DeviceWearer> = listOf()
@@ -46,6 +50,7 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
     return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
   }
 
+  @PreAuthorize("hasRole('ROLE_VIEW_PRISONER_DATA')")
   @GetMapping("/v1/search/{queryString}")
   fun searchDeviceWearers(@PathVariable("queryString") queryString: String?): ResponseEntity<DeviceWearerResponse> {
     if (queryString.isNullOrBlank()) {
@@ -68,6 +73,7 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
     }
   }
 
+  @PreAuthorize("hasRole('ROLE_VIEW_PRISONER_DATA')")
   @GetMapping("/v1/id/{id}")
   fun getDeviceWearerById(@PathVariable("id") deviceWearerId: String): ResponseEntity<DeviceWearerResponse> {
     if (!StaticHelpers().validateUUID(deviceWearerId)) {

@@ -16,7 +16,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
     environment:
       - SERVER_PORT=8080
-      - spring.profiles.active=dev
+      - spring.profiles.active=dev #TODO: does this need to change to: SPRING_PROFILES_ACTIVE=developer ?
       - DATABASE_URL=db:5432
       - DATABASE_NAME=demo_db
       - DATABASE_USERNAME=postgres

@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.co
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,10 +18,10 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.res
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.ILocationService
 import java.util.*
 
-
 @RequestMapping("locations")
 @RestController
 class LocationController(@Autowired private val locationService: ILocationService) {
+  @PreAuthorize("hasRole('ROLE_VIEW_PRISONER_DATA')")
   @GetMapping("/v1")
   fun getAllLocations(): ResponseEntity<LocationResponse> {
     val result: List<Location> = locationService.getAllLocations()
@@ -30,6 +31,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
     return ResponseEntity(LocationResponse(result), HttpStatus.OK)
   }
 
+  @PreAuthorize("hasRole('ROLE_VIEW_PRISONER_DATA')")
   @GetMapping("/v1/device-wearer-id/{id}")
   fun getLocationsByDeviceWearerId(@PathVariable("id") deviceWearerId: String): ResponseEntity<LocationResponse> {
     if (!StaticHelpers().validateUUID(deviceWearerId)) {
@@ -42,13 +44,13 @@ class LocationController(@Autowired private val locationService: ILocationServic
     return ResponseEntity(LocationResponse(result), HttpStatus.OK)
   }
 
+  @PreAuthorize("hasRole('ROLE_VIEW_PRISONER_DATA')")
   @GetMapping("/v1/search-by-time")
   fun getLocationsByDeviceWearerIdAndTimeFrame(
     @RequestParam("deviceWearerId") deviceWearerId: String,
     @RequestParam("startDate") startDate: String,
     @RequestParam("endDate") endDate: String,
   ): ResponseEntity<LocationResponse> {
-
     if (!StaticHelpers().validateUUID(deviceWearerId)) {
       throw EmApiError("Insert a valid device wearer id", HttpStatus.BAD_REQUEST)
     }
@@ -69,6 +71,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
     return ResponseEntity(LocationResponse(result), HttpStatus.OK)
   }
 
+  @PreAuthorize("hasRole('ROLE_VIEW_PRISONER_DATA')")
   @GetMapping("/v1/device-id/{id}")
   fun getLocationsByDeviceId(@PathVariable("id") deviceId: String): ResponseEntity<LocationResponse> {
     if (!StaticHelpers().validateUUID(deviceId)) {
@@ -81,13 +84,13 @@ class LocationController(@Autowired private val locationService: ILocationServic
     return ResponseEntity(LocationResponse(result), HttpStatus.OK)
   }
 
+  @PreAuthorize("hasRole('ROLE_VIEW_PRISONER_DATA')")
   @GetMapping("/v1/search-by-time-and-device")
   fun getLocationsByDeviceIdAndTimeFrame(
     @RequestParam("deviceId") deviceId: String,
     @RequestParam("startDate") startDate: String,
     @RequestParam("endDate") endDate: String,
   ): ResponseEntity<LocationResponse> {
-
     if (!StaticHelpers().validateUUID(deviceId)) {
       throw EmApiError("Insert a valid device id", HttpStatus.BAD_REQUEST)
     }
@@ -114,14 +117,14 @@ class LocationController(@Autowired private val locationService: ILocationServic
     return ResponseEntity(LocationResponse(result), HttpStatus.OK)
   }
 
+  @PreAuthorize("hasRole('ROLE_VIEW_PRISONER_DATA')")
   @GetMapping("/v1/aggregate")
   fun aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
     @RequestParam("deviceId") deviceId: String,
     @RequestParam("startDate") startDate: String,
     @RequestParam("endDate") endDate: String,
-    @RequestParam("duration", defaultValue="1") duration: Int
+    @RequestParam("duration", defaultValue = "1") duration: Int,
   ): ResponseEntity<LocationAggregationResponse> {
-
     if (!StaticHelpers().validateUUID(deviceId)) {
       throw EmApiError("Insert a valid device id", HttpStatus.BAD_REQUEST)
     }
