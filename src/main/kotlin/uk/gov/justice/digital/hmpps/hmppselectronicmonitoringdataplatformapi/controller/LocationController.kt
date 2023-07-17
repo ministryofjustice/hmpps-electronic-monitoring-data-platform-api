@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.CSVHelper
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.DateConverter
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
@@ -33,7 +34,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
   @GetMapping("/v1", produces = ["text/csv"])
   fun exportAllLocations(response: HttpServletResponse?): ResponseEntity<InputStreamResource> {
     val filename = "locations.csv"
-    val file = InputStreamResource(locationService!!.loadAllLocations())
+    val file = InputStreamResource(CSVHelper().locationsToCSV(locationService.getAllLocations()))
     return ResponseEntity.ok().header(
       HttpHeaders.CONTENT_DISPOSITION,
       "attachment; filename=$filename"
