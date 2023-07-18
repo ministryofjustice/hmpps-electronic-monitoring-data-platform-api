@@ -186,7 +186,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
       .contentType(MediaType.parseMediaType("application/csv")).body(file)
   }
 
-  @GetMapping("/v1/aggregate")
+  @GetMapping("/v1/aggregate", produces = ["application/json"])
   fun aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
     @RequestParam("deviceId") deviceId: String,
     @RequestParam("startDate") startDate: String,
@@ -209,11 +209,66 @@ class LocationController(@Autowired private val locationService: ILocationServic
 
     val start: Date = DateConverter().convertFromStringToDate(startDate)
     val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val dateComparison = end.compareTo(start)
+
+    if (dateComparison < 0) {
+      throw EmApiError("End date is before start date", HttpStatus.BAD_REQUEST)
+    }
+
     val result = locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, start, end, duration)
 
     if (result.isEmpty()) {
       return ResponseEntity(LocationAggregationResponse(message = "No data found"), HttpStatus.OK)
     }
     return ResponseEntity(LocationAggregationResponse(result), HttpStatus.OK)
+  }
+
+  @GetMapping("/v1/aggregate", produces = ["application/vnd.api+json"])
+  fun exportAggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+    @RequestParam("deviceId") deviceId: String,
+    @RequestParam("startDate") startDate: String,
+    @RequestParam("endDate") endDate: String,
+    @RequestParam("duration", defaultValue = "1") duration: Int,
+  ): ResponseEntity<InputStreamResource> {
+
+    if (!StaticHelpers().validateUUID(deviceId)) {
+      throw EmApiError("Insert a valid device id", HttpStatus.BAD_REQUEST)
+    }
+    if (!StaticHelpers().isValidISODateTime(startDate)) {
+      throw EmApiError("Insert a valid start date", HttpStatus.BAD_REQUEST)
+    }
+    if (!StaticHelpers().isValidISODateTime(endDate)) {
+      throw EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
+    }
+    if (!StaticHelpers().validateDuration(duration)) {
+      throw EmApiError("Duration should be from 1 to 24", HttpStatus.BAD_REQUEST)
+    }
+
+    val start: Date = DateConverter().convertFromStringToDate(startDate)
+    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val dateComparison = end.compareTo(start)
+
+    if (dateComparison < 0) {
+      throw EmApiError("End date is before start date", HttpStatus.BAD_REQUEST)
+    }
+
+    val filename = "locations.csv"
+    val file =
+      InputStreamResource(
+        CSVHelper().LocationAggregationsToCSV(
+          locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+            deviceId,
+            start,
+            end,
+            duration
+          ),
+        ),
+      )
+
+    return ResponseEntity.ok().header(
+      HttpHeaders.CONTENT_DISPOSITION,
+      "attachment; filename=$filename",
+    )
+      .contentType(MediaType.parseMediaType("application/csv")).body(file)
   }
 }
