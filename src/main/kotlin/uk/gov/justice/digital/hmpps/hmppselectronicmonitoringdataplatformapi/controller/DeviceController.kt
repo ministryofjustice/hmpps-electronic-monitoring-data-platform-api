@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.co
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -13,6 +14,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.res
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.IDeviceService
 
 @RequestMapping("devices")
+@PreAuthorize("hasRole('ROLE_ELECTRONIC_MONITORING')")
 @RestController
 class DeviceController(@Autowired private val deviceService: IDeviceService) {
 
