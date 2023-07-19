@@ -6,9 +6,10 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.hel
 
 class IConvertableTest {
 
-  fun getMyProperties(convertableObject: IConvertable): List<Pair<String, String>>{
+  fun getMyProperties(convertableObject: IConvertable): List<Pair<String, String>> {
     return convertableObject.getProperties()
   }
+
   @Test
   fun `getProperties will get properties for a location`() {
     val device = Device(
@@ -51,4 +52,35 @@ class IConvertableTest {
 
     Assertions.assertThat(result).isEqualTo(expected)
   }
+
+  @Test
+  fun `getProperties will get device info`() {
+    val device = Device(
+      id = 1,
+      deviceId = "myDeviceId",
+      modelId = "modelId",
+      firmwareVersion = "firmwareVersion",
+      deviceType = "deviceType",
+      status = "status",
+      batteryLifeRemaining = 20,
+    )
+
+    val expected = listOf(
+      "batteryLifeRemaining" to "20",
+      "dateTagFitted" to "Sun Dec 02 16:47:04 GMT 292269055",
+      "dateTagRemoved" to "Sun Dec 02 16:47:04 GMT 292269055",
+      "deviceId" to "myDeviceId",
+      "deviceType" to "deviceType",
+      "deviceWearer" to "null",
+      "firmwareVersion" to "firmwareVersion",
+      "id" to "1",
+      "modelId" to "modelId",
+      "status" to "status",
+    )
+
+    val result = getMyProperties(device)
+
+    Assertions.assertThat(result).isEqualTo(expected)
+  }
+
 }
