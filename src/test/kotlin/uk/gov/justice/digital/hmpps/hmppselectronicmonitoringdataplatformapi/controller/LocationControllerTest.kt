@@ -19,8 +19,6 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.res
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.LocationService
 import java.util.*
 
-class LocationAggregationDemo(override var latitude: Double, override var longitude: Double, override var datetime: Date) : LocationAggregation;
-
 class LocationControllerTest {
 
   val locationService = Mockito.mock(LocationService::class.java)
@@ -717,7 +715,7 @@ class LocationControllerTest {
 
     val datetime: Date = DateConverter().convertFromStringToDate("2000-10-31T00:00:00.000-00:00")
 
-    val locationDataList: List<LocationAggregation> = listOf(LocationAggregationDemo(25.0, 20.0, datetime))
+    val locationDataList: List<LocationAggregation> = listOf(LocationAggregation(25.0, 20.0, datetime))
 
     val start: Date = DateConverter().convertFromStringToDate(startDate)
     val end: Date = DateConverter().convertFromStringToDate(endDate)
