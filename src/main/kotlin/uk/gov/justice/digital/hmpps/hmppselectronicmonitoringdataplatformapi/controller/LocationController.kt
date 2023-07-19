@@ -34,7 +34,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
   @GetMapping("/v1", produces = ["application/vnd.api+json"])
   fun exportAllLocations(response: HttpServletResponse?): ResponseEntity<InputStreamResource> {
     val filename = "locations.csv"
-    val file = InputStreamResource(CSVHelper().locationsToCSV(locationService.getAllLocations()))
+    val file = InputStreamResource(CSVHelper().convertToCSV(locationService.getAllLocations()))
 
     return ResponseEntity.ok().header(
       HttpHeaders.CONTENT_DISPOSITION,
@@ -101,7 +101,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
 
     val filename = "locations.csv"
     val file =
-      InputStreamResource(CSVHelper().locationsToCSV(locationService.getLocationsByDeviceId(deviceId)))
+      InputStreamResource(CSVHelper().convertToCSV(locationService.getLocationsByDeviceId(deviceId)))
 
     return ResponseEntity.ok().header(
       HttpHeaders.CONTENT_DISPOSITION,
@@ -170,7 +170,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
     val filename = "locations.csv"
     val file =
       InputStreamResource(
-        CSVHelper().locationsToCSV(
+        CSVHelper().convertToCSV(
           locationService.getLocationsByDeviceIdAndTimeFrame(
             deviceId,
             start,
