@@ -32,8 +32,8 @@ data class Location(
 
   ) : IConvertable {
   override fun getProperties(): List<Pair<String, String>> {
-    var result = Location::class.memberProperties.map { it.name to it.get(this).toString() }
-    var deviceId: String = device?.deviceId ?: ""
+    val result = Location::class.memberProperties.map { it.name to it.get(this).toString() }
+    val deviceId: String = device?.deviceId ?: ""
     val newList: List<Pair<String, String>> = result.map { if (it.first == "device") { "device" to deviceId }
     else it.first to it.second}
     return newList

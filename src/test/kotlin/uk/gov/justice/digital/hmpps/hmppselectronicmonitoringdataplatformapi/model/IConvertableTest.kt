@@ -72,7 +72,7 @@ class IConvertableTest {
       deviceType = "deviceType",
       status = "status",
       batteryLifeRemaining = 20,
-      deviceWearer = deviceWearerId
+      deviceWearer = deviceWearerId,
     )
 
 
@@ -92,6 +92,56 @@ class IConvertableTest {
     val result = getMyProperties(device)
 
     Assertions.assertThat(result).isEqualTo(expected)
+  }
+
+  @Test
+  fun `getProperties will get deviceWearer info`() {
+
+    val deviceWearerId = DeviceWearer(
+      id = 123,
+      deviceWearerId = "345",
+      firstName = "Mark",
+      lastName = "Andreas",
+      type = "chip",
+    )
+
+    val devices = listOf(
+      Device(
+        id = 1,
+        deviceId = "myDeviceId",
+        modelId = "modelId",
+        firmwareVersion = "firmwareVersion",
+        deviceType = "deviceType",
+        status = "status",
+        batteryLifeRemaining = 20,
+        deviceWearer = deviceWearerId,
+      ),
+      Device(
+        id = 2,
+        deviceId = "myOtherDeviceId",
+        modelId = "modelId",
+        firmwareVersion = "firmwareVersion",
+        deviceType = "deviceType",
+        status = "status",
+        batteryLifeRemaining = 20,
+        deviceWearer = deviceWearerId,
+      ),
+
+      )
+    deviceWearerId.devices = devices
+
+    val expected = listOf(
+      "deviceWearerId" to "345",
+      "devices" to "[myDeviceId, myOtherDeviceId]",
+      "firstName" to "Mark",
+      "id" to 123,
+      "lastName" to "Andreas",
+      "type" to "chip",
+    )
+
+    val result = getMyProperties(deviceWearerId)
+
+    Assertions.assertThat(result.toString()).isEqualTo(expected.toString())
   }
 
 }
