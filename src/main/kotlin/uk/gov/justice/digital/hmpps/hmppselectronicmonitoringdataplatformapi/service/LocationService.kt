@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.se
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.ILocationAggregation
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregation
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.repository.LocationRepository
@@ -23,7 +22,7 @@ interface ILocationService {
     startDate: Date,
     endDate: Date,
     duration: Int,
-  ): List<ILocationAggregation>
+  ): List<LocationAggregation>
 
 }
 
@@ -59,13 +58,15 @@ class LocationService(@Autowired private val locationRepository: LocationReposit
     startDate: Date,
     endDate: Date,
     duration: Int,
-  ): List<ILocationAggregation> {
-    return locationRepository.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+  ): List<LocationAggregation> {
+    val repositoryResponse = locationRepository.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
       deviceId,
       startDate,
       endDate,
       duration,
-    ) as List<ILocationAggregation> ?: listOf()
+    ) ?: listOf()
+    val result = repositoryResponse.map{LocationAggregation(it.latitude, it.longitude, it.datetime)}
+    return result
   }
 }
 

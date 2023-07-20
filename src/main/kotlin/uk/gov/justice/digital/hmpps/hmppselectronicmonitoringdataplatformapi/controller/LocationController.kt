@@ -13,7 +13,6 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.hel
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregation
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationAggregationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.ILocationService
@@ -257,7 +256,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
       start,
       end,
       duration
-    ) as List<LocationAggregation>
+    )
 
     val filename = "locations.csv"
     val file =
