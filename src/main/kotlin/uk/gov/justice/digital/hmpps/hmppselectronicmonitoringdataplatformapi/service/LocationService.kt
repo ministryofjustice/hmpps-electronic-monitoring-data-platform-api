@@ -64,7 +64,7 @@ class LocationService(@Autowired private val locationRepository: LocationReposit
       startDate,
       endDate,
       duration,
-    ) ?: listOf()
+    ) as List<LocationAggregation> ?: listOf()
   }
 }
 
