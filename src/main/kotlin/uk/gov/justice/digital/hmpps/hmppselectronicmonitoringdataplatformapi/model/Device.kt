@@ -44,11 +44,11 @@ data class Device(
   val locations = listOf<Location>()
 
   override fun getProperties(): List<Pair<String, String>> {
-    var result = Device::class.memberProperties.map {
+    val result = Device::class.memberProperties.map {
       it.name to it.get(this).toString()
     }
-    var deviceWearerId: String = deviceWearer?.deviceWearerId ?: ""
-    var wearerInfo = result.map {
+    val deviceWearerId: String = deviceWearer?.deviceWearerId ?: ""
+    val wearerInfo = result.map {
       if (it.first == "deviceWearer") {
         "deviceWearer" to deviceWearerId
       }
