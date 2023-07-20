@@ -6,6 +6,7 @@ import org.mockito.Mockito
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.DateConverter
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.ILocationAggregation
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregation
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.repository.LocationRepository
@@ -82,7 +83,7 @@ class LocationServiceTest {
     val duration = 1
 
     val expectedResult: List<Location> = listOf()
-    val result: List<LocationAggregation> = locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, startDate, endDate, duration)
+    val result: List<ILocationAggregation> = locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, startDate, endDate, duration)
 
     verify(locationRepository, times(1)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, startDate, endDate, duration)
     Assertions.assertThat(result).isEqualTo(expectedResult)
