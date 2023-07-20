@@ -7,6 +7,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.hel
 class IConvertableTest {
 
   fun getMyProperties(convertableObject: IConvertable): List<Pair<String, String>> {
+
     return convertableObject.getProperties()
   }
 
@@ -55,6 +56,14 @@ class IConvertableTest {
 
   @Test
   fun `getProperties will get device info`() {
+
+    val deviceWearerId = DeviceWearer(
+      id = 0,
+      deviceWearerId = "0",
+      firstName = "",
+      lastName = "",
+      type = "",
+    )
     val device = Device(
       id = 1,
       deviceId = "myDeviceId",
@@ -63,7 +72,9 @@ class IConvertableTest {
       deviceType = "deviceType",
       status = "status",
       batteryLifeRemaining = 20,
+      deviceWearer = deviceWearerId
     )
+
 
     val expected = listOf(
       "batteryLifeRemaining" to "20",
@@ -71,7 +82,7 @@ class IConvertableTest {
       "dateTagRemoved" to "Sun Dec 02 16:47:04 GMT 292269055",
       "deviceId" to "myDeviceId",
       "deviceType" to "deviceType",
-      "deviceWearer" to "null",
+      "deviceWearer" to "0",
       "firmwareVersion" to "firmwareVersion",
       "id" to "1",
       "modelId" to "modelId",

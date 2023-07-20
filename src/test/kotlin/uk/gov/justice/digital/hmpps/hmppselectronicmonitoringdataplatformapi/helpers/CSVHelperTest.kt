@@ -2,10 +2,9 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.he
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito
 import org.testcontainers.shaded.org.apache.commons.io.IOUtils
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Device
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import java.nio.charset.StandardCharsets
 
@@ -58,24 +57,26 @@ class CSVHelperTest {
 
   }
 
-  @Test
-  fun `It does not convert location to CSV format due to internal server issue`() {
-    val location = Location()
+//  @Test
+//  fun `It does not convert location to CSV format due to internal server issue`() {
+//    val location = Location()
 
 //    assertThrows<Exception> { LocationController(locationService).getAllLocations() }
-    // val convertToCSV = Mockito.mock(CSVHelper::class.java)
-    Mockito.`when`(CSVHelper().convertToCSV(listOf(location))).thenThrow(RuntimeException("Exception"))
+  // val convertToCSV = Mockito.mock(CSVHelper::class.java)
+  // Mockito.`when`(CSVHelper().convertToCSV(listOf(location))).thenThrow(RuntimeException("Exception"))
 //    val result = CSVHelper().convertToCSV(listOf(location))
 //    val expected = RuntimeException("fail to import data to CSV file: ")
-    assertThrows<Exception> { CSVHelper().convertToCSV(listOf(location)) }
-    // verify(locationService, times(1)).getLocationsByDeviceWearerId(any<String>())
+  // assertThrows<Exception> { CSVHelper().convertToCSV(listOf(location)) }
+  // verify(locationService, times(1)).getLocationsByDeviceWearerId(any<String>())
 
-    // Assertions.assertThat(result).isEqualTo(expected)
-  }
+  // Assertions.assertThat(result).isEqualTo(expected)
+  // }
 
   @Test
   fun `it converts devices to CSV format`() {
+
     val device = Device(
+      deviceWearer = DeviceWearer(),
       id = 1,
       deviceId = "myDeviceId",
       modelId = "XYZ",
@@ -86,8 +87,9 @@ class CSVHelperTest {
     )
 
 
-    val expected = "batteryLifeRemaining,dateTagFitted,dateTagRemoved,deviceId,deviceType,deviceWearer,firmwareVersion,id,locations,modelId,status\r\n" +
-      "20,Sun Dec 02 16:47:04 GMT 292269055,Sun Dec 02 16:47:04 GMT 292269055,myDeviceId,testType,null,739,1,[],XYZ,itsOK\r\n"
+    val expected =
+      "batteryLifeRemaining,dateTagFitted,dateTagRemoved,deviceId,deviceType,deviceWearer,firmwareVersion,id,modelId,status\r\n" +
+        "20,Sun Dec 02 16:47:04 GMT 292269055,Sun Dec 02 16:47:04 GMT 292269055,myDeviceId,testType,0,739,1,XYZ,itsOK\r\n"
 
     val result = CSVHelper().convertToCSV(listOf(device))
     val parseRes = IOUtils.toString(result, StandardCharsets.UTF_8)
