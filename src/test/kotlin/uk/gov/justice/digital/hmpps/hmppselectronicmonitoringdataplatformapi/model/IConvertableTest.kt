@@ -27,13 +27,20 @@ class IConvertableTest {
       "device" to "myDeviceId",
       "id" to "1",
       "latitude" to "20.0",
-      "locationTime" to "Tue Oct 31 01:30:00 GMT 2000",
+      "locationTime" to "Tue Oct 31 01:30:00 UTC 2000",
       "longitude" to "20.0",
     )
 
     val result = getMyProperties(location)
+    val resultInUTC = result.map {
+      if (it.first == "locationTime") {
+        it.first to it.second.replace("GMT", "UTC")
+      } else {
+        it
+      }
+    }
 
-    Assertions.assertThat(result).isEqualTo(expected)
+    Assertions.assertThat(resultInUTC).isEqualTo(expected)
   }
 
   @Test
@@ -42,14 +49,21 @@ class IConvertableTest {
     val locationAggregation = LocationAggregation(20.0, 20.0, dateTime)
     val expected = listOf(
 
-      "datetime" to "Tue Oct 31 01:30:00 GMT 2000",
+      "datetime" to "Tue Oct 31 01:30:00 UTC 2000",
       "latitude" to "20.0",
       "longitude" to "20.0",
     )
 
     val result = getMyProperties(locationAggregation)
+    val resultInUTC = result.map {
+      if (it.first == "datetime") {
+        it.first to it.second.replace("GMT", "UTC")
+      } else {
+        it
+      }
+    }
 
-    Assertions.assertThat(result).isEqualTo(expected)
+    Assertions.assertThat(resultInUTC).isEqualTo(expected)
   }
 
   @Test
@@ -74,8 +88,8 @@ class IConvertableTest {
 
     val expected = listOf(
       "batteryLifeRemaining" to "20",
-      "dateTagFitted" to "Sun Dec 02 16:47:04 GMT 292269055",
-      "dateTagRemoved" to "Sun Dec 02 16:47:04 GMT 292269055",
+      "dateTagFitted" to "Sun Dec 02 16:47:04 UTC 292269055",
+      "dateTagRemoved" to "Sun Dec 02 16:47:04 UTC 292269055",
       "deviceId" to "myDeviceId",
       "deviceType" to "deviceType",
       "deviceWearer" to "0",
@@ -86,8 +100,14 @@ class IConvertableTest {
     )
 
     val result = getMyProperties(device)
-
-    Assertions.assertThat(result).isEqualTo(expected)
+    val resultInUTC = result.map {
+      if (it.first == "dateTagFitted" || it.first == "dateTagRemoved") {
+        it.first to it.second.replace("GMT", "UTC")
+      } else {
+        it
+      }
+    }
+    Assertions.assertThat(resultInUTC).isEqualTo(expected)
   }
 
   @Test
