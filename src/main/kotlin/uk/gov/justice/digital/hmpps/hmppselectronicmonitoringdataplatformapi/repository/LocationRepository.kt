@@ -4,8 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.ILocationAggregation
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregation
+import java.time.ZonedDateTime
 import java.util.*
 
 @Repository
@@ -26,9 +27,11 @@ interface LocationRepository : JpaRepository<Location, Int> {
       " WHERE dw.device_wearer_id = :deviceWearerId and l.location_time >= :startDate and l.location_time <= :endDate",
     nativeQuery = true,
   )
-  fun findLocationsByDeviceWearerIdAndTimeFrame(@Param("deviceWearerId") deviceWearerId: String,
-                                                @Param("startDate") startDate: Date,
-                                                @Param("endDate") endDate: Date) : List<Location>?
+  fun findLocationsByDeviceWearerIdAndTimeFrame(
+    @Param("deviceWearerId") deviceWearerId: String,
+    @Param("startDate") startDate: ZonedDateTime,
+    @Param("endDate") endDate: ZonedDateTime,
+  ): List<Location>?
 
   @Query(
     value = "SELECT DISTINCT l.*" +
@@ -38,17 +41,17 @@ interface LocationRepository : JpaRepository<Location, Int> {
   )
   fun findLocationsByDeviceId(@Param("deviceId") deviceId: String): List<Location>?
 
-
   @Query(
     value = "SELECT DISTINCT l.*" +
       "FROM location as l JOIN device as d ON l.device_id = d.id" +
       " WHERE d.device_id = :deviceId and l.location_time >= :startDate and l.location_time <= :endDate",
     nativeQuery = true,
   )
-  fun findLocationsByDeviceIdAndTimeFrame(@Param("deviceId") deviceId: String,
-                                          @Param("startDate") startDate: Date,
-                                          @Param("endDate") endDate: Date) : List<Location>?
-
+  fun findLocationsByDeviceIdAndTimeFrame(
+    @Param("deviceId") deviceId: String,
+    @Param("startDate") startDate: ZonedDateTime,
+    @Param("endDate") endDate: ZonedDateTime,
+  ): List<Location>?
 
   @Query(
     value = "SELECT AVG(l.latitude) as latitude, AVG(l.longitude) as longitude," +
@@ -58,10 +61,10 @@ interface LocationRepository : JpaRepository<Location, Int> {
       " GROUP BY datetime ORDER BY datetime",
     nativeQuery = true,
   )
-  fun aggregateLocationsByDeviceIdAndTimeFrameAndDuration(@Param("deviceId") deviceId: String,
-                                                          @Param("startDate") startDate: Date,
-                                                          @Param("endDate") endDate: Date,
-                                                          @Param("duration") duration: Int) : List<LocationAggregation>?
-
-
+  fun aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+    @Param("deviceId") deviceId: String,
+    @Param("startDate") startDate: ZonedDateTime,
+    @Param("endDate") endDate: ZonedDateTime,
+    @Param("duration") duration: Int,
+  ): List<ILocationAggregation>?
 }

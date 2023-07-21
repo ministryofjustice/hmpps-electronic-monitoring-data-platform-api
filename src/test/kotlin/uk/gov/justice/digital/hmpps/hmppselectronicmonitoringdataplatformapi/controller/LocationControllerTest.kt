@@ -9,7 +9,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.DateConverter
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Device
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
@@ -17,9 +16,7 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationAggregationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.LocationService
-import java.util.*
-
-class LocationAggregationDemo(override var latitude: Double, override var longitude: Double, override var datetime: Date) : LocationAggregation;
+import java.time.ZonedDateTime
 
 class LocationControllerTest {
 
@@ -54,7 +51,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getAllLocations()
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getAllLocations()
   }
 
@@ -77,7 +74,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getAllLocations()
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getAllLocations()
   }
 
@@ -110,7 +107,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getLocationsByDeviceWearerId(deviceWearerId)
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getLocationsByDeviceWearerId(any<String>())
   }
 
@@ -134,7 +131,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getLocationsByDeviceWearerId(deviceWearerId)
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getLocationsByDeviceWearerId(any<String>())
   }
 
@@ -166,8 +163,8 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).getLocationsByDeviceWearerIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
@@ -189,8 +186,8 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).getLocationsByDeviceWearerIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
@@ -212,8 +209,8 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).getLocationsByDeviceWearerIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
@@ -223,8 +220,8 @@ class LocationControllerTest {
     val startDate = "2000-10-31T01:30:07.000-00:00"
     val endDate = "2000-10-31T01:30:20.000-00:00"
 
-    val start: Date = DateConverter().convertFromStringToDate(startDate)
-    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val start: ZonedDateTime = ZonedDateTime.parse(startDate)
+    val end: ZonedDateTime = ZonedDateTime.parse(endDate)
     Mockito.`when`(locationService.getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end))
       .thenReturn(listOf<Location>())
 
@@ -233,11 +230,11 @@ class LocationControllerTest {
       LocationController(locationService).getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, startDate, endDate)
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.locations).isEqualTo(listOf<LocationResponse>())
+    Assertions.assertThat(result.body?.locations).isEqualTo(listOf<Location>())
     verify(locationService, times(1)).getLocationsByDeviceWearerIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
@@ -257,8 +254,8 @@ class LocationControllerTest {
     )
 
     val locationDataList: List<Location> = listOf(Location(1, device, 20.0, 20.0))
-    val start: Date = DateConverter().convertFromStringToDate(startDate)
-    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val start: ZonedDateTime = ZonedDateTime.parse(startDate)
+    val end: ZonedDateTime = ZonedDateTime.parse(endDate)
 
     Mockito.`when`(locationService.getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end))
       .thenReturn(locationDataList)
@@ -271,8 +268,8 @@ class LocationControllerTest {
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getLocationsByDeviceWearerIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
@@ -292,8 +289,8 @@ class LocationControllerTest {
     )
 
     val locationDataList: List<Location> = listOf(Location(1, device, 20.0, 20.0), Location(1, device, 30.0, 30.0))
-    val start: Date = DateConverter().convertFromStringToDate(startDate)
-    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val start: ZonedDateTime = ZonedDateTime.parse(startDate)
+    val end: ZonedDateTime = ZonedDateTime.parse(endDate)
 
     Mockito.`when`(locationService.getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end))
       .thenReturn(locationDataList)
@@ -306,14 +303,14 @@ class LocationControllerTest {
     Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getLocationsByDeviceWearerIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
   @Test
   fun `getLocationsByDeviceWearerIdAndTimeFrame should return internal server error when there is an internal server issue`() {
-    Mockito.`when`(locationService.getLocationsByDeviceWearerIdAndTimeFrame(any<String>(), any<Date>(), any<Date>()))
+    Mockito.`when`(locationService.getLocationsByDeviceWearerIdAndTimeFrame(any<String>(), any<ZonedDateTime>(), any<ZonedDateTime>()))
       .thenThrow(RuntimeException("Exception"))
     val deviceWearerId = "b537065a-094e-47eb-8fab-9698a9664d35"
     val startDate = "2000-10-31T01:30:07.000-00:00"
@@ -328,8 +325,8 @@ class LocationControllerTest {
     }
     verify(locationService, times(1)).getLocationsByDeviceWearerIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
@@ -354,7 +351,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getLocationsByDeviceId(deviceId)
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getLocationsByDeviceId(any<String>())
   }
 
@@ -378,7 +375,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getLocationsByDeviceId(deviceId)
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getLocationsByDeviceId(any<String>())
   }
 
@@ -412,8 +409,8 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).getLocationsByDeviceIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
@@ -435,8 +432,8 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).getLocationsByDeviceIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
@@ -458,8 +455,8 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).getLocationsByDeviceIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
@@ -469,8 +466,8 @@ class LocationControllerTest {
     val startDate = "2000-10-31T01:30:07.000-00:00"
     val endDate = "2000-10-31T01:30:10.000-00:00"
 
-    val start: Date = DateConverter().convertFromStringToDate(startDate)
-    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val start: ZonedDateTime = ZonedDateTime.parse(startDate)
+    val end: ZonedDateTime = ZonedDateTime.parse(endDate)
 
     Mockito.`when`(locationService.getLocationsByDeviceIdAndTimeFrame(deviceId, start, end))
       .thenReturn(listOf<Location>())
@@ -485,8 +482,8 @@ class LocationControllerTest {
     confirmNoError(result, expected)
     verify(locationService, times(1)).getLocationsByDeviceIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
@@ -506,8 +503,8 @@ class LocationControllerTest {
     )
 
     val locationDataList: List<Location> = listOf(Location(1, device, 20.0, 20.0))
-    val start: Date = DateConverter().convertFromStringToDate(startDate)
-    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val start: ZonedDateTime = ZonedDateTime.parse(startDate)
+    val end: ZonedDateTime = ZonedDateTime.parse(endDate)
 
     Mockito.`when`(locationService.getLocationsByDeviceIdAndTimeFrame(deviceId, start, end))
       .thenReturn(locationDataList)
@@ -523,14 +520,14 @@ class LocationControllerTest {
     confirmNoError(result, expected)
     verify(locationService, times(1)).getLocationsByDeviceIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
   @Test
   fun `getLocationsByDeviceIdAndTimeFrame should return internal server error when there is an internal server issue`() {
-    Mockito.`when`(locationService.getLocationsByDeviceIdAndTimeFrame(any<String>(), any<Date>(), any<Date>()))
+    Mockito.`when`(locationService.getLocationsByDeviceIdAndTimeFrame(any<String>(), any<ZonedDateTime>(), any<ZonedDateTime>()))
       .thenThrow(RuntimeException("Exception"))
     val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
     val startDate = "2000-10-31T01:30:07.000-00:00"
@@ -545,8 +542,8 @@ class LocationControllerTest {
     }
     verify(locationService, times(1)).getLocationsByDeviceIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
@@ -568,8 +565,8 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).getLocationsByDeviceIdAndTimeFrame(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
     )
   }
 
@@ -593,8 +590,8 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
       any<Int>(),
     )
   }
@@ -619,8 +616,8 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
       any<Int>(),
     )
   }
@@ -645,8 +642,8 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
       any<Int>(),
     )
   }
@@ -671,8 +668,8 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
       any<Int>(),
     )
   }
@@ -684,8 +681,8 @@ class LocationControllerTest {
     val endDate = "2000-10-31T01:30:10.000-00:00"
     val duration = 2
 
-    val start: Date = DateConverter().convertFromStringToDate(startDate)
-    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val start: ZonedDateTime = ZonedDateTime.parse(startDate)
+    val end: ZonedDateTime = ZonedDateTime.parse(endDate)
 
     Mockito.`when`(locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, start, end, duration))
       .thenReturn(listOf<LocationAggregation>())
@@ -702,8 +699,8 @@ class LocationControllerTest {
     confirmNoErrorForAggregation(result, expected)
     verify(locationService, times(1)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
       any<Int>(),
     )
   }
@@ -715,12 +712,12 @@ class LocationControllerTest {
     val endDate = "2000-10-31T01:35:00.000-00:00"
     val duration = 8
 
-    val datetime: Date = DateConverter().convertFromStringToDate("2000-10-31T00:00:00.000-00:00")
+    val datetime: ZonedDateTime = ZonedDateTime.parse("2000-10-31T00:00:00.000-00:00")
 
-    val locationDataList: List<LocationAggregation> = listOf(LocationAggregationDemo(25.0, 20.0, datetime))
+    val locationDataList: List<LocationAggregation> = listOf(LocationAggregation(25.0, 20.0, datetime))
 
-    val start: Date = DateConverter().convertFromStringToDate(startDate)
-    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val start: ZonedDateTime = ZonedDateTime.parse(startDate)
+    val end: ZonedDateTime = ZonedDateTime.parse(endDate)
 
     Mockito.`when`(locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, start, end, duration))
       .thenReturn(locationDataList)
@@ -738,8 +735,8 @@ class LocationControllerTest {
     confirmNoErrorForAggregation(result, expected)
     verify(locationService, times(1)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
       any<Int>(),
     )
   }
@@ -764,8 +761,8 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
       any<Int>(),
     )
   }
@@ -790,8 +787,8 @@ class LocationControllerTest {
     confirmException(result, expected)
     verify(locationService, times(0)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
       any<String>(),
-      any<Date>(),
-      any<Date>(),
+      any<ZonedDateTime>(),
+      any<ZonedDateTime>(),
       any<Int>(),
     )
   }

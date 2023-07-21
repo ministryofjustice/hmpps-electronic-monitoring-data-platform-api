@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses
 
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.BaseResponse
+import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.ILocationAggregation
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.LocationAggregation
 
 class LocationAggregationResponse : BaseResponse {
