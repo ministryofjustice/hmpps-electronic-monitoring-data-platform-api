@@ -12,7 +12,7 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.springframework.format.annotation.DateTimeFormat
-import java.util.*
+import java.time.ZonedDateTime
 import kotlin.reflect.full.memberProperties
 
 @Entity
@@ -29,10 +29,10 @@ data class Device(
   val batteryLifeRemaining: Int = 0,
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  val dateTagFitted: Date = Date(Long.MIN_VALUE),
+  val dateTagFitted: ZonedDateTime = ZonedDateTime.now(),
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  val dateTagRemoved: Date? = Date(Long.MIN_VALUE),
+  val dateTagRemoved: ZonedDateTime? = ZonedDateTime.now(),
 
   @JsonIgnore
   @ManyToOne(cascade = [(CascadeType.REMOVE)], fetch = FetchType.LAZY, optional = false)

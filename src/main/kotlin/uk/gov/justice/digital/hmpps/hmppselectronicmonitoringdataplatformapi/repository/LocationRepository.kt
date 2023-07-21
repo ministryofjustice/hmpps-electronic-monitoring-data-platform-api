@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.ILocationAggregation
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
+import java.time.ZonedDateTime
 import java.util.*
 
 @Repository
@@ -28,8 +29,8 @@ interface LocationRepository : JpaRepository<Location, Int> {
   )
   fun findLocationsByDeviceWearerIdAndTimeFrame(
     @Param("deviceWearerId") deviceWearerId: String,
-    @Param("startDate") startDate: Date,
-    @Param("endDate") endDate: Date,
+    @Param("startDate") startDate: ZonedDateTime,
+    @Param("endDate") endDate: ZonedDateTime,
   ): List<Location>?
 
   @Query(
@@ -48,8 +49,8 @@ interface LocationRepository : JpaRepository<Location, Int> {
   )
   fun findLocationsByDeviceIdAndTimeFrame(
     @Param("deviceId") deviceId: String,
-    @Param("startDate") startDate: Date,
-    @Param("endDate") endDate: Date,
+    @Param("startDate") startDate: ZonedDateTime,
+    @Param("endDate") endDate: ZonedDateTime,
   ): List<Location>?
 
   @Query(
@@ -62,8 +63,8 @@ interface LocationRepository : JpaRepository<Location, Int> {
   )
   fun aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
     @Param("deviceId") deviceId: String,
-    @Param("startDate") startDate: Date,
-    @Param("endDate") endDate: Date,
+    @Param("startDate") startDate: ZonedDateTime,
+    @Param("endDate") endDate: ZonedDateTime,
     @Param("duration") duration: Int,
   ): List<ILocationAggregation>?
 }

@@ -9,12 +9,12 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.DateConverter
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Device
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.DeviceWearer
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.DeviceResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.DeviceService
+import java.time.ZonedDateTime
 
 class DeviceControllerTest {
   val deviceService = Mockito.mock(DeviceService::class.java)
@@ -67,7 +67,7 @@ class DeviceControllerTest {
       type = "Historical Case Centric",
     )
     val deviceWearerId = "3fc55bb7-ba52-4854-be96-661f710328fc"
-    val dateTagFitted = DateConverter().convertFromStringToDate("2000-10-30T01:32:00.000-00:00")
+    val dateTagFitted = ZonedDateTime.parse("2000-10-30T01:32:00.000-00:00")
     val devicesList: List<Device> =
       listOf(Device(1, "1", "1", "1.0", "GPS", "OK", 80, dateTagFitted, null, deviceWearer))
 
@@ -127,7 +127,7 @@ class DeviceControllerTest {
       type = "Historical Case Centric",
     )
     val deviceId = "3fc55bb7-ba52-4854-be96-661f710328fc"
-    val dateTagFitted = DateConverter().convertFromStringToDate("2000-10-30T01:32:00.000-00:00")
+    val dateTagFitted = ZonedDateTime.parse("2000-10-30T01:32:00.000-00:00")
     val device = Device(1, "1", "1", "1.0", "GPS", "OK", 80, dateTagFitted, null, deviceWearer)
 
     Mockito.`when`(deviceService.getDeviceByDeviceId(deviceId)).thenReturn(device)

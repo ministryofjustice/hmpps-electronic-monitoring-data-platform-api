@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mo
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.DateConverter
+import java.time.ZonedDateTime
 
 class IConvertableTest {
 
@@ -21,13 +21,13 @@ class IConvertableTest {
       status = "status",
       batteryLifeRemaining = 20,
     )
-    val dateTime = DateConverter().convertFromStringToDate("2000-10-31T01:30:00.000-00:00")
+    val dateTime = ZonedDateTime.parse("2000-10-31T01:30:00.000-00:00")
     val location = Location(1, device, 20.0, 20.0, locationTime = dateTime)
     val expected = listOf(
       "device" to "myDeviceId",
       "id" to "1",
       "latitude" to "20.0",
-      "locationTime" to "Tue Oct 31 01:30:00 UTC 2000",
+      "locationTime" to "2000-10-31T01:30Z",
       "longitude" to "20.0",
     )
 
@@ -45,11 +45,11 @@ class IConvertableTest {
 
   @Test
   fun `getProperties will get properties for a locationAggregation`() {
-    val dateTime = DateConverter().convertFromStringToDate("2000-10-31T01:30:00.000-00:00")
+    val dateTime = ZonedDateTime.parse("2000-10-31T01:30:00.000-00:00")
     val locationAggregation = LocationAggregation(20.0, 20.0, dateTime)
     val expected = listOf(
 
-      "datetime" to "Tue Oct 31 01:30:00 UTC 2000",
+      "datetime" to "2000-10-31T01:30Z",
       "latitude" to "20.0",
       "longitude" to "20.0",
     )
@@ -76,20 +76,22 @@ class IConvertableTest {
       type = "",
     )
     val device = Device(
-      id = 1,
-      deviceId = "myDeviceId",
-      modelId = "modelId",
-      firmwareVersion = "firmwareVersion",
-      deviceType = "deviceType",
-      status = "status",
-      batteryLifeRemaining = 20,
-      deviceWearer = deviceWearerId,
+        id = 1,
+        deviceId = "myDeviceId",
+        modelId = "modelId",
+        firmwareVersion = "firmwareVersion",
+        deviceType = "deviceType",
+        status = "status",
+        batteryLifeRemaining = 20,
+        deviceWearer = deviceWearerId,
+        dateTagRemoved = ZonedDateTime.parse("2000-10-31T01:30:00.000-00:00"),
+        dateTagFitted = ZonedDateTime.parse("2000-10-31T01:30:00.000-00:00"),
     )
 
     val expected = listOf(
       "batteryLifeRemaining" to "20",
-      "dateTagFitted" to "Sun Dec 02 16:47:04 UTC 292269055",
-      "dateTagRemoved" to "Sun Dec 02 16:47:04 UTC 292269055",
+      "dateTagFitted" to "2000-10-31T01:30Z",
+      "dateTagRemoved" to "2000-10-31T01:30Z",
       "deviceId" to "myDeviceId",
       "deviceType" to "deviceType",
       "deviceWearer" to "0",

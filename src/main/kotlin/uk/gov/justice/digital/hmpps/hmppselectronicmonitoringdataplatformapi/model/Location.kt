@@ -11,7 +11,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.springframework.format.annotation.DateTimeFormat
-import java.util.*
+import java.time.ZonedDateTime
 import kotlin.reflect.full.memberProperties
 
 @Entity
@@ -28,14 +28,17 @@ data class Location(
   val longitude: Double = 0.0,
 //    @Schema(description = "Date time if discovery date different to incident date", example = "2010-10-12T10:00:00")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  val locationTime: Date = Date(Long.MIN_VALUE),
+  val locationTime: ZonedDateTime = ZonedDateTime.now(),
 
   ) : IConvertable {
   override fun getProperties(): List<Pair<String, String>> {
     val result = Location::class.memberProperties.map { it.name to it.get(this).toString() }
     val deviceId: String = device?.deviceId ?: ""
-    val newList: List<Pair<String, String>> = result.map { if (it.first == "device") { "device" to deviceId }
-    else it.first to it.second}
+    val newList: List<Pair<String, String>> = result.map {
+      if (it.first == "device") {
+        "device" to deviceId
+      } else it.first to it.second
+    }
     return newList
   }
 }

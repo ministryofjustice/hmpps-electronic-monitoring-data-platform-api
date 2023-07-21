@@ -9,13 +9,13 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.CSVHelper
-import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.DateConverter
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.helpers.StaticHelpers
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.EmApiError
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Location
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationAggregationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.responses.LocationResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.ILocationService
+import java.time.ZonedDateTime
 import java.util.*
 
 @RequestMapping("locations")
@@ -71,8 +71,8 @@ class LocationController(@Autowired private val locationService: ILocationServic
       throw EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
     }
 
-    val start: Date = DateConverter().convertFromStringToDate(startDate)
-    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val start: ZonedDateTime = ZonedDateTime.parse(startDate)
+    val end: ZonedDateTime = ZonedDateTime.parse(endDate)
 
     val result = locationService.getLocationsByDeviceWearerIdAndTimeFrame(deviceWearerId, start, end)
     if (result.isEmpty()) {
@@ -126,8 +126,8 @@ class LocationController(@Autowired private val locationService: ILocationServic
       throw EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
     }
 
-    val start: Date = DateConverter().convertFromStringToDate(startDate)
-    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val start: ZonedDateTime = ZonedDateTime.parse(startDate)
+    val end: ZonedDateTime = ZonedDateTime.parse(endDate)
     val dateComparison = end.compareTo(start)
 
     if (dateComparison < 0) {
@@ -158,8 +158,8 @@ class LocationController(@Autowired private val locationService: ILocationServic
       throw EmApiError("Insert a valid end date", HttpStatus.BAD_REQUEST)
     }
 
-    val start: Date = DateConverter().convertFromStringToDate(startDate)
-    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val start: ZonedDateTime = ZonedDateTime.parse(startDate)
+    val end: ZonedDateTime = ZonedDateTime.parse(endDate)
     val dateComparison = end.compareTo(start)
 
     if (dateComparison < 0) {
@@ -206,8 +206,8 @@ class LocationController(@Autowired private val locationService: ILocationServic
       throw EmApiError("Duration should be from 1 to 24", HttpStatus.BAD_REQUEST)
     }
 
-    val start: Date = DateConverter().convertFromStringToDate(startDate)
-    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val start: ZonedDateTime = ZonedDateTime.parse(startDate)
+    val end: ZonedDateTime = ZonedDateTime.parse(endDate)
     val dateComparison = end.compareTo(start)
 
     if (dateComparison < 0) {
@@ -243,8 +243,8 @@ class LocationController(@Autowired private val locationService: ILocationServic
       throw EmApiError("Duration should be from 1 to 24", HttpStatus.BAD_REQUEST)
     }
 
-    val start: Date = DateConverter().convertFromStringToDate(startDate)
-    val end: Date = DateConverter().convertFromStringToDate(endDate)
+    val start: ZonedDateTime = ZonedDateTime.parse(startDate)
+    val end: ZonedDateTime = ZonedDateTime.parse(endDate)
     val dateComparison = end.compareTo(start)
 
     if (dateComparison < 0) {
