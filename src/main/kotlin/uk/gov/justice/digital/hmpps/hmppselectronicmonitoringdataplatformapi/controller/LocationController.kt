@@ -18,7 +18,6 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.res
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.service.ILocationService
 import java.util.*
 
-
 @RequestMapping("locations")
 @RestController
 class LocationController(@Autowired private val locationService: ILocationService) {
@@ -60,7 +59,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
     @RequestParam("deviceWearerId") deviceWearerId: String,
     @RequestParam("startDate") startDate: String,
     @RequestParam("endDate") endDate: String,
-   ): ResponseEntity<LocationResponse> {
+  ): ResponseEntity<LocationResponse> {
 
     if (!StaticHelpers().validateUUID(deviceWearerId)) {
       throw EmApiError("Insert a valid device wearer id", HttpStatus.BAD_REQUEST)
@@ -251,19 +250,19 @@ class LocationController(@Autowired private val locationService: ILocationServic
     if (dateComparison < 0) {
       throw EmApiError("End date is before start date", HttpStatus.BAD_REQUEST)
     }
-    val locations =  locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
+    val locations = locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
       deviceId,
       start,
       end,
-      duration
+      duration,
     )
 
     val filename = "locations.csv"
     val file =
       InputStreamResource(
-        CSVHelper().convertToCSV(locations)
+        CSVHelper().convertToCSV(locations),
 
-      )
+        )
 
     return ResponseEntity.ok().header(
       HttpHeaders.CONTENT_DISPOSITION,

@@ -5,7 +5,6 @@ import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
 import org.testcontainers.containers.DockerComposeContainer
 import java.io.File
-import java.nio.file.Paths
 
 class BaseITInitializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
 
@@ -20,7 +19,6 @@ class BaseITInitializer : ApplicationContextInitializer<ConfigurableApplicationC
     private val POSTGRES = Container("postgres_1", 5430)
 
     private val COMPOSE_CONTAINER: KDockerComposeContainer by lazy {
-      val path = Paths.get("").toAbsolutePath().toString()
       KDockerComposeContainer(File("docker-compose-test.yml"))
         .withExposedService(POSTGRES.serviceName, POSTGRES.port)
         .withLocalCompose(true)

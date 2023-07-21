@@ -32,7 +32,6 @@ class CSVHelperTest {
     val result = CSVHelper().convertToCSV(listOf(location1, location2))
     val parseRes = IOUtils.toString(result, StandardCharsets.UTF_8)
     Assertions.assertThat(parseRes).isEqualTo(expected)
-
   }
 
   @Test
@@ -54,27 +53,10 @@ class CSVHelperTest {
     val result = CSVHelper().convertToCSV(listOf(location1))
     val parseRes = IOUtils.toString(result, StandardCharsets.UTF_8)
     Assertions.assertThat(parseRes).isEqualTo(expected)
-
   }
-
-//  @Test
-//  fun `It does not convert location to CSV format due to internal server issue`() {
-//    val location = Location()
-
-//    assertThrows<Exception> { LocationController(locationService).getAllLocations() }
-  // val convertToCSV = Mockito.mock(CSVHelper::class.java)
-  // Mockito.`when`(CSVHelper().convertToCSV(listOf(location))).thenThrow(RuntimeException("Exception"))
-//    val result = CSVHelper().convertToCSV(listOf(location))
-//    val expected = RuntimeException("fail to import data to CSV file: ")
-  // assertThrows<Exception> { CSVHelper().convertToCSV(listOf(location)) }
-  // verify(locationService, times(1)).getLocationsByDeviceWearerId(any<String>())
-
-  // Assertions.assertThat(result).isEqualTo(expected)
-  // }
 
   @Test
   fun `it converts devices to CSV format`() {
-
     val device = Device(
       deviceWearer = DeviceWearer(),
       id = 1,
@@ -85,7 +67,6 @@ class CSVHelperTest {
       status = "itsOK",
       batteryLifeRemaining = 20,
     )
-
 
     val expected =
       "batteryLifeRemaining,dateTagFitted,dateTagRemoved,deviceId,deviceType,deviceWearer,firmwareVersion,id,modelId,status\r\n" +

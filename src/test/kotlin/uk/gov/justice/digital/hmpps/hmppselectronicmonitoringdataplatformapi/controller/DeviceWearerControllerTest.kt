@@ -62,7 +62,7 @@ class DeviceWearerControllerTest {
 
     val result = DeviceWearerController(deviceWearerService).getAllDeviceWearers()
 
-    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body?.deviceWearers)
     confirmNoError(result, expected)
     verify(deviceWearerService, times(1)).getAllDeviceWearers()
   }
@@ -92,7 +92,7 @@ class DeviceWearerControllerTest {
     val expected: ResponseEntity<DeviceWearerResponse> = ResponseEntity(DeviceWearerResponse(response), HttpStatus.OK)
     val result = DeviceWearerController(deviceWearerService).getDeviceWearerById(id)
 
-    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body?.deviceWearers)
     confirmNoError(result, expected)
     verify(deviceWearerService, times(1)).getDeviceWearerById(any<String>())
   }
@@ -146,7 +146,7 @@ class DeviceWearerControllerTest {
 
     val result = DeviceWearerController(deviceWearerService).searchDeviceWearers(queryString)
 
-    Assertions.assertThat(result.body.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body?.deviceWearers)
     confirmNoError(result, expected)
   }
 
@@ -157,7 +157,7 @@ class DeviceWearerControllerTest {
 
     val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2("")
 
-    Assertions.assertThat(result.body.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body?.deviceWearers)
     confirmNoError(result, expected)
     verify(deviceWearerService, times(1)).getAllDeviceWearers()
   }
@@ -170,7 +170,7 @@ class DeviceWearerControllerTest {
     Mockito.`when`(deviceWearerService.getMatchingDeviceWearers(queryString)).thenReturn(listOf<DeviceWearer>())
     val result = DeviceWearerController(deviceWearerService).searchDeviceWearersV2(queryString)
 
-    Assertions.assertThat(result.body.deviceWearers).isEqualTo(expected.body.deviceWearers)
+    Assertions.assertThat(result.body?.deviceWearers).isEqualTo(expected.body?.deviceWearers)
     confirmNoError(result, expected)
     verify(deviceWearerService, times(1)).getMatchingDeviceWearers(any<String>())
   }
@@ -186,9 +186,9 @@ class DeviceWearerControllerTest {
     val result1 = DeviceWearerController(deviceWearerService).searchDeviceWearersV2(queryString)
     val result2 = DeviceWearerController(deviceWearerService).searchDeviceWearersV2PathVariable(queryString)
 
-    Assertions.assertThat(result1.body.deviceWearers)
-      .isEqualTo(result2.body.deviceWearers)
-      .isEqualTo(expected.body.deviceWearers)
+    Assertions.assertThat(result1.body?.deviceWearers)
+      .isEqualTo(result2.body?.deviceWearers)
+      .isEqualTo(expected.body?.deviceWearers)
     confirmNoError(result1, expected)
     verify(deviceWearerService, times(2)).getMatchingDeviceWearers(any<String>())
   }

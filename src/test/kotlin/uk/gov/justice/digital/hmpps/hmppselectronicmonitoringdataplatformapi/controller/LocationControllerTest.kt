@@ -52,7 +52,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getAllLocations()
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getAllLocations()
   }
 
@@ -75,7 +75,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getAllLocations()
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getAllLocations()
   }
 
@@ -108,7 +108,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getLocationsByDeviceWearerId(deviceWearerId)
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getLocationsByDeviceWearerId(any<String>())
   }
 
@@ -132,7 +132,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getLocationsByDeviceWearerId(deviceWearerId)
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getLocationsByDeviceWearerId(any<String>())
   }
 
@@ -352,7 +352,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getLocationsByDeviceId(deviceId)
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getLocationsByDeviceId(any<String>())
   }
 
@@ -376,7 +376,7 @@ class LocationControllerTest {
     val result = LocationController(locationService).getLocationsByDeviceId(deviceId)
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body.locations)
+    Assertions.assertThat(result.body?.locations).isEqualTo(expected.body?.locations)
     verify(locationService, times(1)).getLocationsByDeviceId(any<String>())
   }
 

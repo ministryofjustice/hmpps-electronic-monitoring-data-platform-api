@@ -12,14 +12,13 @@ class CSVHelper {
 
   fun convertToCSV(dataRows: List<IConvertable>): ByteArrayInputStream {
     try {
-
-      val convertedData = dataRows.map {
-        row -> row.getProperties()
+      val convertedData = dataRows.map { row ->
+        row.getProperties()
       }.map {
-        it.map{pair -> pair.second}
+        it.map { pair -> pair.second }
       }
 
-      val fieldNames = dataRows[0].getProperties().map { it.first}.toTypedArray()
+      val fieldNames = dataRows[0].getProperties().map { it.first }.toTypedArray()
 
       ByteArrayOutputStream().use { out ->
         CSVPrinter(
@@ -27,7 +26,6 @@ class CSVHelper {
           CSVFormat.DEFAULT.withHeader(*fieldNames),
         ).use { csvPrinter ->
           for (row in convertedData) {
-
             csvPrinter.printRecord(row)
           }
           csvPrinter.flush()
@@ -38,41 +36,4 @@ class CSVHelper {
       throw RuntimeException("fail to import data to CSV file: " + e.message)
     }
   }
-
-//  fun Convert(format: CSVFormat, rows: MutableList<List<String?>>): ByteArrayInputStream {
-//    try {
-//      ByteArrayOutputStream().use { out ->
-//        CSVPrinter(
-//          PrintWriter(out),
-//          format,
-//        ).use { csvPrinter ->
-//          for (row in rows) {
-//
-//            csvPrinter.printRecord(row)
-//          }
-//          csvPrinter.flush()
-//          return ByteArrayInputStream(out.toByteArray())
-//        }
-//      }
-//    } catch (e: IOException) {
-//      throw RuntimeException("fail to import data to CSV file: " + e.message)
-//    }
-//
-//  }
-
-
- // fun LocationAggregationsToCSV(locations: List<LocationAggregation>): ByteArrayInputStream {
-//    val format = CSVFormat.DEFAULT.withHeader("Latitude", "Longitude", "DateTime")
-//    val rows: MutableList<List<String?>> = mutableListOf()
-//
-//    for (l in locations) {
-//
-//      val data: MutableList<String?> = mutableListOf()
-//      for (prop in l.getProperties()) {
-//        data.add(prop.get(l).toString())
-//      }
-//      rows.add(data)
-//    }
-//    return Convert(format, rows)
-//  }
 }

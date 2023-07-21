@@ -53,7 +53,7 @@ class DeviceControllerTest {
     val result = DeviceController(deviceService).getDevicesByDeviceWearerId(deviceWearerId)
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.devices).isEqualTo(expected.body.devices)
+    Assertions.assertThat(result.body?.devices).isEqualTo(expected.body?.devices)
     verify(deviceService, times(1)).getDevicesByDeviceWearerId(any<String>())
   }
 
@@ -77,7 +77,7 @@ class DeviceControllerTest {
     val result = DeviceController(deviceService).getDevicesByDeviceWearerId(deviceWearerId)
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.devices).isEqualTo(expected.body.devices)
+    Assertions.assertThat(result.body?.devices).isEqualTo(expected.body?.devices)
     verify(deviceService, times(1)).getDevicesByDeviceWearerId(any<String>())
   }
 
@@ -114,7 +114,7 @@ class DeviceControllerTest {
 
     confirmNoError(result, expected)
     verify(deviceService, times(1)).getDeviceByDeviceId(deviceId)
-    Assertions.assertThat(result.body?.devices).isEqualTo(expected.body.devices)
+    Assertions.assertThat(result.body?.devices).isEqualTo(expected.body?.devices)
   }
 
   @Test
@@ -136,7 +136,7 @@ class DeviceControllerTest {
     val result = DeviceController(deviceService).getDeviceByDeviceId(deviceId)
 
     confirmNoError(result, expected)
-    Assertions.assertThat(result.body?.devices).isEqualTo(expected.body.devices)
+    Assertions.assertThat(result.body?.devices).isEqualTo(expected.body?.devices)
     verify(deviceService, times(1)).getDeviceByDeviceId(any<String>())
   }
 

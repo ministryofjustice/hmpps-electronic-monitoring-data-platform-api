@@ -7,7 +7,6 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.hel
 class IConvertableTest {
 
   fun getMyProperties(convertableObject: IConvertable): List<Pair<String, String>> {
-
     return convertableObject.getProperties()
   }
 
@@ -39,7 +38,6 @@ class IConvertableTest {
 
   @Test
   fun `getProperties will get properties for a locationAggregation`() {
-
     val dateTime = DateConverter().convertFromStringToDate("2000-10-31T01:30:00.000-00:00")
     val locationAggregation = LocationAggregation(20.0, 20.0, dateTime)
     val expected = listOf(
@@ -56,7 +54,6 @@ class IConvertableTest {
 
   @Test
   fun `getProperties will get device info`() {
-
     val deviceWearerId = DeviceWearer(
       id = 0,
       deviceWearerId = "0",
@@ -74,7 +71,6 @@ class IConvertableTest {
       batteryLifeRemaining = 20,
       deviceWearer = deviceWearerId,
     )
-
 
     val expected = listOf(
       "batteryLifeRemaining" to "20",
@@ -96,7 +92,6 @@ class IConvertableTest {
 
   @Test
   fun `getProperties will get deviceWearer info`() {
-
     val deviceWearerId = DeviceWearer(
       id = 123,
       deviceWearerId = "345",
@@ -126,8 +121,7 @@ class IConvertableTest {
         batteryLifeRemaining = 20,
         deviceWearer = deviceWearerId,
       ),
-
-      )
+    )
     deviceWearerId.devices = devices
 
     val expected = listOf(
@@ -143,5 +137,4 @@ class IConvertableTest {
 
     Assertions.assertThat(result.toString()).isEqualTo(expected.toString())
   }
-
 }
