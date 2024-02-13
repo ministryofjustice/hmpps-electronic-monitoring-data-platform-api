@@ -34,6 +34,10 @@ dependencies {
   implementation("org.jetbrains.exposed:exposed-jdbc:0.47.0")
   implementation("org.postgresql:postgresql:42.7.1")
   implementation("org.apache.commons:commons-csv:1.10.0")
+
+  // https://mvnrepository.com/artifact/software.amazon.awssdk/athena
+  implementation("software.amazon.awssdk:athena:2.24.0")
+
   testImplementation("org.springframework.boot:spring-boot-starter-test:3.2.2")
   testImplementation("org.testcontainers:testcontainers:1.19.5")
   testImplementation("org.testcontainers:junit-jupiter:1.19.5")
