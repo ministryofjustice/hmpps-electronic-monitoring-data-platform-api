@@ -35,4 +35,4 @@ class DeviceServiceTest {
     verify(deviceRepository, times(1)).findDeviceByDeviceId(deviceId)
     Assertions.assertThat(result).isEqualTo(expected)
   }
-  }
+}
