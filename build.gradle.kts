@@ -42,8 +42,22 @@ dependencies {
   testImplementation("org.testcontainers:testcontainers:1.19.5")
   testImplementation("org.testcontainers:junit-jupiter:1.19.5")
   testImplementation("org.testcontainers:postgresql:1.19.5")
+
   api("me.paulschwarz:spring-dotenv:4.0.0")
   developmentOnly("org.springframework.boot:spring-boot-devtools:3.2.2")
+
+  constraints {
+    implementation("com.jayway.jsonpath:json-path:2.9.0") {
+      because("To resolve CVE-2023-51074")
+    }
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1") {
+      because("To resolve CVE-2023-35116")
+    }
+
+    testImplementation("com.jayway.jsonpath:json-path:2.9.0") {
+      because("To resolve CVE-2023-51074")
+    }
+  }
 }
 
 java {
