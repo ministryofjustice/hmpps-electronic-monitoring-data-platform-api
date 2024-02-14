@@ -10,7 +10,6 @@ class ServiceRepository {
   val connection = DriverManager.getConnection(jdbcUrl, user, password)
   val table: String = "service"
 
-
   fun getData(fieldList: String = "*", criteria: String = ""): ResultSet? {
     val whereClause: String = if (criteria != "") "" else "WHERE $criteria"
     val sqlQuery: String = "SELECT $fieldList FROM $table $whereClause"

@@ -60,16 +60,16 @@ class CSVHelperTest {
   fun `it converts devices to CSV format`() {
     val dateTime = ZonedDateTime.parse("2000-10-31T01:30:00.000-00:00")
     val device = Device(
-        deviceWearer = DeviceWearer(),
-        id = 1,
-        deviceId = "myDeviceId",
-        modelId = "XYZ",
-        firmwareVersion = "739",
-        deviceType = "testType",
-        status = "itsOK",
-        batteryLifeRemaining = 20,
-        dateTagFitted = dateTime,
-        dateTagRemoved = dateTime,
+      deviceWearer = DeviceWearer(),
+      id = 1,
+      deviceId = "myDeviceId",
+      modelId = "XYZ",
+      firmwareVersion = "739",
+      deviceType = "testType",
+      status = "itsOK",
+      batteryLifeRemaining = 20,
+      dateTagFitted = dateTime,
+      dateTagRemoved = dateTime,
     )
 
     val expected =

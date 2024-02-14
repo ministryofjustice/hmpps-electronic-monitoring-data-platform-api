@@ -29,11 +29,3 @@ class StaticHelpers {
     return duration in 1..24
   }
 }
-
-
-
-
-
-
-
-

@@ -76,16 +76,16 @@ class IConvertableTest {
       type = "",
     )
     val device = Device(
-        id = 1,
-        deviceId = "myDeviceId",
-        modelId = "modelId",
-        firmwareVersion = "firmwareVersion",
-        deviceType = "deviceType",
-        status = "status",
-        batteryLifeRemaining = 20,
-        deviceWearer = deviceWearerId,
-        dateTagRemoved = ZonedDateTime.parse("2000-10-31T01:30:00.000-00:00"),
-        dateTagFitted = ZonedDateTime.parse("2000-10-31T01:30:00.000-00:00"),
+      id = 1,
+      deviceId = "myDeviceId",
+      modelId = "modelId",
+      firmwareVersion = "firmwareVersion",
+      deviceType = "deviceType",
+      status = "status",
+      batteryLifeRemaining = 20,
+      deviceWearer = deviceWearerId,
+      dateTagRemoved = ZonedDateTime.parse("2000-10-31T01:30:00.000-00:00"),
+      dateTagFitted = ZonedDateTime.parse("2000-10-31T01:30:00.000-00:00"),
     )
 
     val expected = listOf(

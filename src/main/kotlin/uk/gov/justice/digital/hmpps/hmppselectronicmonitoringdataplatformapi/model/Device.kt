@@ -51,7 +51,9 @@ data class Device(
     val wearerInfo = result.map {
       if (it.first == "deviceWearer") {
         "deviceWearer" to deviceWearerId
-      } else it.first to it.second
+      } else {
+        it.first to it.second
+      }
     }
 
     val testResult = wearerInfo.filter { it.first != "locations" }.toList()

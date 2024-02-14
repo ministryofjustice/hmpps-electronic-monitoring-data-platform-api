@@ -86,12 +86,11 @@ class LocationServiceTest {
       locationService.aggregateLocationsByDeviceIdAndTimeFrameAndDuration(deviceId, startDate, endDate, duration)
 
     verify(locationRepository, times(1)).aggregateLocationsByDeviceIdAndTimeFrameAndDuration(
-        deviceId,
-        startDate,
-        endDate,
-        duration,
+      deviceId,
+      startDate,
+      endDate,
+      duration,
     )
     Assertions.assertThat(result).isEqualTo(expectedResult)
   }
 }
-

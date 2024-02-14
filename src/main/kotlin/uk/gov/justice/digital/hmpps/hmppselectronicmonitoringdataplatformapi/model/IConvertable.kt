@@ -1,5 +1,5 @@
 package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model
 
-interface IConvertable{
+interface IConvertable {
   fun getProperties(): List<Pair<String, String>>
 }

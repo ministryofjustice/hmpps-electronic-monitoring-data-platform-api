@@ -11,6 +11,7 @@ import java.util.*
 
 class DeviceWearerServiceTest {
   val deviceWearerRepository = Mockito.mock(DeviceWearerRepository::class.java)
+
   @Test
   fun `getAllDeviceWearers should return an empty list when there is no device wearer`() {
     val expected = listOf<DeviceWearer>()

@@ -31,7 +31,6 @@ interface ILocationService {
     endDate: ZonedDateTime,
     duration: Int,
   ): List<LocationAggregation>
-
 }
 
 @Service
@@ -81,6 +80,3 @@ class LocationService(@Autowired private val locationRepository: LocationReposit
     return result
   }
 }
-
-
-

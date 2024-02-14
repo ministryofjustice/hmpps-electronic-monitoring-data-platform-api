@@ -13,10 +13,8 @@ interface DeviceRepository : JpaRepository<Device, Int> {
     value = "SELECT DISTINCT d.*" +
       "FROM device as d JOIN device_wearer as dw ON d.device_wearer_id = dw.id" +
       " WHERE dw.device_wearer_id = :deviceWearerId",
-
     nativeQuery = true,
   )
-
   fun findDevicesByDeviceWearerId(deviceWearerId: String): List<Device>?
 
   @Query(
@@ -26,6 +24,4 @@ interface DeviceRepository : JpaRepository<Device, Int> {
     nativeQuery = true,
   )
   fun findDeviceByDeviceId(@Param("deviceId") deviceId: String): List<Device>?
-
-
 }

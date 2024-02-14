@@ -24,5 +24,4 @@ class DeviceService(@Autowired private val deviceRepository: DeviceRepository) :
   override fun getDeviceByDeviceId(deviceId: String): Device? {
     return deviceRepository.findDeviceByDeviceId(deviceId)?.firstOrNull()
   }
-
 }

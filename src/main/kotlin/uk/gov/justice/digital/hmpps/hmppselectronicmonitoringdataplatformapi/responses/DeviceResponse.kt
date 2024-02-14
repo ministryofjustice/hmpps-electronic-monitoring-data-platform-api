@@ -3,11 +3,11 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.re
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.BaseResponse
 import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.model.Device
 
-class DeviceResponse: BaseResponse {
+class DeviceResponse : BaseResponse {
   val devices: List<Device>
   var message: String = ""
   constructor(deviceList: List<Device>?, error: String = "") : super(error) {
-    this.devices = deviceList ?:listOf()
+    this.devices = deviceList ?: listOf()
   }
   constructor(deviceList: Device, error: String = "") : super(error) {
     this.devices = listOf<Device>(deviceList)

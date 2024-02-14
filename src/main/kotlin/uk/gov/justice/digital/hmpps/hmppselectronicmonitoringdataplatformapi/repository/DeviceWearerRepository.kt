@@ -7,13 +7,13 @@ import uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.mod
 @Repository
 interface DeviceWearerRepository : JpaRepository<DeviceWearer, Int> {
   fun findByDeviceWearerId(id: String): DeviceWearer?
+
   //  @Query(value = "SELECT * FROM DeviceWearer", nativeQuery = true)
   @Query(
     value = "SELECT * FROM device_wearer u WHERE u.first_name = 'Jane'",
     nativeQuery = true,
   )
   fun findByDeviceWearerIdSearch(@Param("firstName") firstName: String): List<DeviceWearer>?
-
 
   @Query(
     value = "SELECT * FROM device_wearer u\n" +
@@ -24,6 +24,4 @@ interface DeviceWearerRepository : JpaRepository<DeviceWearer, Int> {
     nativeQuery = true,
   )
   fun searchDatabase(@Param("parameter") parameter: String): List<DeviceWearer>?
-
 }
-

@@ -60,7 +60,6 @@ class LocationController(@Autowired private val locationService: ILocationServic
     @RequestParam("startDate") startDate: String,
     @RequestParam("endDate") endDate: String,
   ): ResponseEntity<LocationResponse> {
-
     if (!StaticHelpers().validateUUID(deviceWearerId)) {
       throw EmApiError("Insert a valid device wearer id", HttpStatus.BAD_REQUEST)
     }
@@ -115,7 +114,6 @@ class LocationController(@Autowired private val locationService: ILocationServic
     @RequestParam("startDate") startDate: String,
     @RequestParam("endDate") endDate: String,
   ): ResponseEntity<LocationResponse> {
-
     if (!StaticHelpers().validateUUID(deviceId)) {
       throw EmApiError("Insert a valid device id", HttpStatus.BAD_REQUEST)
     }
@@ -192,7 +190,6 @@ class LocationController(@Autowired private val locationService: ILocationServic
     @RequestParam("endDate") endDate: String,
     @RequestParam("duration", defaultValue = "1") duration: Int,
   ): ResponseEntity<LocationAggregationResponse> {
-
     if (!StaticHelpers().validateUUID(deviceId)) {
       throw EmApiError("Insert a valid device id", HttpStatus.BAD_REQUEST)
     }
@@ -229,7 +226,6 @@ class LocationController(@Autowired private val locationService: ILocationServic
     @RequestParam("endDate") endDate: String,
     @RequestParam("duration", defaultValue = "1") duration: Int,
   ): ResponseEntity<InputStreamResource> {
-
     if (!StaticHelpers().validateUUID(deviceId)) {
       throw EmApiError("Insert a valid device id", HttpStatus.BAD_REQUEST)
     }
@@ -262,7 +258,7 @@ class LocationController(@Autowired private val locationService: ILocationServic
       InputStreamResource(
         CSVHelper().convertToCSV(locations),
 
-        )
+      )
 
     return ResponseEntity.ok().header(
       HttpHeaders.CONTENT_DISPOSITION,

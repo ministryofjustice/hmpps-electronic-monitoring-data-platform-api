@@ -6,7 +6,7 @@ class LocationResponse : BaseResponse {
   val locations: List<Location>
   var message: String = ""
   constructor(locationList: List<Location>?, error: String = "") : super(error) {
-    this.locations = locationList ?:listOf()
+    this.locations = locationList ?: listOf()
   }
   constructor(locationList: Location, error: String = "") : super(error) {
     this.locations = listOf<Location>(locationList)

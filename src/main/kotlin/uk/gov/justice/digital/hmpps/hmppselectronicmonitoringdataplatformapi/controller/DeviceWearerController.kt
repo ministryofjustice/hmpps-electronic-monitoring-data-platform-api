@@ -21,7 +21,7 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
     try {
       val result: List<DeviceWearer> = deviceWearerService.getAllDeviceWearers()
       if (result.isEmpty()) {
-        return ResponseEntity(DeviceWearerResponse(message ="No data found"), HttpStatus.OK)
+        return ResponseEntity(DeviceWearerResponse(message = "No data found"), HttpStatus.OK)
       }
       return ResponseEntity(DeviceWearerResponse(result), HttpStatus.OK)
     } catch (e: Exception) {
@@ -53,7 +53,7 @@ class DeviceWearerController(@Autowired private val deviceWearerService: IDevice
     }
     val matchingDeviceWearers = filterDeviceWearers(queryString)
     if (matchingDeviceWearers.isEmpty()) {
-      return ResponseEntity(DeviceWearerResponse(message ="No matching data found"), HttpStatus.OK)
+      return ResponseEntity(DeviceWearerResponse(message = "No matching data found"), HttpStatus.OK)
     }
     return ResponseEntity(DeviceWearerResponse(matchingDeviceWearers), HttpStatus.OK)
   }

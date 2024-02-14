@@ -22,7 +22,7 @@ data class DeviceWearer(
   val lastName: String = "",
   val type: String = "",
 
-  ) : IConvertable {
+) : IConvertable {
 
   @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, mappedBy = "deviceWearer")
   @JsonIgnore
@@ -35,7 +35,9 @@ data class DeviceWearer(
     val newList: List<Pair<String, String>> = result.map {
       if (it.first == "devices") {
         "devices" to listOfDeviceId
-      } else it
+      } else {
+        it
+      }
     }
 
     return newList
