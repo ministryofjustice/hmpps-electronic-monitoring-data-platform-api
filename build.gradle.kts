@@ -38,8 +38,7 @@ dependencies {
   // https://mvnrepository.com/artifact/software.amazon.awssdk/athena
   implementation("software.amazon.awssdk:athena:2.24.1")
 
-  implementation(fileTree("src/main/libs") { include("*.jar") })
-
+  implementation(files("libs/athena-jdbc-3.0.0/athena-jdbc-3.0.0.jar"))
 
   testImplementation("org.springframework.boot:spring-boot-starter-test:3.2.2")
   testImplementation("org.testcontainers:testcontainers:1.19.5")

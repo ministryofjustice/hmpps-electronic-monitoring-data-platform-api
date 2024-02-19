@@ -9,6 +9,7 @@ package uk.gov.justice.digital.hmpps.hmppselectronicmonitoringdataplatformapi.re
 import java.sql.ResultSet
 import java.util.*
 import com.amazon.athena.jdbc.AthenaDriver
+import software.amazon.awssdk.services.athena.AthenaClient
 // import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider
 // import software.amazon.awssdk.regions.Region
 // import software.amazon.awssdk.services.athena.AthenaClient
