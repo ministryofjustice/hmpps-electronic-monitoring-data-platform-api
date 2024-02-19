@@ -36,7 +36,10 @@ dependencies {
   implementation("org.apache.commons:commons-csv:1.10.0")
 
   // https://mvnrepository.com/artifact/software.amazon.awssdk/athena
-  implementation("software.amazon.awssdk:athena:2.24.0")
+  implementation("software.amazon.awssdk:athena:2.24.1")
+
+  implementation(fileTree("src/main/libs") { include("*.jar") })
+
 
   testImplementation("org.springframework.boot:spring-boot-starter-test:3.2.2")
   testImplementation("org.testcontainers:testcontainers:1.19.5")
